@@ -72,12 +72,9 @@ class ApiEvent extends Event
     public function copy()
     {
         $copy = new self($this->request, $this->resource, $this->action);
-        if ($model = $this->getModel()) {
-            $copy->setModel($model);
-        }
-        if ($form = $this->getForm()) {
-            $copy->setForm($form);
-        }
+        $copy->model = $this->model;
+        $copy->form = $this->form;
+
         return $copy;
     }
 

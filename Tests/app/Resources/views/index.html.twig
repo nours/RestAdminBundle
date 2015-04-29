@@ -1,0 +1,7 @@
+<h1>{{ resource.fullname }} {{ action.name }}</h1>
+
+<ul>
+{% for post in model %}
+    <li>{{ post.id }}</li>
+{% endfor %}
+</ul>

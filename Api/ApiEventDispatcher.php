@@ -13,7 +13,7 @@ namespace Nours\RestAdminBundle\Api;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Api\Event\ApiEvent;
 use Nours\RestAdminBundle\Api\Event\EventSubscriber;
-use Nours\RestAdminBundle\BuilderManager;
+use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -43,12 +43,12 @@ class ApiEventDispatcher
     private $dispatcher;
 
     /**
-     * @var BuilderManager
+     * @var ActionManager
      */
     private $builders;
 
 
-    public function __construct(AdminManager $manager, BuilderManager $builders)
+    public function __construct(AdminManager $manager, ActionManager $builders)
     {
         $this->manager = $manager;
         $this->builders = $builders;

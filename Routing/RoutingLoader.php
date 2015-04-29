@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\Routing;
 
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Api\KernelProvider;
-use Nours\RestAdminBundle\BuilderManager;
+use Nours\RestAdminBundle\ActionManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -31,15 +31,15 @@ class RoutingLoader extends Loader
     private $manager;
 
     /**
-     * @var BuilderManager
+     * @var ActionManager
      */
     private $builders;
 
     /**
      * @param AdminManager $manager
-     * @param BuilderManager $factory
+     * @param ActionManager $factory
      */
-    public function __construct(AdminManager $manager, BuilderManager $factory)
+    public function __construct(AdminManager $manager, ActionManager $factory)
     {
         $this->manager = $manager;
         $this->builders = $factory;

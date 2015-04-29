@@ -11,8 +11,10 @@
 namespace Nours\RestAdminBundle\Action;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Nours\RestAdminBundle\Domain\Resource;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -22,6 +24,19 @@ use Symfony\Component\Routing\Route;
  */
 abstract class AbstractBuilder implements ActionBuilderInterface
 {
+    protected $template;
+    protected $controller;
+
+    /**
+     * @param $template
+     * @param $controller
+     */
+    public function __construct($template, $controller)
+    {
+        $this->template   = $template;
+        $this->controller = $controller;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -31,9 +46,12 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         $resolver->setRequired(array(
             'template', 'controller'
         ));
-//        $resolver->setDefaults(array('resource' => $resource));
+        $resolver->setDefaults(array(
+            'template'   => $this->template,
+            'controller' => $this->controller
+        ));
 
-        $this->setDefaultOptions($resolver, $resource);
+        $this->setDefaultOptions($resolver);
 
         $options = $resolver->resolve($options);
 
@@ -45,6 +63,14 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         $this->buildAction($action, $options);
 
         return $action;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator)
+    {
+
     }
 
     /**

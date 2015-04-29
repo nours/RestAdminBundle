@@ -43,7 +43,8 @@ class AdminTestCase extends WebTestCase
      */
     protected function getClient()
     {
-        return static::createClient();
+        $client = static::createClient();
+        return $client;
     }
 
     /**

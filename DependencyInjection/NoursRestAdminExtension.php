@@ -36,5 +36,15 @@ class NoursRestAdminExtension extends Extension
         $loader->load('orm.yml');
 
         $container->setParameter('rest_admin.resource', $config['resource']);
+
+        // Default templates
+        foreach ($config['templates'] as $action => $template) {
+            $container->setParameter('rest_admin.templates.' . $action, $template);
+        }
+
+        // Default controllers
+        foreach ($config['controllers'] as $action => $controller) {
+            $container->setParameter('rest_admin.controllers.' . $action, $controller);
+        }
     }
 }

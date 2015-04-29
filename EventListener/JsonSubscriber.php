@@ -11,23 +11,25 @@
 namespace Nours\RestAdminBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\Serializer;
 use Nours\RestAdminBundle\Api\ApiEvents;
 use Nours\RestAdminBundle\Api\Event\ApiEvent;
 use Nours\RestAdminBundle\Api\Event\EventSubscriber;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * Class RendererSubscriber
+ * Class JsonSubscriber
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class RendererSubscriber implements EventSubscriber
+class JsonSubscriber implements EventSubscriber
 {
     /**
-     * @var \Twig_Environment
+     * @var Serializer
      */
-    private $twig;
+    private $serializer;
 
     public function getSubscribedEvents()
     {
@@ -36,27 +38,21 @@ class RendererSubscriber implements EventSubscriber
         );
     }
 
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(Serializer $serializer)
     {
-        $this->twig = $twig;
+        $this->serializer = $serializer;
     }
 
     public function render(ApiEvent $event)
     {
-        if ($event->getRequest()->getRequestFormat() !== 'html') {
+        if ($event->getRequest()->getRequestFormat() !== 'json') {
             return;
         }
 
-        $template = $this->twig->loadTemplate($event->getAction()->getTemplate());
+        $serialized = $this->serializer->serialize($event->getModel(), 'json');
 
-        $arguments = array(
-            'resource' => $event->getResource(),
-            'action' => $event->getAction(),
-            'model' => $event->getModel(),
-            'form' => $event->getForm() ? $event->getForm()->createView() : null
-        );
-
-        $response = new Response($template->render($arguments));
+        $response = new Response($serialized);
+        $response->headers->set('Content-Type', 'application/json');
 
         $event->setResponse($response);
     }

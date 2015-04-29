@@ -18,7 +18,7 @@ services:
 
   rest_admin.action_factory:
     class: Nours\RestAdminBundle\Loader\ActionFactory
-    arguments: [ '@rest_admin.builder_manager' ]
+    arguments: [ '@rest_admin.action_manager' ]
 
 ##############################
 # Core classes
@@ -27,36 +27,46 @@ services:
     class: Nours\RestAdminBundle\AdminManager
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
 
-  rest_admin.builder_manager:
-    class: Nours\RestAdminBundle\BuilderManager
+  rest_admin.action_manager:
+    class: Nours\RestAdminBundle\ActionManager
 
   rest_admin.core_controller:
     class: Nours\RestAdminBundle\Controller\CoreController
-    arguments: [ '@rest_admin.manager', '@rest_admin.event_dispatcher' ]
+    arguments: [ '@rest_admin.manager', '@rest_admin.event_dispatcher', '@rest_admin.action_form_factory' ]
 
   rest_admin.routing_loader:
     class: Nours\RestAdminBundle\Routing\RoutingLoader
-    arguments: [ '@rest_admin.manager', '@rest_admin.builder_manager' ]
+    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
     tags: [ { name: 'routing.loader' } ]
 
   rest_admin.event_dispatcher:
     class: Nours\RestAdminBundle\Api\ApiEventDispatcher
-    arguments: [ '@rest_admin.manager', '@rest_admin.builder_manager' ]
+    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
 
 ##############################
 # Core actions
 ##############################
   rest_admin.action_builder.index:
     class: Nours\RestAdminBundle\Action\Core\IndexActionBuilder
+    arguments: [ '%rest_admin.templates.index%', '%rest_admin.controllers.index%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.get:
     class: Nours\RestAdminBundle\Action\Core\GetActionBuilder
+    arguments: [ '%rest_admin.templates.get%', '%rest_admin.controllers.get%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.create:
     class: Nours\RestAdminBundle\Action\Core\CreateActionBuilder
+    arguments: [ '%rest_admin.templates.create%', '%rest_admin.controllers.create%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
+
+##############################
+# Forms
+##############################
+  rest_admin.action_form_factory:
+    class: Nours\RestAdminBundle\Action\ActionFormFactory
+    arguments: [ '@rest_admin.action_manager', '@form.factory', '@router' ]
 
 ##############################
 # Events
@@ -64,4 +74,9 @@ services:
   rest_admin.view_renderer_subscriber:
     class: Nours\RestAdminBundle\EventListener\RendererSubscriber
     arguments: [ '@twig' ]
+    tags: [ { name: 'rest_admin.event_subscriber' }]
+
+  rest_admin.json_renderer_subscriber:
+    class: Nours\RestAdminBundle\EventListener\JsonSubscriber
+    arguments: [ '@jms_serializer.serializer' ]
     tags: [ { name: 'rest_admin.event_subscriber' }]

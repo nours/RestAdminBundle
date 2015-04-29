@@ -1,5 +1,6 @@
 Nours\RestAdminBundle\Tests\Fixtures\Entity\Post:
   name: post
+  form: post
   actions: [ create ]
 
 Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment:

@@ -34,12 +34,8 @@ class IndexActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolver $resolver, Resource $resource)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => 'NoursRestAdminBundle:Core:index.html.twig',
-            'controller' => 'rest_admin.core_controller:indexAction'
-        ));
     }
 
     /**

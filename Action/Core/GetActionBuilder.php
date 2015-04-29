@@ -34,12 +34,8 @@ class GetActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolver $resolver, Resource $resource)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => '@NoursRestAdminBundle:core:get.html.twig',
-            'controller' => 'rest_admin.core_controller:getAction'
-        ));
     }
 
     /**

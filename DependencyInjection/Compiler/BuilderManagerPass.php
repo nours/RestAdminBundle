@@ -23,7 +23,7 @@ class BuilderManagerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('rest_admin.builder_manager');
+        $definition = $container->getDefinition('rest_admin.action_manager');
 
         $ids = $container->findTaggedServiceIds('rest_admin.action_builder');
         foreach ($ids as $id => $tags) {

@@ -46,7 +46,8 @@ class Resource
     /**
      * @var string
      */
-    private $routePrefix = '';
+    private $routePrefix;
+    private $basePrefix;
 
 
     /**
@@ -113,8 +114,14 @@ class Resource
             $this->setSlug(Inflector::pluralize($name));
         }
 
+        // Form
+        if (isset($config['form'])) {
+            $this->form = $config['form'];
+        }
+
         // Route prefix  defaults to name
-        $this->routePrefix = $name . '_';
+        $this->basePrefix  = $name . '_';
+        $this->routePrefix = $this->basePrefix;
     }
 
     /**
@@ -223,7 +230,7 @@ class Resource
         $this->parent = $parent;
 
         // Update route prefix with parent
-        $this->routePrefix = $parent->getRoutePrefix() . $this->routePrefix;
+        $this->routePrefix = $parent->getRoutePrefix() . $this->basePrefix;
     }
 
     /**

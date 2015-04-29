@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\Loader;
 
-use Nours\RestAdminBundle\BuilderManager;
+use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Resource;
 
 
@@ -22,11 +22,11 @@ use Nours\RestAdminBundle\Domain\Resource;
 class ActionFactory
 {
     /**
-     * @var BuilderManager
+     * @var ActionManager
      */
     private $builders;
 
-    public function __construct(BuilderManager $builders)
+    public function __construct(ActionManager $builders)
     {
         $this->builders = $builders;
     }

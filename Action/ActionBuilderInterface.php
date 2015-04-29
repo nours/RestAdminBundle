@@ -13,7 +13,9 @@ namespace Nours\RestAdminBundle\Action;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class ActionBuilderInterface
@@ -33,9 +35,8 @@ interface ActionBuilderInterface
      * Override to provide default options for
      *
      * @param OptionsResolver $resolver
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      */
-    public function setDefaultOptions(OptionsResolver $resolver, Resource $resource);
+    public function setDefaultOptions(OptionsResolver $resolver);
 
     /**
      * @param RoutesBuilder $builder
@@ -43,6 +44,19 @@ interface ActionBuilderInterface
      * @param Action $action
      */
     public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action);
+
+    /**
+     * Builds a form for this action.
+     *
+     * Responsible for initializing form action and method. As form needs absolute url, a UrlGeneratorInterface
+     * is provided to generate them.
+     *
+     * @param FormBuilderInterface $builder
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param UrlGeneratorInterface $generator
+     * @return mixed
+     */
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator);
 
     /**
      * @param Action $action

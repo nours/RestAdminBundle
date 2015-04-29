@@ -14,11 +14,11 @@ use Nours\RestAdminBundle\Action\ActionBuilderInterface;
 
 
 /**
- * Class BuilderManager
+ * Class ActionManager
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class BuilderManager
+class ActionManager
 {
     /**
      * @var ActionBuilderInterface[]

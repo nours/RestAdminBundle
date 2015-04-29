@@ -9,6 +9,8 @@
  */
 
 namespace Nours\RestAdminBundle\Controller;
+use Nours\RestAdminBundle\Action\ActionFormFactory;
+use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Api\ApiEventDispatcher;
 use Nours\RestAdminBundle\Api\ApiEvents;
@@ -25,15 +27,18 @@ class CoreController
 {
     private $manager;
     private $dispatcher;
+    private $formFactory;
 
     /**
      * @param AdminManager $manager
      * @param ApiEventDispatcher $dispatcher
+     * @param ActionFormFactory $formFactory
      */
-    public function __construct(AdminManager $manager, ApiEventDispatcher $dispatcher)
+    public function __construct(AdminManager $manager, ApiEventDispatcher $dispatcher, ActionFormFactory $formFactory)
     {
-        $this->manager = $manager;
-        $this->dispatcher = $dispatcher;
+        $this->manager       = $manager;
+        $this->dispatcher    = $dispatcher;
+        $this->formFactory   = $formFactory;
     }
 
     /**
@@ -66,13 +71,13 @@ class CoreController
     public function getAction(Request $request)
     {
         $event = $this->makeEvent($request);
-        $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event->copy());
 
         if ($response = $event->getResponse()) {
             return $response;
         }
 
-        $this->dispatcher->dispatch(ApiEvents::EVENT_VIEW, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_VIEW, $event->copy());
 
         return $event->getResponse();
     }
@@ -86,7 +91,7 @@ class CoreController
     public function createAction(Request $request)
     {
         $event = $this->makeEvent($request);
-        $this->dispatcher->dispatch(ApiEvents::EVENT_CREATE, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_CREATE, $event->copy());
 
         if ($response = $event->getResponse()) {
             return $response;
@@ -104,7 +109,7 @@ class CoreController
     public function editAction(Request $request)
     {
         $event = $this->makeEvent($request);
-        $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event->copy());
 
         if ($response = $event->getResponse()) {
             return $response;
@@ -122,7 +127,7 @@ class CoreController
     public function deleteAction(Request $request)
     {
         $event = $this->makeEvent($request);
-        $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_GET, $event->copy());
 
         if ($response = $event->getResponse()) {
             return $response;
@@ -141,14 +146,15 @@ class CoreController
     protected function handleForm(Request $request, ApiEvent $event)
     {
         $form = $this->getForm($event);
+        $event->setForm($form);
 
-        if ($request->getMethod() != 'GET') {
+        if ($request->getMethod() === $form->getConfig()->getMethod()) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->dispatcher->dispatch(ApiEvents::EVENT_SUCCESS, $event);
+                $event = $this->dispatcher->dispatch(ApiEvents::EVENT_SUCCESS, $event);
             } else {
-                $this->dispatcher->dispatch(ApiEvents::EVENT_ERROR, $event);
+                $event = $this->dispatcher->dispatch(ApiEvents::EVENT_ERROR, $event);
             }
 
             if ($response = $event->getResponse()) {
@@ -156,7 +162,7 @@ class CoreController
             }
         }
 
-        $this->dispatcher->dispatch(ApiEvents::EVENT_VIEW, $event);
+        $event = $this->dispatcher->dispatch(ApiEvents::EVENT_VIEW, $event->copy());
 
         return $event->getResponse();
     }
@@ -167,14 +173,7 @@ class CoreController
      */
     private function getForm(ApiEvent $event)
     {
-        if ($form = $event->getForm()) {
-            return $form;
-        }
-
-        throw new \DomainException(sprintf(
-            "Missing form for %s:%s",
-            $event->getResource()->getFullName(), $event->getAction()->getName()
-        ));
+        return $this->formFactory->createForm($event->getResource(), $event->getAction(), $event->getModel());
     }
 
     /**

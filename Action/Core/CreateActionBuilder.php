@@ -14,7 +14,9 @@ use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class GetAction
@@ -35,22 +37,28 @@ class CreateActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildAction(Action $action, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator)
     {
-        $action->setForm($options['form']);
+        $routeName = $resource->getRouteName('create');
+
+        $builder
+            ->setMethod('POST')
+            ->setAction($generator->generate($routeName))
+        ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolver $resolver, Resource $resource)
+    public function buildAction(Action $action, array $options = array())
     {
-        $resolver->setDefaults(array(
-            'template' => '@NoursRestAdminBundle:core:create.html.twig',
-            'controller' => 'rest_admin.core_controller:formAction',
-            'form' => $resource->getForm()
-        ));
-        $resolver->setRequired('form');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolver $resolver)
+    {
     }
 
     /**

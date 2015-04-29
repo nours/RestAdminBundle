@@ -31,9 +31,12 @@ class DoctrineSubscriber implements EventSubscriber
 
     public function getSubscribedEvents()
     {
+        $priority = 32;
+
         return array(
-            ApiEvents::EVENT_LOAD => 'onLoad',
-            ApiEvents::EVENT_GET  => array('onGet', 0)
+            ApiEvents::EVENT_LOAD    => array('onLoad', $priority),
+            ApiEvents::EVENT_GET     => array('onGet', $priority),
+            ApiEvents::EVENT_CREATE  => array('onCreate', $priority)
         );
     }
 
@@ -54,6 +57,15 @@ class DoctrineSubscriber implements EventSubscriber
     }
 
     public function onGet(ApiEvent $event)
+    {
+        $resource = $event->getResource();
+
+        if ($this->repository->supports($resource)) {
+
+        }
+    }
+
+    public function onCreate(ApiEvent $event)
     {
         $resource = $event->getResource();
 
