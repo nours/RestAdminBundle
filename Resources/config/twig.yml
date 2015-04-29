@@ -1,0 +1,5 @@
+services:
+  rest_admin.twig.extension:
+    class: Nours\RestAdminBundle\Twig\Extension\RestAdminExtension
+    arguments: [ '@request_stack' ]
+    tags: [ { name: 'twig.extension' }]

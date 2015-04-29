@@ -1,0 +1,67 @@
+services:
+##############################
+# Resources loading
+##############################
+  rest_admin.resolver:
+    class: Symfony\Component\Config\Loader\LoaderResolver
+    public: false
+
+  rest_admin.loader.yml:
+    class: Nours\RestAdminBundle\Loader\YamlResourceLoader
+    public: false
+    arguments: [ '@file_locator', '@rest_admin.action_factory' ]
+    tags: [ { name: rest_admin.loader }]
+
+  rest_admin.loader:
+    class: Symfony\Component\Config\Loader\DelegatingLoader
+    arguments: [ '@rest_admin.resolver' ]
+
+  rest_admin.action_factory:
+    class: Nours\RestAdminBundle\Loader\ActionFactory
+    arguments: [ '@rest_admin.builder_manager' ]
+
+##############################
+# Core classes
+##############################
+  rest_admin.manager:
+    class: Nours\RestAdminBundle\AdminManager
+    arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
+
+  rest_admin.builder_manager:
+    class: Nours\RestAdminBundle\BuilderManager
+
+  rest_admin.core_controller:
+    class: Nours\RestAdminBundle\Controller\CoreController
+    arguments: [ '@rest_admin.manager', '@rest_admin.event_dispatcher' ]
+
+  rest_admin.routing_loader:
+    class: Nours\RestAdminBundle\Routing\RoutingLoader
+    arguments: [ '@rest_admin.manager', '@rest_admin.builder_manager' ]
+    tags: [ { name: 'routing.loader' } ]
+
+  rest_admin.event_dispatcher:
+    class: Nours\RestAdminBundle\Api\ApiEventDispatcher
+    arguments: [ '@rest_admin.manager', '@rest_admin.builder_manager' ]
+
+##############################
+# Core actions
+##############################
+  rest_admin.action_builder.index:
+    class: Nours\RestAdminBundle\Action\Core\IndexActionBuilder
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
+  rest_admin.action_builder.get:
+    class: Nours\RestAdminBundle\Action\Core\GetActionBuilder
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
+  rest_admin.action_builder.create:
+    class: Nours\RestAdminBundle\Action\Core\CreateActionBuilder
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
+##############################
+# Events
+##############################
+  rest_admin.view_renderer_subscriber:
+    class: Nours\RestAdminBundle\EventListener\RendererSubscriber
+    arguments: [ '@twig' ]
+    tags: [ { name: 'rest_admin.event_subscriber' }]

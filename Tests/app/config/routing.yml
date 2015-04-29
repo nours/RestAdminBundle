@@ -1,0 +1,3 @@
+nours_admin:
+  resource: .
+  type: admin

@@ -1,0 +1,115 @@
+<?php
+/*
+ * This file is part of RestAdminBundle.
+ *
+ * (c) David Coudrier <david.coudrier@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Nours\RestAdminBundle\Tests\Api;
+
+use Nours\RestAdminBundle\Api\ApiEvents;
+use Nours\RestAdminBundle\Api\Event\FormEvent;
+use Nours\RestAdminBundle\Api\FormKernel;
+use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\Fixtures\Entity\Post;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+
+/**
+ * Class FormKernelTest
+ * 
+ * @author David Coudrier <david.coudrier@gmail.com>
+ */
+class FormKernelTest extends AdminTestCase
+{
+    /**
+     * @var FormKernel
+     */
+    private $formKernel;
+
+    public function setUp()
+    {
+        $this->formKernel = $this->get('rest_admin.kernel.form');
+    }
+
+    public function testFormKernelGetResponse()
+    {
+        $resource = $this->getAdminManager()->getResourceCollection()->get('post');
+        $action = $resource->getAction('create');
+
+        $post = new Post(1);
+
+        $request = Request::create('/posts/new');
+        $request->attributes->add(array(
+            '_resource' => 'post',
+            '_action' => 'create'
+        ));
+
+        $dispatcher = $this->formKernel->getDispatcher();
+
+        $form = $this->getMockBuilder('Symfony\Component\Form\FormInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $dispatcher->addListener(ApiEvents::REQUEST_EVENT, $resource, $action, function(FormEvent $event) use ($form) {
+            $event->setForm($form);
+        });
+
+        $response = new Response();
+        $foundForm = null;
+        $dispatcher->addListener(ApiEvents::RESPONSE_EVENT, $resource, $action, function(FormEvent $event) use (&$foundForm, $response) {
+            $foundForm = $event->getForm();
+            $event->setResponse($response);
+        });
+
+        $result = $this->formKernel->handle($request);
+
+        $this->assertSame($response, $result);
+        $this->assertSame($form, $foundForm);
+    }
+
+    public function testFormKernelPostResponse()
+    {
+        $resource = $this->getAdminManager()->getResourceCollection()->get('post');
+        $action = $resource->getAction('create');
+
+        $post = new Post(1);
+
+        $request = Request::create('/posts/new');
+        $request->attributes->add(array(
+            '_resource' => 'post',
+            '_action' => 'create'
+        ));
+        $request->setMethod('POST');
+
+        $dispatcher = $this->formKernel->getDispatcher();
+
+        $form = $this->getMockBuilder('Symfony\Component\Form\FormInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $form->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $dispatcher->addListener(ApiEvents::REQUEST_EVENT, $resource, $action, function(FormEvent $event) use ($form) {
+            $event->setForm($form);
+        });
+
+        $response = new Response();
+        $foundForm = null;
+        $dispatcher->addListener(ApiEvents::SUCCESS_EVENT, $resource, $action, function(FormEvent $event) use (&$foundForm, $response) {
+            $foundForm = $event->getForm();
+            $event->setResponse($response);
+        });
+
+        $result = $this->formKernel->handle($request);
+
+        $this->assertSame($response, $result);
+        $this->assertSame($form, $foundForm);
+    }
+}

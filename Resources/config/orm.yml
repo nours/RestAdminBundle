@@ -1,0 +1,9 @@
+services:
+  rest_admin.orm.repository:
+    class: Nours\RestAdminBundle\Doctrine\DoctrineRepository
+    arguments: [ '@doctrine.orm.default_entity_manager' ]
+
+  rest_admin.orm.event_subscriber:
+    class: Nours\RestAdminBundle\EventListener\DoctrineSubscriber
+    arguments: [ '@rest_admin.orm.repository' ]
+    tags: [ { name: 'rest_admin.event_subscriber' }]

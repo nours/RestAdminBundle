@@ -1,0 +1,8 @@
+Nours\RestAdminBundle\Tests\Fixtures\Entity\Post:
+  name: post
+  actions: [ create ]
+
+Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment:
+  name: comment
+  parent: post
+  actions: []

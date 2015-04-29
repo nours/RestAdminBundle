@@ -1,0 +1,7 @@
+vendor
+composer.lock
+
+Tests/app/cache
+Tests/app/logs
+
+.idea
