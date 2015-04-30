@@ -1,7 +1,7 @@
 Nours\RestAdminBundle\Tests\Fixtures\Entity\Post:
   name: post
   form: post
-  actions: [ create ]
+  actions: [ create, edit, delete ]
 
 Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment:
   name: comment

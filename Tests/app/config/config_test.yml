@@ -43,6 +43,8 @@ nours_rest_admin:
         index: index.html.twig
         get: get.html.twig
         create: create.html.twig
+        edit: edit.html.twig
+        delete: delete.html.twig
 
 doctrine:
     dbal:

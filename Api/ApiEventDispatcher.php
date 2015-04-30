@@ -45,16 +45,14 @@ class ApiEventDispatcher
     /**
      * @var ActionManager
      */
-    private $builders;
+    private $actionManager;
 
 
-    public function __construct(AdminManager $manager, ActionManager $builders)
+    public function __construct(AdminManager $manager, ActionManager $actionManager)
     {
         $this->manager = $manager;
-        $this->builders = $builders;
+        $this->actionManager = $actionManager;
         $this->dispatcher = new EventDispatcher();
-
-        // Register globally configured events
     }
 
     /**
@@ -94,6 +92,7 @@ class ApiEventDispatcher
     public function dispatch($eventName, ApiEvent $event)
     {
         $resource = $event->getResource();
+
         $events = array(
             $resource->getFullName() . '.' . $eventName, $eventName
         );

@@ -61,6 +61,16 @@ services:
     arguments: [ '%rest_admin.templates.create%', '%rest_admin.controllers.create%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
+  rest_admin.action_builder.edit:
+    class: Nours\RestAdminBundle\Action\Core\EditActionBuilder
+    arguments: [ '%rest_admin.templates.edit%', '%rest_admin.controllers.edit%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
+  rest_admin.action_builder.delete:
+    class: Nours\RestAdminBundle\Action\Core\DeleteActionBuilder
+    arguments: [ '%rest_admin.templates.delete%', '%rest_admin.controllers.delete%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
 ##############################
 # Forms
 ##############################

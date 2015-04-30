@@ -209,13 +209,46 @@ class CoreControllerTest extends AdminTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * Create action dispatches a GET event, which loads a resource.
      */
-    private function createForm()
+    public function testEditFormAction()
     {
-        $form = $this->getMockBuilder('Symfony\Component\Form\FormInterface')
-            ->getMock();
+        $client = $this->getClient();
 
-        return $form;
+        $post = new Post(24);
+
+        $this->getDispatcher()->addEventListener(ApiEvents::EVENT_GET, function(ApiEvent $event) use ($post) {
+            $event->setModel($post);
+        });
+
+        $crawler = $client->request('GET', '/posts/24/edit');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>edit post 24</h1>',
+            $client->getResponse()->getContent()
+        );
+    }
+
+    /**
+     * Create action dispatches a GET event, which loads a resource.
+     */
+    public function testDeleteFormAction()
+    {
+        $client = $this->getClient();
+
+        $post = new Post(25);
+
+        $this->getDispatcher()->addEventListener(ApiEvents::EVENT_GET, function(ApiEvent $event) use ($post) {
+            $event->setModel($post);
+        });
+
+        $crawler = $client->request('GET', '/posts/25/delete');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>delete post 25</h1>',
+            $client->getResponse()->getContent()
+        );
     }
 }
