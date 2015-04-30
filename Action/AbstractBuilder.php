@@ -48,35 +48,21 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         ));
         $resolver->setDefaults(array(
             'template'   => $this->template,
-            'controller' => $this->controller
+            'controller' => $this->controller,
+            'form' => null
         ));
 
         $this->setDefaultOptions($resolver);
 
         $options = $resolver->resolve($options);
 
-        $action = new Action();
-        $action->setName($this->getName());
-        $action->setController($options['controller']);
-        $action->setTemplate($options['template']);
-
-        $this->buildAction($action, $options);
-
-        return $action;
+        return new Action($this->getName(), $options);
     }
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator)
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildAction(Action $action, array $options = array())
     {
 
     }

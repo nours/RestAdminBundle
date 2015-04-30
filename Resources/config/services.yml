@@ -90,3 +90,14 @@ services:
     class: Nours\RestAdminBundle\EventListener\JsonSubscriber
     arguments: [ '@jms_serializer.serializer' ]
     tags: [ { name: 'rest_admin.event_subscriber' }]
+
+
+  rest_admin.listener.request:
+    class: Nours\RestAdminBundle\EventListener\RequestListener
+    arguments: [ '@rest_admin.manager' ]
+    tags: [ { name: 'kernel.event_subscriber' }]
+
+  rest_admin.listener.doctrine:
+    class: Nours\RestAdminBundle\EventListener\DoctrineListener
+    arguments: [ '@doctrine' ]
+    tags: [ { name: 'kernel.event_subscriber' }]

@@ -59,12 +59,6 @@ interface ActionBuilderInterface
     public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator);
 
     /**
-     * @param Action $action
-     * @param array $options
-     */
-    public function buildAction(Action $action, array $options = array());
-
-    /**
      * @return string
      */
     public function getName();

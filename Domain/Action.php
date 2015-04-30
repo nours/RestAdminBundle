@@ -24,36 +24,17 @@ class Action
      */
     private $name;
 
-    /**
-     * The uri part of this action
-     *
-     * @var string
-     */
-    private $slug;
+    private $options = array();
 
     /**
-     * @var string
+     * @param $name
+     * @param $options
      */
-    private $template;
-
-    /**
-     * @var string
-     */
-    private $form;
-
-    /**
-     * Role used for basic access management.
-     *
-     * @var string
-     */
-    private $role;
-
-    /**
-     * Controller string
-     *
-     * @var string
-     */
-    private $controller;
+    public function __construct($name, $options)
+    {
+        $this->name    = $name;
+        $this->options = $options;
+    }
 
     /**
      * @return string
@@ -64,27 +45,13 @@ class Action
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
+     * @param string $key
+     * @param mixed $default
      * @return string
      */
-    public function getSlug()
+    public function getOption($key, $default = null)
     {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
+        return isset($this->options[$key]) ? $this->options[$key] : $default;
     }
 
     /**
@@ -92,15 +59,7 @@ class Action
      */
     public function getForm()
     {
-        return $this->form;
-    }
-
-    /**
-     * @param string $form
-     */
-    public function setForm($form)
-    {
-        $this->form = $form;
+        return $this->options['form'];
     }
 
     /**
@@ -108,15 +67,7 @@ class Action
      */
     public function getRole()
     {
-        return $this->role;
-    }
-
-    /**
-     * @param string $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
+        return $this->getOption('role');
     }
 
     /**
@@ -124,15 +75,7 @@ class Action
      */
     public function getTemplate()
     {
-        return $this->template;
-    }
-
-    /**
-     * @param string $template
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
+        return $this->getOption('template');
     }
 
     /**
@@ -140,14 +83,6 @@ class Action
      */
     public function getController()
     {
-        return $this->controller;
-    }
-
-    /**
-     * @param string $controller
-     */
-    public function setController($controller)
-    {
-        $this->controller = $controller;
+        return $this->getOption('controller');
     }
 }

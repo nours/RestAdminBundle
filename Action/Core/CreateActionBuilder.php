@@ -50,13 +50,6 @@ class CreateActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildAction(Action $action, array $options = array())
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
     }

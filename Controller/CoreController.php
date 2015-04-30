@@ -182,8 +182,8 @@ class CoreController
      */
     private function makeEvent(Request $request)
     {
-        $resource = $this->manager->getResource($request->attributes->get('_resource'));
-        $action = $resource->getAction($request->attributes->get('_action'));
+        $resource = $request->attributes->get('_resource');
+        $action = $request->attributes->get('_action');
 
         return new ApiEvent($request, $resource, $action);
     }
