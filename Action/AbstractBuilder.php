@@ -31,7 +31,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
      * @param $template
      * @param $controller
      */
-    public function __construct($template, $controller)
+    public function __construct($template = null, $controller = null)
     {
         $this->template   = $template;
         $this->controller = $controller;
@@ -62,7 +62,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator)
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
     {
 
     }

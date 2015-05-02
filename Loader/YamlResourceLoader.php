@@ -93,7 +93,7 @@ class YamlResourceLoader extends FileLoader
     {
         $resource = new Resource($name, $config);
 
-        $this->actionFactory->configureActions($resource, $config);
+        $this->actionFactory->configureActions($resource, isset($config['actions']) ? $config['actions'] : array());
 
         return $resource;
     }

@@ -8,30 +8,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Action\Core;
+namespace Nours\RestAdminBundle\Tests\Fixtures\Action;
 
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class GetAction
+ * Class EditActionBuilder
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class CreateActionBuilder extends AbstractBuilder
+class PublishActionBuilder extends AbstractBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
     {
-        $builder->addRoute($resource, $action, 'create_form', 'GET', $resource->getUriPath('new'));
-        $builder->addRoute($resource, $action, 'create', 'POST', $resource->getUriPath());
+        $builder->addRoute($resource, $action, 'publish_form', 'GET', $resource->getResourceUriPath('publish'));
+        $builder->addRoute($resource, $action, 'publish', 'PUT', $resource->getResourceUriPath('publish'));
+        $builder->addRoute($resource, $action, 'unpublish', 'DELETE', $resource->getResourceUriPath('publish'));
     }
 
     /**
@@ -39,10 +41,14 @@ class CreateActionBuilder extends AbstractBuilder
      */
     public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
     {
-        $routeName = $resource->getRouteName('create');
+        if (!$model instanceof Comment) {
+            throw new \InvalidArgumentException("Comment expected !");
+        }
+
+        $routeName = $resource->getRouteName('publish');
 
         $builder
-            ->setMethod('POST')
+            ->setMethod('PUT')
             ->setAction($generator->generate($routeName))
         ;
     }
@@ -59,6 +65,6 @@ class CreateActionBuilder extends AbstractBuilder
      */
     public function getName()
     {
-        return 'create';
+        return 'publish';
     }
 }

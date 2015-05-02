@@ -2,3 +2,7 @@ services:
   tests.form.post:
     class: Nours\RestAdminBundle\Tests\Fixtures\Form\PostType
     tags: [ { name: form.type, alias: post } ]
+
+  tests.action.publish:
+    class: Nours\RestAdminBundle\Tests\Fixtures\Action\PublishActionBuilder
+    tags: [ { name: 'rest_admin.action_builder' } ]

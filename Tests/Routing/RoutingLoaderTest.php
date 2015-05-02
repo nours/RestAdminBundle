@@ -91,5 +91,12 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('post', $postCreateForm->getDefault('_resource'));
         $this->assertEquals('create', $postCreateForm->getDefault('_action'));
         $this->assertEquals(array('GET'), $postCreateForm->getMethods());
+
+        $commentPublish = $this->collection->get('post_comment_publish_form');
+
+        $this->assertNotNull($commentPublish);
+        $this->assertEquals('/posts/{post}/comments/{comment}/publish.{_format}', $commentPublish->getPath());
+        $this->assertEquals('post.comment', $commentPublish->getDefault('_resource'));
+        $this->assertEquals('publish', $commentPublish->getDefault('_action'));
     }
 }

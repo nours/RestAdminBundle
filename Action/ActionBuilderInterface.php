@@ -54,9 +54,9 @@ interface ActionBuilderInterface
      * @param FormBuilderInterface $builder
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param UrlGeneratorInterface $generator
-     * @return mixed
+     * @param mixed $model
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator);
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model);
 
     /**
      * @return string

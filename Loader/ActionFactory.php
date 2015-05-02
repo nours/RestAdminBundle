@@ -40,7 +40,7 @@ class ActionFactory
      */
     public function configureActions(Resource $resource, $configs)
     {
-        $actions = empty($configs['actions']) ? array() : $this->prepareConfig($configs['actions']);
+        $actions = $this->prepareConfig($configs);
 
         // Append default actions
         foreach (array('index', 'get') as $name) {

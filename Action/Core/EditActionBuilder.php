@@ -37,7 +37,7 @@ class EditActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator)
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
     {
         $routeName = $resource->getRouteName('edit');
 

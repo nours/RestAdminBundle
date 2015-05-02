@@ -75,16 +75,7 @@ class AnnotationClassLoader implements LoaderInterface
 
             $resource = $this->processResource($annotation);
 
-            foreach ($class->getMethods() as $method) {
-                foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                    if ($annot instanceof $this->routeAnnotationClass) {
-//                        $this->addRoute($collection, $annot, $globals, $class, $method);
-                    }
-                }
-            }
-            $configs = array();
-
-            $this->factory->configureActions($resource, $configs);
+            $this->factory->configureActions($resource, $this->processActions($class));
 
             $collection->add($resource);
         }
@@ -92,6 +83,29 @@ class AnnotationClassLoader implements LoaderInterface
 
 
         return $collection;
+    }
+
+    private function processActions(\ReflectionClass $class)
+    {
+        $configs = array();
+
+        // Class annotations
+        foreach ($this->reader->getClassAnnotations($class) as $annotation) {
+            if ($annotation instanceof $this->actionAnnotationClass) {
+                $configs[$annotation->name] = $annotation->options;
+            }
+        }
+
+        // Methods annotations
+        foreach ($class->getMethods() as $method) {
+            foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
+                if ($annotation instanceof $this->actionAnnotationClass) {
+                    $configs[$annotation->name] = $annotation->options;
+                }
+            }
+        }
+
+        return $configs;
     }
 
     /**

@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class BuilderManagerPass implements CompilerPassInterface
+class ActionManagerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

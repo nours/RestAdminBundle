@@ -23,8 +23,20 @@ use Nours\RestAdminBundle\Annotation as Rest;
  *  parent = "post",
  *  class = "Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment"
  * )
+ *
+ * @Rest\Action(
+ *  "create"
+ * )
  */
 class CommentController
 {
+    /**
+     * @Rest\Action(
+     *  "publish"
+     * )
+     */
+    public function publishAction()
+    {
 
+    }
 }
