@@ -46,8 +46,8 @@ class DoctrineListener implements EventSubscriberInterface
         if ($resource) {
             $class = $resource->getClass();
 
-            if ($em = $this->doctrine->getManagerForClass($class)) {
-            }
+//            if ($em = $this->doctrine->getManagerForClass($class)) {
+//            }
         }
     }
 

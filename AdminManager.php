@@ -56,6 +56,7 @@ class AdminManager
     {
         if (empty($this->resources)) {
             $this->resources = $this->loader->load($this->resource);
+            $this->resources->resolveParents();
         }
 
         return $this->resources;

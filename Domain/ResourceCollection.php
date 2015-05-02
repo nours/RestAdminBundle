@@ -9,6 +9,7 @@
  */
 
 namespace Nours\RestAdminBundle\Domain;
+use Symfony\Component\Config\Resource\ResourceInterface;
 
 
 /**
@@ -24,18 +25,17 @@ class ResourceCollection implements \Countable, \IteratorAggregate
     private $resources = array();
 
     /**
+     * @var array
+     */
+    private $configResources = array();
+
+    /**
      * Adds a resource, after resolving it's parent.
      *
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param null $parent
      */
-    public function add(Resource $resource, $parent = null)
+    public function add(Resource $resource)
     {
-        if ($parent) {
-            $parent = $this->get($parent);
-            $resource->setParent($parent);
-        }
-
         $name = $resource->getFullName();
         $this->resources[$name] = $resource;
     }
@@ -60,6 +60,32 @@ class ResourceCollection implements \Countable, \IteratorAggregate
     }
 
     /**
+     * Resolves parent resource elements
+     */
+    public function resolveParents()
+    {
+        $this->resolving = array();
+        foreach ($this->resources as $name => $resource) {
+            $this->resolveResourceParent($resource);
+        }
+    }
+
+    private function resolveResourceParent(Resource $resource)
+    {
+        $parent = $resource->getParent();
+
+        // Do nothing if no parent or already resolved
+        if (empty($parent) || $parent instanceof Resource) {
+            return;
+        }
+
+        $parent = $this->get($parent);
+        $this->resolveResourceParent($parent);
+
+        $resource->setParent($parent);
+    }
+
+    /**
      * @return int
      */
     public function count()
@@ -73,5 +99,39 @@ class ResourceCollection implements \Countable, \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->resources);
+    }
+
+    /**
+     * @param ResourceInterface $resource
+     * @return $this
+     */
+    public function addConfigResource(ResourceInterface $resource)
+    {
+        $this->configResources[] = $resource;
+        return $this;
+    }
+
+    /**
+     * @return ResourceInterface[]
+     */
+    public function getConfigResources()
+    {
+        return $this->configResources;
+    }
+
+    /**
+     * Merges another collection in this one.
+     *
+     * @param self $other
+     */
+    public function merge(ResourceCollection $other)
+    {
+        foreach ($other->resources as $resource) {
+            $this->add($resource);
+        }
+
+        foreach ($other->configResources as $resource) {
+            $this->addConfigResource($resource);
+        }
     }
 }

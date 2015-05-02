@@ -1,9 +1,15 @@
-Nours\RestAdminBundle\Tests\Fixtures\Entity\Post:
-  name: post
-  form: post
-  actions: [ create, edit, delete ]
+imports:
+  fixture_controller:
+    resource: '@NoursRestAdminBundle/Tests/Fixtures/Controller/'
+    type: 'annotation'
 
-Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment:
-  name: comment
-  parent: post
-  actions: []
+resources:
+  post:
+    class: Nours\RestAdminBundle\Tests\Fixtures\Entity\Post
+    form: post
+    actions: [ create, edit, delete ]
+
+#  comment:
+#    class: Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment
+#    parent: post
+#    actions: []

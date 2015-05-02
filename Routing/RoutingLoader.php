@@ -26,9 +26,9 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutingLoader extends Loader
 {
     /**
-     * @var AdminManager
+     * @var \Nours\RestAdminBundle\Domain\ResourceCollection
      */
-    private $manager;
+    private $collection;
 
     /**
      * @var ActionManager
@@ -41,7 +41,7 @@ class RoutingLoader extends Loader
      */
     public function __construct(AdminManager $manager, ActionManager $factory)
     {
-        $this->manager = $manager;
+        $this->collection = $manager->getResourceCollection();
         $this->builders = $factory;
     }
 
@@ -54,7 +54,7 @@ class RoutingLoader extends Loader
         $routesBuilder = new RoutesBuilder($routes);
 
         // Iterate on resources
-        foreach ($this->manager->getResourceCollection() as $resource) {
+        foreach ($this->collection as $resource) {
             /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
 
             foreach ($resource->getActions() as $action) {

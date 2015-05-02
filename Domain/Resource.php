@@ -96,12 +96,12 @@ class Resource
     private $layout;
 
     /**
-     * @param string $class
+     * @param string $name
      * @param array $config
      */
-    public function __construct($class, array $config)
+    public function __construct($name, array $config)
     {
-        $name = $config['name'];
+        $class = $config['class'];
 
         $this->setClass($class);
         $this->setIdentifier(isset($config['identifier']) ? $config['identifier'] : 'id');
@@ -119,9 +119,33 @@ class Resource
             $this->form = $config['form'];
         }
 
-        // Route prefix  defaults to name
-        $this->basePrefix  = $name . '_';
+        // Parent
+        if (isset($config['parent'])) {
+            $this->parent = $config['parent'];
+        }
+
+        $this->basePrefix = $name . '_';
         $this->routePrefix = $this->basePrefix;
+    }
+
+    /**
+     * @param $name
+     * @param $class
+     * @param $parent
+     * @param $identifier
+     * @param $form
+     * @param null $slug
+     * @return static
+     */
+    public static function create($name, $class, $parent, $identifier, $form, $slug = null)
+    {
+        return new static($name, array(
+            'class' => $class,
+            'parent' => $parent,
+            'identifier' => $identifier,
+            'form' => $form,
+            'slug' => $slug
+        ));
     }
 
     /**
@@ -176,15 +200,11 @@ class Resource
         }
 
         $parts = array();
-        $current = $this;
 
-        while ($parent = $current->getParent()) {
-            $parts[] = $parent->getName();
-
-            $current = $parent;
+        if ($this->parent) {
+            $parts[] = $this->parent;
         }
 
-        $parts = array_reverse($parts);
         $parts[] = $this->name;
 
         return $this->fullName = implode('.', $parts);
@@ -225,12 +245,11 @@ class Resource
     /**
      * @param \Nours\RestAdminBundle\Domain\Resource $parent
      */
-    public function setParent($parent)
+    public function setParent(Resource $parent)
     {
         $this->parent = $parent;
 
-        // Update route prefix with parent
-        $this->routePrefix = $parent->getRoutePrefix() . $this->basePrefix;
+        $this->routePrefix = $parent->routePrefix . $this->basePrefix;
     }
 
     /**
@@ -378,22 +397,14 @@ class Resource
         ));
     }
 
-
-    /**
-     * @return string
-     */
-    public function getRoutePrefix()
-    {
-        return $this->routePrefix;
-    }
-
-    /**
-     * @param string $routePrefix
-     */
-    public function setRoutePrefix($routePrefix)
-    {
-        $this->routePrefix = $routePrefix;
-    }
+//
+//    /**
+//     * @param string $routePrefix
+//     */
+//    public function setRoutePrefix($routePrefix)
+//    {
+//        $this->routePrefix = $routePrefix;
+//    }
 
     /**
      * @param string $name

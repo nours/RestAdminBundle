@@ -2,19 +2,37 @@ services:
 ##############################
 # Resources loading
 ##############################
-  rest_admin.resolver:
-    class: Symfony\Component\Config\Loader\LoaderResolver
-    public: false
-
   rest_admin.loader.yml:
     class: Nours\RestAdminBundle\Loader\YamlResourceLoader
     public: false
     arguments: [ '@file_locator', '@rest_admin.action_factory' ]
     tags: [ { name: rest_admin.loader }]
 
+  rest_admin.loader.annotation_file:
+    class: Nours\RestAdminBundle\Loader\AnnotationFileLoader
+    public: false
+    arguments: [ '@file_locator', '@rest_admin.loader.annotation_class' ]
+    tags: [ { name: rest_admin.loader }]
+
+  rest_admin.loader.annotation_directory:
+    class: Nours\RestAdminBundle\Loader\AnnotationDirectoryLoader
+    public: false
+    arguments: [ '@file_locator', '@rest_admin.loader.annotation_file' ]
+    tags: [ { name: rest_admin.loader }]
+
+  rest_admin.loader.annotation_class:
+    class: Nours\RestAdminBundle\Loader\AnnotationClassLoader
+    public: false
+    arguments: [ '@annotation_reader', '@rest_admin.action_factory' ]
+#    tags: [ { name: rest_admin.loader }]
+
+  rest_admin.loader_resolver:
+    class: Symfony\Component\Config\Loader\LoaderResolver
+    public: false
+
   rest_admin.loader:
     class: Symfony\Component\Config\Loader\DelegatingLoader
-    arguments: [ '@rest_admin.resolver' ]
+    arguments: [ '@rest_admin.loader_resolver' ]
 
   rest_admin.action_factory:
     class: Nours\RestAdminBundle\Loader\ActionFactory

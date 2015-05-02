@@ -9,3 +9,17 @@ if (!is_file($loaderFile = __DIR__.'/../vendor/autoload.php')) {
 $loader = require $loaderFile;
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
+// Loads bundle annotations
+AnnotationRegistry::registerLoader(function($class) {
+    $namespace = 'Nours\RestAdminBundle\Annotation';
+    if (strpos($class, $namespace) === 0) {
+        $className = explode('\\', $class);
+        $className = array_pop($className);
+
+        $file = __DIR__ . '/../Annotation/' . $className . '.php';
+
+        require $file;
+        return true;
+    }
+});

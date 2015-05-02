@@ -23,7 +23,7 @@ class LoaderResolverPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('rest_admin.resolver');
+        $definition = $container->getDefinition('rest_admin.loader_resolver');
 
         $ids = $container->findTaggedServiceIds('rest_admin.loader');
         foreach ($ids as $id => $tags) {

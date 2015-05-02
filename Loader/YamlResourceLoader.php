@@ -14,6 +14,7 @@ use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -58,35 +59,43 @@ class YamlResourceLoader extends FileLoader
         }
 
         $resources = new ResourceCollection();
+        $resources->addConfigResource(new FileResource($path));
 
-        // todo : implement sub collections
-        foreach ($configs as $class => $config) {
-            $resource = $this->loadResource($class, $config);
+        // Process resources
+        if (isset($configs['resources'])) {
+            foreach ($configs['resources'] as $name => $config) {
+                $resource = $this->loadResource($name, $config);
 
-            $resources->add($resource, isset($config['parent']) ? $config['parent'] : null);
+                $resources->add($resource);
+            }
+        }
+
+        // Process imports
+        if (isset($configs['imports'])) {
+            foreach ($configs['imports'] as $name => $config) {
+//                var_dump($config['resource'], self::$loading);
+                self::$loading = array();
+                $import = $this->import($config['resource'], isset($config['type']) ? $config['type'] : null);
+
+                $resources->merge($import);
+            }
         }
 
         return $resources;
     }
 
     /**
-     * @param string $class
+     * @param string $name
      * @param array $config
      * @return Resource
      */
-    protected function loadResource($class, array $config)
+    protected function loadResource($name, array $config)
     {
-        $resource = new Resource($class, $config);
+        $resource = new Resource($name, $config);
 
         $this->actionFactory->configureActions($resource, $config);
 
         return $resource;
-    }
-
-
-    protected function makeResourceName($class)
-    {
-
     }
 
     /**

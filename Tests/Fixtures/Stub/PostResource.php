@@ -21,8 +21,8 @@ class PostResource extends Resource
 {
     public function __construct()
     {
-        parent::__construct('Nours\RestAdminBundle\Tests\Fixtures\Entity\Post', array(
-            'name' => 'post'
+        parent::__construct('post', array(
+            'class' => 'Nours\RestAdminBundle\Tests\Fixtures\Entity\Post'
         ));
     }
 }

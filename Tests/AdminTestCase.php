@@ -79,4 +79,12 @@ class AdminTestCase extends WebTestCase
 
 
 
+    /**
+     * Clean up Kernel usage in this test.
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
+
 }
