@@ -41,6 +41,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
         $publish = $resource->getAction('publish');
 
         $this->assertNotNull($publish);
+        $this->assertEquals('tests.controller.comment:publishAction', $publish->getController());
     }
 
 }

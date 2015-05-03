@@ -21,7 +21,8 @@ use Nours\RestAdminBundle\Annotation as Rest;
  * @Rest\Resource(
  *  name = "comment",
  *  parent = "post",
- *  class = "Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment"
+ *  class = "Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment",
+ *  service = "tests.controller.comment"
  * )
  *
  * @Rest\Action(

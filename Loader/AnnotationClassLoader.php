@@ -75,7 +75,7 @@ class AnnotationClassLoader implements LoaderInterface
 
             $resource = $this->processResource($annotation);
 
-            $this->factory->configureActions($resource, $this->processActions($class));
+            $this->factory->configureActions($resource, $this->processActions($class, $annotation));
 
             $collection->add($resource);
         }
@@ -85,7 +85,7 @@ class AnnotationClassLoader implements LoaderInterface
         return $collection;
     }
 
-    private function processActions(\ReflectionClass $class)
+    private function processActions(\ReflectionClass $class, $resourceAnnotation)
     {
         $configs = array();
 
@@ -100,12 +100,23 @@ class AnnotationClassLoader implements LoaderInterface
         foreach ($class->getMethods() as $method) {
             foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
                 if ($annotation instanceof $this->actionAnnotationClass) {
-                    $configs[$annotation->name] = $annotation->options;
+                    $configs[$annotation->name] = array_merge($annotation->options, array(
+                        'controller' => $this->getControllerName($resourceAnnotation, $method)
+                    ));
                 }
             }
         }
 
         return $configs;
+    }
+
+    private function getControllerName($resourceAnnotation, \ReflectionMethod $method)
+    {
+        if (!($service = $resourceAnnotation->service)) {
+            throw new \DomainException("service param must be set on @Resource annotation to use @Action on methods");
+        }
+
+        return $service . ':' . $method->getName();
     }
 
     /**

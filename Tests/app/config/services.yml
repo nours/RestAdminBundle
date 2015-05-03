@@ -1,4 +1,7 @@
 services:
+  tests.controller.comment:
+    class: Nours\RestAdminBundle\Tests\Fixtures\Controller\CommentController
+
   tests.form.post:
     class: Nours\RestAdminBundle\Tests\Fixtures\Form\PostType
     tags: [ { name: form.type, alias: post } ]

@@ -17,8 +17,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
- * Class RequestListener
- * 
+ * RequestListener who generates resource and action attributes based
+ * on infos provided by the routing loader.
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class RequestListener implements EventSubscriberInterface
@@ -37,7 +38,7 @@ class RequestListener implements EventSubscriberInterface
         $resourceName = $attributes->get('_resource');
         $actionName   = $attributes->get('_action');
 
-        if ($resourceName) {
+        if ($resourceName && $actionName) {
             if ($resource = $this->adminManager->getResource($resourceName)) {
                 $action = $resource->getAction($actionName);
                 if (!$action) {

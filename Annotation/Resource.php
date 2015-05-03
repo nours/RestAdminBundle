@@ -16,4 +16,6 @@ class Resource
     public $identifier;
     public $form;
     public $templates;
+
+    public $service;
 }

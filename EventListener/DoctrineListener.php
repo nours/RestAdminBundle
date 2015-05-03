@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
- * Class DoctrineListener
+ * Generates the model based on
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

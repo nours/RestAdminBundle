@@ -33,7 +33,10 @@ class NoursRestAdminExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('twig.yml');
-        $loader->load('orm.yml');
+
+        if ($config['listeners']['orm']) {
+            $loader->load('orm.yml');
+        }
 
         $container->setParameter('rest_admin.resource', $config['resource']);
 
