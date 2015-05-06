@@ -13,19 +13,26 @@ namespace Nours\RestAdminBundle\Annotation;
 use Doctrine\Common\Annotations\Annotation;
 
 /**
+ * Class can either be passed as default or as class argument.
+ *
  * @Annotation
  * @Target("CLASS")
  */
 class Resource
 {
-    public $name;
+    /**
+     * The resource class name
+     *
+     * @var string
+     */
     public $class;
-    public $parent;
-    public $identifier;
-    public $form;
-    public $slug;
 
-    public $options;
+    /**
+     * The resource config array
+     *
+     * @var array
+     */
+    public $config;
 
     /**
      * Controller service id
@@ -33,4 +40,26 @@ class Resource
      * @var string
      */
     public $service;
+
+
+    public function __construct(array $values)
+    {
+        if (isset($values['class'])) {
+            $this->class = $values['class'];
+        } elseif (isset($values['value'])) {
+            $this->class = $values['value'];
+        } else {
+            throw new \InvalidArgumentException("Missing resource class");
+        }
+
+        unset($values['class']);
+        unset($values['value']);
+
+        if (isset($values['service'])) {
+            $this->service = $values['service'];
+            unset($values['service']);
+        }
+
+        $this->config = $values;
+    }
 }

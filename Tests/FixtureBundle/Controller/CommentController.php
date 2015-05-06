@@ -21,9 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @author David Coudrier <david.coudrier@gmail.com>
  *
  * @Rest\Resource(
- *  name = "comment",
+ *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
  *  parent = "post",
- *  class = "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
  *  service = "tests.controller.comment"
  * )
  *

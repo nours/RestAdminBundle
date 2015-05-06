@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Loader;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Inflector\Inflector;
 use Nours\RestAdminBundle\Annotation\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -110,14 +111,14 @@ class AnnotationClassLoader implements LoaderInterface
             }
         }
 
-        return new \Nours\RestAdminBundle\Domain\Resource($annotation->name, array(
-            'class' => $annotation->class,
-            'parent' => $annotation->parent,
-            'identifier' => $annotation->identifier,
-            'form' => $annotation->form,
-            'slug' => $annotation->slug,
-            'factory' => $factory,
-        ));
+        $resourceClass  = $annotation->class;
+        $config = $annotation->config;
+        $name   = isset($config['name']) ? $config['name'] : $this->guessResourceName($resourceClass);
+
+        $config['class']   = $resourceClass;
+        $config['factory'] = $factory;
+
+        return new \Nours\RestAdminBundle\Domain\Resource($name, $config);
     }
 
     private function processActions(\ReflectionClass $class, $resourceAnnotation)
@@ -159,6 +160,13 @@ class AnnotationClassLoader implements LoaderInterface
         }
 
         return $service . ':' . $method->getName();
+    }
+
+    private function guessResourceName($className)
+    {
+        $exploded = explode("\\", $className);
+
+        return Inflector::tableize(end($exploded));
     }
 
     /**

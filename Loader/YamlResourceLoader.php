@@ -54,10 +54,6 @@ class YamlResourceLoader extends FileLoader
 
         $configs = $this->getYamlParser()->parse(file_get_contents($path));
 
-        if (empty($configs)) {
-            return array();
-        }
-
         $resources = new ResourceCollection();
         $resources->addConfigResource(new FileResource($path));
 
