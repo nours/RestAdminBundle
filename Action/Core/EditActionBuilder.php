@@ -31,19 +31,19 @@ class EditActionBuilder extends AbstractBuilder
     public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
     {
         $builder->addRoute($resource, $action, 'edit_form', 'GET', $resource->getResourceUriPath('edit'));
-        $builder->addRoute($resource, $action, 'edit', 'PUT', $resource->getUriPath());
+        $builder->addRoute($resource, $action, 'edit', 'PUT', $resource->getResourceUriPath());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
     {
         $routeName = $resource->getRouteName('edit');
 
         $builder
             ->setMethod('PUT')
-            ->setAction($generator->generate($routeName))
+            ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)))
         ;
     }
 

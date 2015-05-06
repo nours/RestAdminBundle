@@ -12,7 +12,9 @@ namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\AdminManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 
@@ -33,8 +35,14 @@ class RequestListener implements EventSubscriberInterface
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
         $attributes = $request->attributes;
+
+        // Resource and action parameters
         $resourceName = $attributes->get('_resource');
         $actionName   = $attributes->get('_action');
 
@@ -49,6 +57,17 @@ class RequestListener implements EventSubscriberInterface
                 $attributes->set('_action', $action);
             } else {
                 throw new \RuntimeException("Resource ".$resourceName." not found");
+            }
+        }
+
+        // Guess request format on accept headers in order to initialize it's format
+        $format = $request->get('_format');
+        if (empty($format)) {
+            $accept = AcceptHeader::fromString($request->headers->get('Accept'));
+            if ($accept->has('application/json')) {
+                $request->attributes->set('_format', 'json');
+            } else {
+                $request->attributes->set('_format', 'html');
             }
         }
     }

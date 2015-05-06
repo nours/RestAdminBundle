@@ -25,25 +25,38 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class DeleteActionBuilder extends AbstractBuilder
 {
+    protected $form;
+
+    /**
+     * @param $template
+     * @param $controller
+     */
+    public function __construct($template = null, $controller = null, $form = null)
+    {
+        parent::__construct($template, $controller);
+
+        $this->form   = $form;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
     {
         $builder->addRoute($resource, $action, 'delete_form', 'GET', $resource->getResourceUriPath('delete'));
-        $builder->addRoute($resource, $action, 'delete', 'DELETE', $resource->getUriPath());
+        $builder->addRoute($resource, $action, 'delete', 'DELETE', $resource->getResourceUriPath());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
     {
         $routeName = $resource->getRouteName('delete');
 
         $builder
             ->setMethod('DELETE')
-            ->setAction($generator->generate($routeName))
+            ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)));
         ;
     }
 
@@ -52,6 +65,10 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
+        // Sets default form for deleting objects
+        $resolver->setDefaults(array(
+            'form' => $this->form
+        ));
     }
 
     /**

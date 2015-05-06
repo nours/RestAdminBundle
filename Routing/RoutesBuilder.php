@@ -41,7 +41,7 @@ class RoutesBuilder
             '_resource'   => $resource->getFullName(),
             '_action'     => $action->getName(),
             '_controller' => $action->getController(),
-            '_format'     => 'html'
+            '_format'     => null
         );
 
         $reqs = $options = array();

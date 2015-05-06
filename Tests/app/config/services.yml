@@ -1,11 +1,15 @@
 services:
   tests.controller.comment:
-    class: Nours\RestAdminBundle\Tests\Fixtures\Controller\CommentController
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Controller\CommentController
 
   tests.form.post:
-    class: Nours\RestAdminBundle\Tests\Fixtures\Form\PostType
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
     tags: [ { name: form.type, alias: post } ]
 
+  tests.form.comment:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\CommentType
+    tags: [ { name: form.type, alias: comment } ]
+
   tests.action.publish:
-    class: Nours\RestAdminBundle\Tests\Fixtures\Action\PublishActionBuilder
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Action\PublishActionBuilder
     tags: [ { name: 'rest_admin.action_builder' } ]

@@ -38,6 +38,10 @@ class NoursRestAdminExtension extends Extension
             $loader->load('orm.yml');
         }
 
+        if ($config['listeners']['view']) {
+            $loader->load('view.yml');
+        }
+
         $container->setParameter('rest_admin.resource', $config['resource']);
 
         // Default templates
@@ -48,6 +52,16 @@ class NoursRestAdminExtension extends Extension
         // Default controllers
         foreach ($config['controllers'] as $action => $controller) {
             $container->setParameter('rest_admin.controllers.' . $action, $controller);
+        }
+
+        // Default forms
+        foreach ($config['forms'] as $action => $form) {
+            $container->setParameter('rest_admin.forms.' . $action, $form);
+        }
+
+        // Services
+        foreach ($config['services'] as $name => $service) {
+            $container->setAlias('rest_admin.' . $name, $service);
         }
     }
 }

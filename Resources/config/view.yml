@@ -1,0 +1,18 @@
+services:
+  rest_admin.view_handler:
+    class: Nours\RestAdminBundle\View\DelegatingHandler
+
+  rest_admin.view_handler.templating:
+    class: Nours\RestAdminBundle\View\TemplatingHandler
+    arguments: [ '@service_container' ]
+    tags: [ { name: 'rest_admin.view_handler' } ]
+
+  rest_admin.view_handler.json:
+    class: Nours\RestAdminBundle\View\JsonHandler
+    arguments: [ '@service_container' ]
+    tags: [ { name: 'rest_admin.view_handler' } ]
+
+  rest_admin.listener.view_handler:
+    class: Nours\RestAdminBundle\EventListener\ViewListener
+    arguments: [ '@rest_admin.view_handler' ]
+    tags: [ { name: 'kernel.event_subscriber' }]

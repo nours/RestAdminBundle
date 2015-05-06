@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of RestAdminBundle.
+ *
+ * (c) David Coudrier <david.coudrier@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Nours\RestAdminBundle\Annotation;
 
@@ -15,7 +23,14 @@ class Resource
     public $parent;
     public $identifier;
     public $form;
-    public $templates;
+    public $slug;
 
+    public $options;
+
+    /**
+     * Controller service id
+     *
+     * @var string
+     */
     public $service;
 }

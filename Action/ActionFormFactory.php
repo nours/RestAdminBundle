@@ -50,12 +50,13 @@ class ActionFormFactory
     /**
      * Creates a form for a certain type
      *
+     * @param mixed $data
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
-     * @param $model
+     * @param array $options
      * @return \Symfony\Component\Form\Form
      */
-    public function createForm(Resource $resource, Action $action, $model)
+    public function createForm($data, Resource $resource, Action $action, array $options = array())
     {
         // Find form name
         $formName = $action->getForm() ?: $resource->getForm();
@@ -71,9 +72,9 @@ class ActionFormFactory
         $actionBuilder = $this->manager->getActionBuilder($action->getName());
 
         // Create builder
-        $builder = $this->factory->createNamedBuilder('', $formName, $model);
+        $builder = $this->factory->createNamedBuilder($resource->getName(), $formName, $data, $options);
 
-        $actionBuilder->buildForm($builder, $resource, $this->generator, $model);
+        $actionBuilder->buildForm($builder, $resource, $this->generator, $data);
 
         return $builder->getForm();
     }

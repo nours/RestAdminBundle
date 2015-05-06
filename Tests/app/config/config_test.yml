@@ -13,6 +13,7 @@ framework:
         strict_requirements: ~
     form: ~
     csrf_protection: false
+    serializer: true
     validation:      { enable_annotations: true }
     templating:
         engines: ['twig']
@@ -33,12 +34,18 @@ framework:
 monolog:
     handlers:
         main:
+            type: fingers_crossed
+            action_level: error
+            handler: file
+        file:
             type:   stream
             path:   "%kernel.logs_dir%/%kernel.environment%.log"
             level:  debug
 
 nours_rest_admin:
     resource: "%kernel.root_dir%/config/resources.yml"
+    listeners:
+        view: true
     templates:
         index: index.html.twig
         get: get.html.twig
@@ -48,12 +55,9 @@ nours_rest_admin:
 
 doctrine:
     dbal:
-        driver:   pdo_mysql
-        host:     localhost
-        dbname:   nours_rest_admin
-        user:     nours_rest_admin
-        password: nours_rest_admin
-        charset:  UTF8
+        driver:  pdo_sqlite
+        path:    '%kernel.cache_dir%/sqlite.db.cache'
+        charset: UTF8
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

@@ -39,7 +39,7 @@ services:
     arguments: [ '@rest_admin.action_manager' ]
 
 ##############################
-# Core classes
+# Core
 ##############################
   rest_admin.manager:
     class: Nours\RestAdminBundle\AdminManager
@@ -60,6 +60,14 @@ services:
   rest_admin.event_dispatcher:
     class: Nours\RestAdminBundle\Api\ApiEventDispatcher
     arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
+
+  rest_admin.view_handler:
+    class: Nours\RestAdminBundle\View\ViewHandler
+    arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
+
+  rest_admin.resource_factory:
+    class: Nours\RestAdminBundle\Domain\ResourceFactory
+    arguments: [ '@controller_resolver' ]
 
 ##############################
 # Core actions
@@ -86,7 +94,7 @@ services:
 
   rest_admin.action_builder.delete:
     class: Nours\RestAdminBundle\Action\Core\DeleteActionBuilder
-    arguments: [ '%rest_admin.templates.delete%', '%rest_admin.controllers.delete%' ]
+    arguments: [ '%rest_admin.templates.delete%', '%rest_admin.controllers.delete%', '%rest_admin.forms.delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
 ##############################
@@ -96,26 +104,14 @@ services:
     class: Nours\RestAdminBundle\Action\ActionFormFactory
     arguments: [ '@rest_admin.action_manager', '@form.factory', '@router' ]
 
+  rest_admin.form_type.delete:
+    class: Nours\RestAdminBundle\Form\Type\DeleteType
+    tags: [ { name: 'form.type', alias: 'rest_admin_delete' } ]
+
 ##############################
-# Events
+# Event listeners
 ##############################
-  rest_admin.view_renderer_subscriber:
-    class: Nours\RestAdminBundle\EventListener\RendererSubscriber
-    arguments: [ '@twig' ]
-    tags: [ { name: 'rest_admin.event_subscriber' }]
-
-  rest_admin.json_renderer_subscriber:
-    class: Nours\RestAdminBundle\EventListener\JsonSubscriber
-    arguments: [ '@jms_serializer.serializer' ]
-    tags: [ { name: 'rest_admin.event_subscriber' }]
-
-
   rest_admin.listener.request:
     class: Nours\RestAdminBundle\EventListener\RequestListener
     arguments: [ '@rest_admin.manager' ]
-    tags: [ { name: 'kernel.event_subscriber' }]
-
-  rest_admin.listener.doctrine:
-    class: Nours\RestAdminBundle\EventListener\DoctrineListener
-    arguments: [ '@doctrine' ]
     tags: [ { name: 'kernel.event_subscriber' }]

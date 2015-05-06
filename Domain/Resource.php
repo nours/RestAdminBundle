@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Domain;
 use Doctrine\Common\Inflector\Inflector;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Resource description.
@@ -61,13 +62,6 @@ class Resource
     private $parent;
 
     /**
-     * Role used for basic access management.
-     *
-     * @var string
-     */
-    private $role;
-
-    /**
      * The default form type name
      *
      * @var string
@@ -75,25 +69,39 @@ class Resource
     private $form;
 
     /**
-     * The default table type name
+     * The user defined resource factory.
      *
-     * @var string
+     * @var null|callback
      */
-    private $table;
+    private $factory;
 
-    /**
-     * The templates for the html based user interface
-     *
-     * @var array
-     */
-    private $templates = array();
-
-    /**
-     * The layout used for the user interface
-     *
-     * @var string
-     */
-    private $layout;
+//    /**
+//     * Role used for basic access management.
+//     *
+//     * @var string
+//     */
+//    private $role;
+//
+//    /**
+//     * The default table type name
+//     *
+//     * @var string
+//     */
+//    private $table;
+//
+//    /**
+//     * The templates for the html based user interface
+//     *
+//     * @var array
+//     */
+//    private $templates = array();
+//
+//    /**
+//     * The layout used for the user interface
+//     *
+//     * @var string
+//     */
+//    private $layout;
 
     /**
      * @param string $name
@@ -103,9 +111,9 @@ class Resource
     {
         $class = $config['class'];
 
-        $this->setClass($class);
-        $this->setIdentifier(isset($config['identifier']) ? $config['identifier'] : 'id');
-        $this->setName($name);
+        $this->class = $class;
+        $this->identifier = isset($config['identifier']) ? $config['identifier'] : 'id';
+        $this->name = $name;
 
         // Slug set by config or defaults to pluralized name
         if (isset($config['slug'])) {
@@ -124,28 +132,21 @@ class Resource
             $this->parent = $config['parent'];
         }
 
+        // Parent
+        if (isset($config['factory'])) {
+            $this->factory = $config['factory'];
+        }
+
         $this->basePrefix = $name . '_';
         $this->routePrefix = $this->basePrefix;
     }
 
     /**
-     * @param $name
-     * @param $class
-     * @param $parent
-     * @param $identifier
-     * @param $form
-     * @param null $slug
-     * @return static
+     * @return callable|null
      */
-    public static function create($name, $class, $parent, $identifier, $form, $slug = null)
+    public function getFactory()
     {
-        return new static($name, array(
-            'class' => $class,
-            'parent' => $parent,
-            'identifier' => $identifier,
-            'form' => $form,
-            'slug' => $slug
-        ));
+        return $this->factory;
     }
 
     /**
@@ -157,27 +158,11 @@ class Resource
     }
 
     /**
-     * @param string $class
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-    }
-
-    /**
      * @return string
      */
     public function getIdentifier()
     {
         return $this->identifier;
-    }
-
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = $identifier;
     }
 
     /**
@@ -208,14 +193,6 @@ class Resource
         $parts[] = $this->name;
 
         return $this->fullName = implode('.', $parts);
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -252,21 +229,21 @@ class Resource
         $this->routePrefix = $parent->routePrefix . $this->basePrefix;
     }
 
-    /**
-     * @return string
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param string $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
-    }
+//    /**
+//     * @return string
+//     */
+//    public function getRole()
+//    {
+//        return $this->role;
+//    }
+//
+//    /**
+//     * @param string $role
+//     */
+//    public function setRole($role)
+//    {
+//        $this->role = $role;
+//    }
 
     /**
      * @return string
@@ -284,53 +261,53 @@ class Resource
         $this->form = $form;
     }
 
-    /**
-     * @return string
-     */
-    public function getTable()
-    {
-        return $this->table;
-    }
-
-    /**
-     * @param string $table
-     */
-    public function setTable($table)
-    {
-        $this->table = $table;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTemplates()
-    {
-        return $this->templates;
-    }
-
-    /**
-     * @param array $templates
-     */
-    public function setTemplates($templates)
-    {
-        $this->templates = $templates;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * @param string $layout
-     */
-    public function setLayout($layout)
-    {
-        $this->layout = $layout;
-    }
+//    /**
+//     * @return string
+//     */
+//    public function getTable()
+//    {
+//        return $this->table;
+//    }
+//
+//    /**
+//     * @param string $table
+//     */
+//    public function setTable($table)
+//    {
+//        $this->table = $table;
+//    }
+//
+//    /**
+//     * @return array
+//     */
+//    public function getTemplates()
+//    {
+//        return $this->templates;
+//    }
+//
+//    /**
+//     * @param array $templates
+//     */
+//    public function setTemplates($templates)
+//    {
+//        $this->templates = $templates;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getLayout()
+//    {
+//        return $this->layout;
+//    }
+//
+//    /**
+//     * @param string $layout
+//     */
+//    public function setLayout($layout)
+//    {
+//        $this->layout = $layout;
+//    }
 
     /**
      * Get route name for an action
@@ -397,15 +374,6 @@ class Resource
         ));
     }
 
-//
-//    /**
-//     * @param string $routePrefix
-//     */
-//    public function setRoutePrefix($routePrefix)
-//    {
-//        $this->routePrefix = $routePrefix;
-//    }
-
     /**
      * @param string $name
      * @return bool
@@ -438,5 +406,74 @@ class Resource
     public function addAction(Action $action)
     {
         $this->actions[$action->getName()] = $action;
+    }
+
+    /**
+     * Build route parameters for an instance of this resource
+     *
+     * @param $data
+     * @return array
+     */
+    public function getRouteParams($data)
+    {
+        if ($parent = $this->getParent()) {
+            return $parent->getResourceRouteParams($this->getParentObject($data));
+        }
+
+        return array();
+    }
+
+    /**
+     * Build route parameters for an instance of this resource
+     *
+     * @param $data
+     * @return array
+     */
+    public function getResourceRouteParams($data)
+    {
+        $params = array(
+            $this->getName() => $this->getObjectIdentifier($data)
+        );
+
+        if ($parent = $this->getParent()) {
+            $params = array_merge($params, $parent->getResourceRouteParams($this->getParentObject($data)));
+        }
+
+        return $params;
+    }
+
+    /**
+     * Retrieve parent object from data.
+     *
+     * @param $data
+     * @return null
+     */
+    public function getParentObject($data)
+    {
+        if ($parent = $this->getParent()) {
+            $name = $parent->getName();
+
+            if (isset($data->$name)) {
+                return $data->$name;
+            } else {
+                $method = 'get' . ucfirst($name);
+
+                return $data->$method();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns an object id value
+     *
+     * @param $data
+     * @return mixed
+     */
+    public function getObjectIdentifier($data)
+    {
+        $idMethod = 'get' . ucfirst($this->getIdentifier());
+        return $data->$idMethod();
     }
 }

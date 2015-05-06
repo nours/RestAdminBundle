@@ -10,44 +10,40 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Nours\RestAdminBundle\Api\ApiEvents;
-use Nours\RestAdminBundle\Api\Event\ApiEvent;
-use Nours\RestAdminBundle\Doctrine\DoctrineRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
- * Generates the model based on
+ * Fetches Doctrine based resources from request parameters.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class DoctrineListener implements EventSubscriberInterface
 {
     /**
-     * @var RegistryInterface
+     * @var DoctrineParamFetcher
      */
-    private $doctrine;
+    private $repository;
 
-    public function __construct(RegistryInterface $doctrine)
+    public function __construct(DoctrineParamFetcher $repository)
     {
-        $this->doctrine = $doctrine;
+        $this->repository = $repository;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
-        $resource = $request->attributes->get('_resource');
 
-        if ($resource) {
-            $class = $resource->getClass();
-
-//            if ($em = $this->doctrine->getManagerForClass($class)) {
-//            }
+        if ($request->attributes->has('_resource') && $request->attributes->has('_action')) {
+            $this->repository->fetchParams($request);
         }
     }
 

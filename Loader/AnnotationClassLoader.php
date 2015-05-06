@@ -19,8 +19,8 @@ use Symfony\Component\Config\Resource\FileResource;
 
 
 /**
- * Class AnnotationClassLoader
- * 
+ * Loads resource instances from controller classes.
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class AnnotationClassLoader implements LoaderInterface
@@ -46,9 +46,15 @@ class AnnotationClassLoader implements LoaderInterface
     protected $actionAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Action';
 
     /**
+     * @var string
+     */
+    protected $factoryAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Factory';
+
+    /**
      * Constructor.
      *
      * @param Reader $reader
+     * @param ActionFactory $factory
      */
     public function __construct(Reader $reader, ActionFactory $factory)
     {
@@ -56,7 +62,11 @@ class AnnotationClassLoader implements LoaderInterface
         $this->factory = $factory;
     }
 
-
+    /**
+     * @param mixed $class
+     * @param null $type
+     * @return ResourceCollection
+     */
     public function load($class, $type = null)
     {
         if (!class_exists($class)) {
@@ -73,16 +83,41 @@ class AnnotationClassLoader implements LoaderInterface
 
         if ($annotation = $this->reader->getClassAnnotation($class, $this->resourceAnnotationClass)) {
 
-            $resource = $this->processResource($annotation);
+            $resource = $this->processResource($class, $annotation);
 
             $this->factory->configureActions($resource, $this->processActions($class, $annotation));
 
             $collection->add($resource);
         }
 
-
-
         return $collection;
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @param \Nours\RestAdminBundle\Annotation\Resource $annotation
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    private function processResource(\ReflectionClass $class, Resource $annotation)
+    {
+        // Look for @Factory annotation
+        $factory = null;
+        foreach ($class->getMethods() as $method) {
+            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
+                if ($annot instanceof $this->factoryAnnotationClass) {
+                    $factory = $this->getControllerName($annotation, $method);
+                }
+            }
+        }
+
+        return new \Nours\RestAdminBundle\Domain\Resource($annotation->name, array(
+            'class' => $annotation->class,
+            'parent' => $annotation->parent,
+            'identifier' => $annotation->identifier,
+            'form' => $annotation->form,
+            'slug' => $annotation->slug,
+            'factory' => $factory,
+        ));
     }
 
     private function processActions(\ReflectionClass $class, $resourceAnnotation)
@@ -110,6 +145,13 @@ class AnnotationClassLoader implements LoaderInterface
         return $configs;
     }
 
+    /**
+     * Gets the name for a controller method.
+     *
+     * @param $resourceAnnotation
+     * @param \ReflectionMethod $method
+     * @return string
+     */
     private function getControllerName($resourceAnnotation, \ReflectionMethod $method)
     {
         if (!($service = $resourceAnnotation->service)) {
@@ -117,25 +159,6 @@ class AnnotationClassLoader implements LoaderInterface
         }
 
         return $service . ':' . $method->getName();
-    }
-
-    /**
-     * @param Resource $annotation
-     * @return \Nours\RestAdminBundle\Domain\Resource
-     */
-    private function processResource(Resource $annotation)
-    {
-        $name = $annotation->name;
-
-        $resource = \Nours\RestAdminBundle\Domain\Resource::create(
-            $name,
-            $annotation->class,
-            $annotation->parent,
-            $annotation->identifier,
-            $annotation->form
-        );
-
-        return $resource;
     }
 
     /**

@@ -26,7 +26,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Nours\RestAdminBundle\NoursRestAdminBundle(),
-            new Symfony\Bundle\MonologBundle\MonologBundle()
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
+            new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle()
         );
     }
 

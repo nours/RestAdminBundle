@@ -31,6 +31,7 @@ class RequestListenerTest extends AdminTestCase
         $request = new Request();
         $request->attributes->set('_resource', 'post');
         $request->attributes->set('_action', 'create');
+        $request->headers->set('Accept', 'application/json');
 
         $event = new GetResponseEvent($this->get('http_kernel'), $request, HttpKernelInterface::MASTER_REQUEST);
 
@@ -38,6 +39,7 @@ class RequestListenerTest extends AdminTestCase
 
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Resource', $request->attributes->get('_resource'));
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Action', $request->attributes->get('_action'));
+        $this->assertEquals('json', $request->getRequestFormat());
     }
 
 }

@@ -10,9 +10,14 @@
 
 namespace Nours\RestAdminBundle\Tests;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Nours\RestAdminBundle\AdminManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AdminTestCase
@@ -21,6 +26,13 @@ use Symfony\Component\Config\FileLocator;
  */
 class AdminTestCase extends WebTestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+    }
+
     /**
      * @return AdminManager
      */
@@ -78,13 +90,58 @@ class AdminTestCase extends WebTestCase
     }
 
 
-
     /**
-     * Clean up Kernel usage in this test.
+     * Executes fixtures
      */
-    protected function tearDown()
+    protected function loadFixtures()
     {
-        parent::tearDown();
+        $loader = new Loader();
+        $loader->loadFromDirectory(__DIR__ . '/FixtureBundle/Fixtures');
+
+        $purger = new ORMPurger();
+        $executor = new ORMExecutor($this->getEntityManager(), $purger);
+        $executor->execute($loader->getFixtures());
     }
 
+    /**
+     * Returns the doctrine orm entity manager
+     *
+     * @return EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * Asserts the content type header of a response
+     *
+     * @param $expected
+     * @param Response $response
+     */
+    protected function assertResponseContentType($expected, Response $response)
+    {
+        foreach ($response->headers as $header => $value) {
+            $value = $value[0];
+            if ($header == 'content-type' && $value !== $expected) {
+                $this->fail("Response content type failed ($expected expected, $value found");
+            }
+        }
+    }
+
+
+    protected function assertRedirect(Response $response, $location, $statusCode = 302)
+    {
+        $this->assertEquals($statusCode, $response->getStatusCode(),
+            "Bad redirect status ($statusCode expected, {$response->getStatusCode()} found)."
+        );
+
+        if ($response->headers->has('Location')) {
+            $this->assertEquals($location, $loc = $response->headers->get('Location'),
+                "Response location $loc do not match ($location expectd)");
+        } else {
+            $this->fail("Response has no header Location.");
+        }
+
+    }
 }

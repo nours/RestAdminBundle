@@ -1,15 +1,15 @@
 imports:
   fixture_controller:
-    resource: '@NoursRestAdminBundle/Tests/Fixtures/Controller/'
+    resource: '@FixtureBundle/Controller/'
     type: 'annotation'
 
 resources:
   post:
-    class: Nours\RestAdminBundle\Tests\Fixtures\Entity\Post
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
     form: post
     actions: [ create, edit, delete ]
 
 #  comment:
-#    class: Nours\RestAdminBundle\Tests\Fixtures\Entity\Comment
+#    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment
 #    parent: post
 #    actions: []

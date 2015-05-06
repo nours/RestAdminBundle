@@ -56,7 +56,6 @@ class AnnotationDirectoryLoader extends Loader
                 continue;
             }
 
-//            var_dump($file->getRealPath());
             $import = $this->loader->load($file->getRealPath());
             $resources->merge($import);
         }

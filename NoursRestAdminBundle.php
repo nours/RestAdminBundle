@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle;
 
 use Nours\RestAdminBundle\DependencyInjection\Compiler\EventDispatcherPass;
+use Nours\RestAdminBundle\DependencyInjection\Compiler\ViewHandlerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Nours\RestAdminBundle\DependencyInjection\Compiler\ActionManagerPass;
@@ -31,5 +32,6 @@ class NoursRestAdminBundle extends Bundle
         $container->addCompilerPass(new ActionManagerPass());
         $container->addCompilerPass(new LoaderResolverPass());
         $container->addCompilerPass(new EventDispatcherPass());
+        $container->addCompilerPass(new ViewHandlerPass());
     }
 }
