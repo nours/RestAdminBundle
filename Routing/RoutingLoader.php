@@ -14,6 +14,7 @@ use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Api\KernelProvider;
 use Nours\RestAdminBundle\ActionManager;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -26,9 +27,9 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutingLoader extends Loader
 {
     /**
-     * @var \Nours\RestAdminBundle\Domain\ResourceCollection
+     * @var AdminManager
      */
-    private $collection;
+    private $manager;
 
     /**
      * @var ActionManager
@@ -41,7 +42,7 @@ class RoutingLoader extends Loader
      */
     public function __construct(AdminManager $manager, ActionManager $factory)
     {
-        $this->collection = $manager->getResourceCollection();
+        $this->manager  = $manager;
         $this->builders = $factory;
     }
 
@@ -50,11 +51,13 @@ class RoutingLoader extends Loader
      */
     public function load($resource, $type = null)
     {
+        $resources = $this->manager->getResourceCollection();
+
         $routes = new RouteCollection();
         $routesBuilder = new RoutesBuilder($routes);
 
         // Iterate on resources
-        foreach ($this->collection as $resource) {
+        foreach ($resources as $resource) {
             /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
 
             foreach ($resource->getActions() as $action) {
@@ -62,6 +65,12 @@ class RoutingLoader extends Loader
                 $builder->buildRoutes($routesBuilder, $resource, $action);
             }
         }
+
+        // Append config resources to routing collection
+        foreach ($resources->getConfigResources() as $res) {
+            $routes->addResource($res);
+        }
+        $routes->addResource(new FileResource(__FILE__));
 
         return $routes;
     }
