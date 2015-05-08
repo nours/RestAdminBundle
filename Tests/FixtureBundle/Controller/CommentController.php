@@ -23,7 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
  *  parent = "post",
- *  service = "tests.controller.comment"
+ *  service = "tests.controller.comment",
+ *  foo = "bar"
  * )
  *
  * @Rest\Action(

@@ -32,7 +32,7 @@ class AnnotationClassLoader implements LoaderInterface
     protected $reader;
 
     /**
-     * @var ActionFactory
+     * @var ResourceFactory
      */
     protected $factory;
 
@@ -55,9 +55,9 @@ class AnnotationClassLoader implements LoaderInterface
      * Constructor.
      *
      * @param Reader $reader
-     * @param ActionFactory $factory
+     * @param ResourceFactory $factory
      */
-    public function __construct(Reader $reader, ActionFactory $factory)
+    public function __construct(Reader $reader, ResourceFactory $factory)
     {
         $this->reader = $reader;
         $this->factory = $factory;
@@ -111,14 +111,12 @@ class AnnotationClassLoader implements LoaderInterface
             }
         }
 
-        $resourceClass  = $annotation->class;
         $config = $annotation->config;
-        $name   = isset($config['name']) ? $config['name'] : $this->guessResourceName($resourceClass);
+        if ($factory) {
+            $config['factory'] = $factory;
+        }
 
-        $config['class']   = $resourceClass;
-        $config['factory'] = $factory;
-
-        return new \Nours\RestAdminBundle\Domain\Resource($name, $config);
+        return $this->factory->createResource($annotation->class, $config);
     }
 
     private function processActions(\ReflectionClass $class, $resourceAnnotation)
@@ -160,13 +158,6 @@ class AnnotationClassLoader implements LoaderInterface
         }
 
         return $service . ':' . $method->getName();
-    }
-
-    private function guessResourceName($className)
-    {
-        $exploded = explode("\\", $className);
-
-        return Inflector::tableize(end($exploded));
     }
 
     /**

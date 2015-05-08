@@ -30,15 +30,15 @@ class YamlResourceLoader extends FileLoader
     private $parser;
 
     /**
-     * @var ActionFactory
+     * @var ResourceFactory
      */
-    private $actionFactory;
+    private $resourceFactory;
 
-    public function __construct(FileLocatorInterface $locator, ActionFactory $actionFactory)
+    public function __construct(FileLocatorInterface $locator, ResourceFactory $resourceFactory)
     {
         parent::__construct($locator);
 
-        $this->actionFactory = $actionFactory;
+        $this->resourceFactory = $resourceFactory;
     }
 
     /**
@@ -87,9 +87,17 @@ class YamlResourceLoader extends FileLoader
      */
     protected function loadResource($name, array $config)
     {
-        $resource = new Resource($name, $config);
+        if (!isset($config['class'])) {
+            throw new \InvalidArgumentException("Resource class missing for $name");
+        }
 
-        $this->actionFactory->configureActions($resource, isset($config['actions']) ? $config['actions'] : array());
+        $class = $config['class'];
+        unset($config['class']);
+        $config['name'] = $name;
+
+        $resource = $this->resourceFactory->createResource($class, $config);
+
+        $this->resourceFactory->configureActions($resource, isset($config['actions']) ? $config['actions'] : array());
 
         return $resource;
     }

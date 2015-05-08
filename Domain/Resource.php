@@ -9,8 +9,10 @@
  */
 
 namespace Nours\RestAdminBundle\Domain;
+
 use Doctrine\Common\Inflector\Inflector;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Resource description.
@@ -20,14 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 class Resource
 {
     /**
-     * @var string
+     * @var PropertyAccessor
      */
-    private $class;
-
-    /**
-     * @var string
-     */
-    private $identifier;
+    private static $propertyAccessor;
 
     /**
      * @var string
@@ -37,7 +34,7 @@ class Resource
     /**
      * @var string
      */
-    private $fullName;
+    private $class;
 
     /**
      * @var string
@@ -45,11 +42,9 @@ class Resource
     private $slug;
 
     /**
-     * @var string
+     * @var array
      */
-    private $routePrefix;
-    private $basePrefix;
-
+    private $configs;
 
     /**
      * @var Action[]
@@ -57,96 +52,66 @@ class Resource
     private $actions = array();
 
     /**
-     * @var Resource
+     * false means that the parent resource has not been resolved yet.
+     *
+     * @var Resource|null
      */
-    private $parent;
+    private $parent = false;
 
     /**
-     * The default form type name
-     *
      * @var string
      */
-    private $form;
+    private $routePrefix;
 
     /**
-     * The user defined resource factory.
-     *
-     * @var null|callback
+     * @var string
      */
-    private $factory;
-
-//    /**
-//     * Role used for basic access management.
-//     *
-//     * @var string
-//     */
-//    private $role;
-//
-//    /**
-//     * The default table type name
-//     *
-//     * @var string
-//     */
-//    private $table;
-//
-//    /**
-//     * The templates for the html based user interface
-//     *
-//     * @var array
-//     */
-//    private $templates = array();
-//
-//    /**
-//     * The layout used for the user interface
-//     *
-//     * @var string
-//     */
-//    private $layout;
+    private $basePrefix;
 
     /**
-     * @param string $name
-     * @param array $config
+     * @param string $class
+     * @param array $configs
      */
-    public function __construct($name, array $config)
+    public function __construct($class, array $configs)
     {
-        $class = $config['class'];
-
         $this->class = $class;
-        $this->identifier = isset($config['identifier']) ? $config['identifier'] : 'id';
-        $this->name = $name;
 
-        // Slug set by config or defaults to pluralized name
-        if (isset($config['slug'])) {
-            $this->setSlug($config['slug']);
+        if (isset($configs['name'])) {
+            $this->name = $configs['name'];
+            unset($configs['name']);
         } else {
-            $this->setSlug(Inflector::pluralize($name));
+            $exploded = explode("\\", $class);
+            $this->name = Inflector::tableize(end($exploded));
         }
 
-        // Form
-        if (isset($config['form'])) {
-            $this->form = $config['form'];
+        // Slug defaults to pluralized name
+        if (isset($configs['slug'])) {
+            $this->slug = $configs['slug'];
+            unset($configs['slug']);
+        } else {
+            $this->slug = Inflector::pluralize($this->name);
         }
 
-        // Parent
-        if (isset($config['parent'])) {
-            $this->parent = $config['parent'];
-        }
+        $this->configs = $configs;
 
-        // Parent
-        if (isset($config['factory'])) {
-            $this->factory = $config['factory'];
-        }
-
-        $this->basePrefix = $name . '_';
+        $this->basePrefix = $this->name . '_';
         $this->routePrefix = $this->basePrefix;
     }
 
     /**
-     * @return callable|null
+     * @return mixed
+     */
+    public function getConfig($name, $default = null)
+    {
+        return isset($this->configs[$name]) ? $this->configs[$name] : $default;
+    }
+
+    /**
+     * @return string|null
      */
     public function getFactory()
     {
-        return $this->factory;
+        return $this->getConfig('factory');
     }
 
     /**
@@ -162,7 +127,7 @@ class Resource
      */
     public function getIdentifier()
     {
-        return $this->identifier;
+        return $this->getConfig('identifier', 'id');
     }
 
     /**
@@ -180,19 +145,12 @@ class Resource
      */
     public function getFullName()
     {
-        if (!empty($this->fullName)) {
-            return $this->fullName;
+        $fullName = $this->name;
+        if ($parentName = $this->getParentName()) {
+            $fullName = $parentName . '.' . $fullName;
         }
 
-        $parts = array();
-
-        if ($this->parent) {
-            $parts[] = $this->parent;
-        }
-
-        $parts[] = $this->name;
-
-        return $this->fullName = implode('.', $parts);
+        return $fullName;
     }
 
     /**
@@ -204,11 +162,11 @@ class Resource
     }
 
     /**
-     * @param string $slug
+     * @return string
      */
-    public function setSlug($slug)
+    public function getParentName()
     {
-        $this->slug = $slug;
+        return $this->getConfig('parent');
     }
 
     /**
@@ -216,98 +174,65 @@ class Resource
      */
     public function getParent()
     {
+        if ($this->parent === false) {
+            throw new \DomainException("The parent resource of {$this->getName()} is not resolved yet");
+        }
         return $this->parent;
     }
 
     /**
      * @param \Nours\RestAdminBundle\Domain\Resource $parent
      */
-    public function setParent(Resource $parent)
+    public function setParent(Resource $parent = null)
     {
         $this->parent = $parent;
 
-        $this->routePrefix = $parent->routePrefix . $this->basePrefix;
+        if ($parent) {
+            $this->routePrefix = $parent->routePrefix . $this->basePrefix;
+        }
     }
-
-//    /**
-//     * @return string
-//     */
-//    public function getRole()
-//    {
-//        return $this->role;
-//    }
-//
-//    /**
-//     * @param string $role
-//     */
-//    public function setRole($role)
-//    {
-//        $this->role = $role;
-//    }
 
     /**
      * @return string
      */
     public function getForm()
     {
-        return $this->form;
+        return $this->getConfig('form');
     }
 
     /**
-     * @param string $form
+     * @param string $name
+     * @return bool
      */
-    public function setForm($form)
+    public function hasAction($name)
     {
-        $this->form = $form;
+        return isset($this->actions[$name]);
     }
 
-//    /**
-//     * @return string
-//     */
-//    public function getTable()
-//    {
-//        return $this->table;
-//    }
-//
-//    /**
-//     * @param string $table
-//     */
-//    public function setTable($table)
-//    {
-//        $this->table = $table;
-//    }
-//
-//    /**
-//     * @return array
-//     */
-//    public function getTemplates()
-//    {
-//        return $this->templates;
-//    }
-//
-//    /**
-//     * @param array $templates
-//     */
-//    public function setTemplates($templates)
-//    {
-//        $this->templates = $templates;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getLayout()
-//    {
-//        return $this->layout;
-//    }
-//
-//    /**
-//     * @param string $layout
-//     */
-//    public function setLayout($layout)
-//    {
-//        $this->layout = $layout;
-//    }
+    /**
+     * @param string $name
+     * @return Action
+     */
+    public function getAction($name)
+    {
+        return isset($this->actions[$name]) ? $this->actions[$name] : null;
+    }
+
+    /**
+     * @return Action[]
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param Action $action
+     */
+    public function addAction(Action $action)
+    {
+        $this->actions[$action->getName()] = $action;
+    }
 
     /**
      * Get route name for an action
@@ -361,54 +286,6 @@ class Resource
     }
 
     /**
-     * Formulae for generating event names.
-     *
-     * @param $eventName
-     * @param Action $action
-     * @return string
-     */
-    public function getEventName($eventName, Action $action)
-    {
-        return implode('.', array(
-            $this->getFullName(), $action->getName(), $eventName
-        ));
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function hasAction($name)
-    {
-        return isset($this->actions[$name]);
-    }
-
-    /**
-     * @param string $name
-     * @return Action
-     */
-    public function getAction($name)
-    {
-        return isset($this->actions[$name]) ? $this->actions[$name] : null;
-    }
-
-    /**
-     * @return Action[]
-     */
-    public function getActions()
-    {
-        return $this->actions;
-    }
-
-    /**
-     * @param Action $action
-     */
-    public function addAction(Action $action)
-    {
-        $this->actions[$action->getName()] = $action;
-    }
-
-    /**
      * Build route parameters for an instance of this resource
      *
      * @param $data
@@ -446,20 +323,12 @@ class Resource
      * Retrieve parent object from data.
      *
      * @param $data
-     * @return null
+     * @return null|mixed
      */
     public function getParentObject($data)
     {
         if ($parent = $this->getParent()) {
-            $name = $parent->getName();
-
-            if (isset($data->$name)) {
-                return $data->$name;
-            } else {
-                $method = 'get' . ucfirst($name);
-
-                return $data->$method();
-            }
+            return $this->getPropertyAccessor()->getValue($data, $parent->getName());
         }
 
         return null;
@@ -473,7 +342,16 @@ class Resource
      */
     public function getObjectIdentifier($data)
     {
-        $idMethod = 'get' . ucfirst($this->getIdentifier());
-        return $data->$idMethod();
+        return $this->getPropertyAccessor()->getValue($data, $this->getIdentifier());
+    }
+
+
+    private function getPropertyAccessor()
+    {
+        if (empty(self::$propertyAccessor)) {
+            self::$propertyAccessor = PropertyAccess::createPropertyAccessor();
+        }
+
+        return self::$propertyAccessor;
     }
 }

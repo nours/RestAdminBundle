@@ -24,16 +24,19 @@ class Action
      */
     private $name;
 
-    private $options = array();
+    /**
+     * @var array
+     */
+    private $config = array();
 
     /**
      * @param $name
-     * @param $options
+     * @param array $config
      */
-    public function __construct($name, $options)
+    public function __construct($name, array $config)
     {
         $this->name    = $name;
-        $this->options = $options;
+        $this->config = $config;
     }
 
     /**
@@ -49,9 +52,9 @@ class Action
      * @param mixed $default
      * @return string
      */
-    public function getOption($key, $default = null)
+    public function getConfig($key, $default = null)
     {
-        return isset($this->options[$key]) ? $this->options[$key] : $default;
+        return isset($this->config[$key]) ? $this->config[$key] : $default;
     }
 
     /**
@@ -59,7 +62,7 @@ class Action
      */
     public function getForm()
     {
-        return $this->options['form'];
+        return $this->config['form'];
     }
 
     /**
@@ -67,7 +70,7 @@ class Action
      */
     public function getRole()
     {
-        return $this->getOption('role');
+        return $this->getConfig('role');
     }
 
     /**
@@ -75,7 +78,7 @@ class Action
      */
     public function getTemplate()
     {
-        return $this->getOption('template');
+        return $this->getConfig('template');
     }
 
     /**
@@ -83,6 +86,6 @@ class Action
      */
     public function getController()
     {
-        return $this->getOption('controller');
+        return $this->getConfig('controller');
     }
 }

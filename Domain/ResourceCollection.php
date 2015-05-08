@@ -72,14 +72,15 @@ class ResourceCollection implements \Countable, \IteratorAggregate
 
     private function resolveResourceParent(Resource $resource)
     {
-        $parent = $resource->getParent();
+        $parentName = $resource->getParentName();
 
         // Do nothing if no parent or already resolved
-        if (empty($parent) || $parent instanceof Resource) {
+        if (null === $parentName) {
+            $resource->setParent(null);
             return;
         }
 
-        $parent = $this->get($parent);
+        $parent = $this->get($parentName);
         $this->resolveResourceParent($parent);
 
         $resource->setParent($parent);

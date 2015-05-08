@@ -19,26 +19,38 @@ use Nours\RestAdminBundle\Domain\Resource;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ActionFactory
+class ResourceFactory
 {
     /**
      * @var ActionManager
      */
     private $builders;
 
+    /**
+     * @param ActionManager $builders
+     */
     public function __construct(ActionManager $builders)
     {
         $this->builders = $builders;
     }
 
+    /**
+     * @param $class
+     * @param array $configs
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    public function createResource($class, array $configs)
+    {
+        return new Resource($class, $configs);
+    }
 
     /**
      * Configure the actions for a resource from its config.
      *
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param $configs
+     * @param array $configs
      */
-    public function configureActions(Resource $resource, $configs)
+    public function configureActions(Resource $resource, array $configs)
     {
         $actions = $this->prepareConfig($configs);
 

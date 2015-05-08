@@ -66,15 +66,4 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     {
 
     }
-
-    /**
-     * Helper function to generate url base path for the resource.
-     *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @return string
-     */
-    protected function getBasePath(Resource $resource)
-    {
-        return '';
-    }
 }

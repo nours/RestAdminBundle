@@ -37,6 +37,12 @@ class ResourceTest extends AdminTestCase
         $this->commentResource = $this->getAdminManager()->getResource('post.comment');
     }
 
+
+    public function testResourceCanHaveAnyConfig()
+    {
+        $this->assertEquals('bar', $this->commentResource->getConfig('foo'));
+    }
+
     /**
      * The global route params for a simple resource should always be empty
      */

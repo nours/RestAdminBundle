@@ -34,7 +34,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
 
         $resource = $resources->get('post.comment');
 
-        $this->assertEquals('post', $resource->getParent());
+        $this->assertEquals('post', $resource->getParentName());
 
         $this->assertCount(4, $resource->getActions());
 

@@ -89,7 +89,7 @@ class DoctrineParamFetcher
     {
         $resourceId = $request->attributes->get($resource->getName());
 
-        $finder = $action ? $action->getOption('finder', 'find') : 'find';
+        $finder = $action ? $action->getConfig('finder', 'find') : 'find';
 
         return $this->manager->getRepository($resource->getClass())->$finder($resourceId);
     }

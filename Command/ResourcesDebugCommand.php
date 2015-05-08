@@ -24,7 +24,7 @@ class ResourcesDebugCommand extends ContainerAwareCommand
 {
     public function configure()
     {
-        $this->setName('nours_rest:debug');
+        $this->setName('debug:rest_admin');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -42,9 +42,6 @@ class ResourcesDebugCommand extends ContainerAwareCommand
     {
         $output->writeln('<info>'.$resource->getFullName().'</info> :');
 
-//        if ($parent = $resource->getParent()) {
-//            $output->writeln("  parent : " . $parent->getFullName());
-//        }
         $output->writeln("  <error>actions</error> : ");
 
         foreach ($resource->getActions() as $action) {
