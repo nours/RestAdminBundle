@@ -5,7 +5,7 @@ services:
   rest_admin.loader.yml:
     class: Nours\RestAdminBundle\Loader\YamlResourceLoader
     public: false
-    arguments: [ '@file_locator', '@rest_admin.action_factory' ]
+    arguments: [ '@file_locator', '@rest_admin.loader.resource_factory' ]
     tags: [ { name: rest_admin.loader }]
 
   rest_admin.loader.annotation_file:
@@ -23,7 +23,7 @@ services:
   rest_admin.loader.annotation_class:
     class: Nours\RestAdminBundle\Loader\AnnotationClassLoader
     public: false
-    arguments: [ '@annotation_reader', '@rest_admin.action_factory' ]
+    arguments: [ '@annotation_reader', '@rest_admin.loader.resource_factory' ]
 #    tags: [ { name: rest_admin.loader }]
 
   rest_admin.loader_resolver:
@@ -34,8 +34,8 @@ services:
     class: Symfony\Component\Config\Loader\DelegatingLoader
     arguments: [ '@rest_admin.loader_resolver' ]
 
-  rest_admin.action_factory:
-    class: Nours\RestAdminBundle\Loader\ActionFactory
+  rest_admin.loader.resource_factory:
+    class: Nours\RestAdminBundle\Loader\ResourceFactory
     arguments: [ '@rest_admin.action_manager' ]
 
 ##############################

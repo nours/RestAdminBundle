@@ -15,7 +15,7 @@ use Nours\RestAdminBundle\Domain\Resource;
 
 
 /**
- * Class ActionFactory
+ * Class ResourceFactory
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
