@@ -25,12 +25,12 @@ class DefaultController extends Controller
     /**
      * Index action
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $_resource
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @return ArrayCollection
      */
-    public function indexAction(Resource $_resource)
+    public function indexAction(Resource $resource)
     {
-        $data = $this->getDoctrine()->getRepository($_resource->getClass())->findAll();
+        $data = $this->getDoctrine()->getRepository($resource->getClass())->findAll();
 
         return new ArrayCollection($data);
     }
@@ -50,15 +50,15 @@ class DefaultController extends Controller
      * Create action
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $_resource
-     * @param Action $_action
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param Action $action
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request, Resource $_resource, Action $_action)
+    public function createAction(Request $request, Resource $resource, Action $action)
     {
         $data = $this->createData($request);
 
-        $form = $this->createResourceForm($data, $_resource, $_action);
+        $form = $this->createResourceForm($data, $resource, $action);
 
         $form->handleRequest($request);
 
@@ -66,9 +66,9 @@ class DefaultController extends Controller
             $this->getDoctrine()->getManager()->persist($data);
             $this->getDoctrine()->getManager()->flush();
 
-            $this->addFlash('success', $_resource->getFullName().'.create');
+            $this->addFlash('success', $resource->getFullName().'.create');
 
-            return $this->redirectToRoute($_resource->getRouteName('index'), $_resource->getRouteParams($data));
+            return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParams($data));
         }
 
         return $form;
@@ -78,13 +78,13 @@ class DefaultController extends Controller
      * Create action
      *
      * @param Request $request
-     * @param Resource $_resource
-     * @param Action $_action
+     * @param Resource $resource
+     * @param Action $action
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, Resource $_resource, Action $_action, $data)
+    public function editAction(Request $request, Resource $resource, Action $action, $data)
     {
-        $form = $this->createResourceForm($data, $_resource, $_action);
+        $form = $this->createResourceForm($data, $resource, $action);
 
         if ($request->getMethod() == $form->getConfig()->getMethod()) {
             $form->handleRequest($request);
@@ -92,9 +92,9 @@ class DefaultController extends Controller
             if ($form->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
 
-                $this->addFlash('success', $_resource->getFullName().'.edit');
+                $this->addFlash('success', $resource->getFullName().'.edit');
 
-                return $this->redirectToRoute($_resource->getRouteName('index'));
+                return $this->redirectToRoute($resource->getRouteName('index'));
             }
         }
 
@@ -105,13 +105,13 @@ class DefaultController extends Controller
      * Create action
      *
      * @param Request $request
-     * @param Resource $_resource
-     * @param Action $_action
+     * @param Resource $resource
+     * @param Action $action
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, Resource $_resource, Action $_action, $data)
+    public function deleteAction(Request $request, Resource $resource, Action $action, $data)
     {
-        $form = $this->createResourceForm($data, $_resource, $_action);
+        $form = $this->createResourceForm($data, $resource, $action);
 
         $form->handleRequest($request);
 
@@ -119,9 +119,9 @@ class DefaultController extends Controller
             $this->getDoctrine()->getManager()->remove($data);
             $this->getDoctrine()->getManager()->flush();
 
-            $this->addFlash('success', $_resource->getFullName().'.delete');
+            $this->addFlash('success', $resource->getFullName().'.delete');
 
-            return $this->redirectToRoute($_resource->getRouteName('index'));
+            return $this->redirectToRoute($resource->getRouteName('index'));
         }
 
         return $form;

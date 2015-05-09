@@ -41,8 +41,8 @@ class TemplatingHandler implements ViewHandler
     public function handle($data, Request $request)
     {
         // Find template from action
-        $resource = $request->attributes->get('_resource');
-        $action   = $request->attributes->get('_action');
+        $resource = $request->attributes->get('resource');
+        $action   = $request->attributes->get('action');
         $template = $action->getTemplate();
 
         $parameters = array(

@@ -46,8 +46,8 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request();
         $request->attributes->add(array(
-            '_resource' => $resource,
-            '_action' => $resource->getAction('get'),
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
             'post' => $post->getId()
         ));
 
@@ -70,8 +70,8 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request();
         $request->attributes->add(array(
-            '_resource' => $resource,
-            '_action' => $resource->getAction('get'),
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
             'comment' => $comment->getId(),
             'post' => $post->getId()
         ));
@@ -95,8 +95,8 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request();
         $request->attributes->add(array(
-            '_resource' => $resource,
-            '_action' => $resource->getAction('index'),
+            'resource' => $resource,
+            'action' => $resource->getAction('index'),
             'post' => $post->getId()
         ));
 

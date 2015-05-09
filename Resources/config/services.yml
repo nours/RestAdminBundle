@@ -48,18 +48,10 @@ services:
   rest_admin.action_manager:
     class: Nours\RestAdminBundle\ActionManager
 
-  rest_admin.core_controller:
-    class: Nours\RestAdminBundle\Controller\CoreController
-    arguments: [ '@rest_admin.manager', '@rest_admin.event_dispatcher', '@rest_admin.action_form_factory' ]
-
   rest_admin.routing_loader:
     class: Nours\RestAdminBundle\Routing\RoutingLoader
     arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
     tags: [ { name: 'routing.loader' } ]
-
-  rest_admin.event_dispatcher:
-    class: Nours\RestAdminBundle\Api\ApiEventDispatcher
-    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
 
   rest_admin.view_handler:
     class: Nours\RestAdminBundle\View\ViewHandler

@@ -39,8 +39,8 @@ class DoctrineParamFetcher
      */
     public function fetchParams(Request $request)
     {
-        $resource = $request->attributes->get('_resource');
-        $action   = $request->attributes->get('_action');
+        $resource = $request->attributes->get('resource');
+        $action   = $request->attributes->get('action');
 
         $resourceId = $request->attributes->get($resource->getName());
 

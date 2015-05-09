@@ -45,7 +45,7 @@ class ResourceFactory
     public function createResource(Request $request)
     {
         /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
-        $resource = $request->attributes->get('_resource');
+        $resource = $request->attributes->get('resource');
 
         if ($factory = $resource->getFactory()) {
             // Clone request to use it's _controller attribute for resolver

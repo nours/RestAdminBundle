@@ -53,8 +53,8 @@ class RequestListener implements EventSubscriberInterface
                     throw new \RuntimeException("Action ".$actionName." not found for resource ".$resourceName);
                 }
 
-                $attributes->set('_resource', $resource);
-                $attributes->set('_action', $action);
+                $attributes->set('resource', $resource);
+                $attributes->set('action', $action);
             } else {
                 throw new \RuntimeException("Resource ".$resourceName." not found");
             }

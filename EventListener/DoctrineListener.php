@@ -42,7 +42,7 @@ class DoctrineListener implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        if ($request->attributes->has('_resource') && $request->attributes->has('_action')) {
+        if ($request->attributes->has('resource') && $request->attributes->has('action')) {
             $this->repository->fetchParams($request);
         }
     }
