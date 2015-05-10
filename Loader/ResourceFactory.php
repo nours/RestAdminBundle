@@ -25,13 +25,16 @@ class ResourceFactory
      * @var ActionManager
      */
     private $builders;
+    private $resourceClass;
 
     /**
      * @param ActionManager $builders
+     * @param string $resourceClass
      */
-    public function __construct(ActionManager $builders)
+    public function __construct(ActionManager $builders, $resourceClass)
     {
-        $this->builders = $builders;
+        $this->builders      = $builders;
+        $this->resourceClass = $resourceClass;
     }
 
     /**
@@ -41,7 +44,7 @@ class ResourceFactory
      */
     public function createResource($class, array $configs)
     {
-        return new Resource($class, $configs);
+        return new $this->resourceClass($class, $configs);
     }
 
     /**

@@ -44,6 +44,9 @@ class NoursRestAdminExtension extends Extension
 
         $container->setParameter('rest_admin.resource', $config['resource']);
 
+        // Domain classes
+        $this->configureDomainClasses($config, $container);
+
         // Default templates
         foreach ($config['templates'] as $action => $template) {
             $container->setParameter('rest_admin.templates.' . $action, $template);
@@ -63,5 +66,18 @@ class NoursRestAdminExtension extends Extension
         foreach ($config['services'] as $name => $service) {
             $container->setAlias('rest_admin.' . $name, $service);
         }
+    }
+
+
+    private function configureDomainClasses(array $config, ContainerBuilder $container)
+    {
+        $resourceClass = $config['resource_class'];
+        $subClass = 'Nours\\RestAdminBundle\\Domain\\Resource';
+        $reflection = new \ReflectionClass($resourceClass);
+        if ($resourceClass !== $subClass && !$reflection->isSubclassOf($subClass)) {
+            throw new \DomainException("Resource class $resourceClass must extend base class $subClass");
+        }
+
+        $container->setParameter('rest_admin.resource_class', $resourceClass);
     }
 }

@@ -36,7 +36,7 @@ services:
 
   rest_admin.loader.resource_factory:
     class: Nours\RestAdminBundle\Loader\ResourceFactory
-    arguments: [ '@rest_admin.action_manager' ]
+    arguments: [ '@rest_admin.action_manager', '%rest_admin.resource_class%' ]
 
 ##############################
 # Core

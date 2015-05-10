@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('resource')->isRequired()->end()
-                ->booleanNode('orm')->defaultTrue()->end()
+                ->scalarNode('resource_class')->defaultValue('Nours\RestAdminBundle\Domain\Resource')->end()
                 ->arrayNode('listeners')
                     ->addDefaultsIfNotSet()
                     ->children()

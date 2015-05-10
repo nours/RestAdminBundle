@@ -13,7 +13,6 @@ namespace Nours\RestAdminBundle\EventListener;
 use Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 
