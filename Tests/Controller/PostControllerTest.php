@@ -117,7 +117,7 @@ class PostControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/new');
+        $crawler = $client->request('GET', '/posts/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(

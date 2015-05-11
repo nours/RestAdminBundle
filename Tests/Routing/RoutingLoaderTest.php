@@ -44,8 +44,6 @@ class RoutingLoaderTest extends AdminTestCase
     {
         $postIndex = $this->collection->get('post_index');
 
-//        var_dump($this->collection->all());die;
-
         $this->assertNotNull($postIndex);
         $this->assertEquals('/posts.{_format}', $postIndex->getPath());
         $this->assertEquals('post', $postIndex->getDefault('_resource'));
@@ -72,9 +70,7 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('post.comment', $commentGet->getDefault('_resource'));
         $this->assertEquals('get', $commentGet->getDefault('_action'));
 
-        $postCreate = $this->collection->get('post_create');
-
-//        var_dump($this->collection->all());die;
+        $postCreate = $this->collection->get('post_new');
 
         $this->assertNotNull($postCreate);
         $this->assertEquals('/posts.{_format}', $postCreate->getPath());
@@ -82,12 +78,10 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('create', $postCreate->getDefault('_action'));
         $this->assertEquals(array('POST'), $postCreate->getMethods());
 
-        $postCreateForm = $this->collection->get('post_create_form');
-
-//        var_dump($this->collection->all());die;
+        $postCreateForm = $this->collection->get('post_create');
 
         $this->assertNotNull($postCreateForm);
-        $this->assertEquals('/posts/new.{_format}', $postCreateForm->getPath());
+        $this->assertEquals('/posts/create.{_format}', $postCreateForm->getPath());
         $this->assertEquals('post', $postCreateForm->getDefault('_resource'));
         $this->assertEquals('create', $postCreateForm->getDefault('_action'));
         $this->assertEquals(array('GET'), $postCreateForm->getMethods());

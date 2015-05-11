@@ -68,7 +68,7 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/2/comments/new');
+        $crawler = $client->request('GET', '/posts/2/comments/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
