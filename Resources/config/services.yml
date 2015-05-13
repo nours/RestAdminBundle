@@ -66,27 +66,27 @@ services:
 ##############################
   rest_admin.action_builder.index:
     class: Nours\RestAdminBundle\Action\Core\IndexActionBuilder
-    arguments: [ '%rest_admin.templates.index%', '%rest_admin.controllers.index%' ]
+    arguments: [ '%rest_admin.actions.index%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.get:
     class: Nours\RestAdminBundle\Action\Core\GetActionBuilder
-    arguments: [ '%rest_admin.templates.get%', '%rest_admin.controllers.get%' ]
+    arguments: [ '%rest_admin.actions.get%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.create:
     class: Nours\RestAdminBundle\Action\Core\CreateActionBuilder
-    arguments: [ '%rest_admin.templates.create%', '%rest_admin.controllers.create%' ]
+    arguments: [ '%rest_admin.actions.create%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.edit:
     class: Nours\RestAdminBundle\Action\Core\EditActionBuilder
-    arguments: [ '%rest_admin.templates.edit%', '%rest_admin.controllers.edit%' ]
+    arguments: [ '%rest_admin.actions.edit%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.delete:
     class: Nours\RestAdminBundle\Action\Core\DeleteActionBuilder
-    arguments: [ '%rest_admin.templates.delete%', '%rest_admin.controllers.delete%', '%rest_admin.forms.delete%' ]
+    arguments: [ '%rest_admin.actions.delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
 ##############################

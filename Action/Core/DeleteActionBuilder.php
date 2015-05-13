@@ -25,19 +25,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class DeleteActionBuilder extends AbstractBuilder
 {
-    protected $form;
-
-    /**
-     * @param $template
-     * @param $controller
-     */
-    public function __construct($template = null, $controller = null, $form = null)
-    {
-        parent::__construct($template, $controller);
-
-        $this->form   = $form;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -65,10 +52,6 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        // Sets default form for deleting objects
-        $resolver->setDefaults(array(
-            'form' => $this->form
-        ));
     }
 
     /**

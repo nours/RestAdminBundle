@@ -47,28 +47,54 @@ class NoursRestAdminExtension extends Extension
         // Domain classes
         $this->configureDomainClasses($config, $container);
 
-        // Default templates
-        foreach ($config['templates'] as $action => $template) {
-            $container->setParameter('rest_admin.templates.' . $action, $template);
-        }
+        // Action params
+        $this->configureActionParams($config, $container);
 
-        // Default controllers
-        foreach ($config['controllers'] as $action => $controller) {
-            $container->setParameter('rest_admin.controllers.' . $action, $controller);
-        }
-
-        // Default forms
-        foreach ($config['forms'] as $action => $form) {
-            $container->setParameter('rest_admin.forms.' . $action, $form);
-        }
-
-        // Services
+        // Service aliases (see Configuration for default values)
         foreach ($config['services'] as $name => $service) {
             $container->setAlias('rest_admin.' . $name, $service);
         }
     }
 
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
+    private function configureActionParams(array $config, ContainerBuilder $container)
+    {
+        $actions = array('index', 'get', 'create', 'edit', 'delete');
+        foreach ($actions as $action) {
+            $params = array();
 
+            // Controller + template
+            $params['controller'] = $config['controllers'][$action];
+            $params['template']   = $config['templates'][$action];
+
+            // Form (optional)
+            if (array_key_exists($action, $config['forms'])) {
+                $params['form'] = $config['forms'][$action];
+            }
+
+            // Extras
+            if (isset($config['extras'][$action])) {
+                $extras = $config['extras'][$action];
+                if (!is_array($extras)) {
+                    throw new \DomainException("Extra params for action $action must be an array");
+                }
+
+                foreach ($extras as $extra => $value) {
+                    $params[$extra] = $value;
+                }
+            }
+
+            $container->setParameter('rest_admin.actions.' . $action, $params);
+        }
+    }
+
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
     private function configureDomainClasses(array $config, ContainerBuilder $container)
     {
         $resourceClass = $config['resource_class'];

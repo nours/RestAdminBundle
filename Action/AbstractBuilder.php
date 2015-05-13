@@ -15,7 +15,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Route;
 
 /**
  * Class AbstractAction
@@ -24,17 +23,14 @@ use Symfony\Component\Routing\Route;
  */
 abstract class AbstractBuilder implements ActionBuilderInterface
 {
-    protected $template;
-    protected $controller;
+    protected $defaultOptions;
 
     /**
-     * @param $template
-     * @param $controller
+     * @param array $defaultOptions
      */
-    public function __construct($template = null, $controller = null)
+    public function __construct(array $defaultOptions = array())
     {
-        $this->template   = $template;
-        $this->controller = $controller;
+        $this->defaultOptions   = $defaultOptions;
     }
 
     /**
@@ -46,11 +42,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         $resolver->setRequired(array(
             'template', 'controller'
         ));
-        $resolver->setDefaults(array(
-            'template'   => $this->template,
-            'controller' => $this->controller,
-            'form' => null
-        ));
+        $resolver->setDefaults($this->defaultOptions);
 
         $this->setDefaultOptions($resolver);
 
