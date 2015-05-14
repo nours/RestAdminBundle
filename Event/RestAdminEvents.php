@@ -10,21 +10,19 @@
 
 namespace Nours\RestAdminBundle\Event;
 
-
 /**
- * Class ControllerEvents
- *
- * todo: refactor ? delete ?
+ * Class RestAdminEvents
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ControllerEvents
+class RestAdminEvents
 {
-
-    const CREATE = 'create';
-
-    const SUCCESS = 'success';
-
-    const ERROR = 'error';
-
+    /**
+     * A route event enables to hook into rest admin route creation.
+     *
+     * Dispatched by the route builder before a route is created, in order to be able to change some defaults parameters.
+     *
+     * @see RouteEvent
+     */
+    const ROUTE = 'route';
 }

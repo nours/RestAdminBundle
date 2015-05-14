@@ -15,6 +15,7 @@ use Nours\RestAdminBundle\Api\KernelProvider;
 use Nours\RestAdminBundle\ActionManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -37,13 +38,20 @@ class RoutingLoader extends Loader
     private $builders;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param AdminManager $manager
      * @param ActionManager $factory
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(AdminManager $manager, ActionManager $factory)
+    public function __construct(AdminManager $manager, ActionManager $factory, EventDispatcherInterface $eventDispatcher)
     {
         $this->manager  = $manager;
         $this->builders = $factory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -54,7 +62,7 @@ class RoutingLoader extends Loader
         $resources = $this->manager->getResourceCollection();
 
         $routes = new RouteCollection();
-        $routesBuilder = new RoutesBuilder($routes);
+        $routesBuilder = new RoutesBuilder($routes, $this->eventDispatcher);
 
         // Iterate on resources
         foreach ($resources as $resource) {

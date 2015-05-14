@@ -13,6 +13,8 @@ namespace Nours\RestAdminBundle\Event;
 
 /**
  * Class ControllerEventDispatcher
+ *
+ * todo: refactor ? delete ?
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

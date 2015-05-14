@@ -68,7 +68,7 @@ class DefaultController extends Controller
 
             $this->addFlash('success', $resource->getFullName().'.create');
 
-            return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParams($data));
+            return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParamsFromData($data));
         }
 
         return $form;

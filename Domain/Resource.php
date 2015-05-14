@@ -288,13 +288,28 @@ class Resource
     /**
      * Build route parameters for an instance of this resource
      *
-     * @param $data
+     * @param mixed $data
      * @return array
      */
-    public function getRouteParams($data)
+    public function getRouteParamsFromData($data)
     {
         if ($parent = $this->getParent()) {
             return $parent->getResourceRouteParams($this->getParentObject($data));
+        }
+
+        return array();
+    }
+
+    /**
+     * Returns the route params from the parent object.
+     *
+     * @param mixed $parent
+     * @return array
+     */
+    public function getRouteParamsFromParent($parent)
+    {
+        if ($parentResource = $this->getParent()) {
+            return $parentResource->getResourceRouteParams($parent);
         }
 
         return array();

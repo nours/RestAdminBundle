@@ -10,11 +10,13 @@
 
 namespace Nours\RestAdminBundle\Routing;
 
-use Nours\RestAdminBundle\Api\KernelProvider;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Event\RestAdminEvents;
+use Nours\RestAdminBundle\Event\RouteEvent;
+use Nours\RestAdminBundle\Domain\Resource;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Nours\RestAdminBundle\Domain\Resource;
 
 
 /**
@@ -25,16 +27,25 @@ use Nours\RestAdminBundle\Domain\Resource;
 class RoutesBuilder
 {
     private $collection;
+    private $eventDispatcher;
 
     /**
      * @param RouteCollection $collection
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(RouteCollection $collection)
+    public function __construct(RouteCollection $collection, EventDispatcherInterface $eventDispatcher)
     {
         $this->collection = $collection;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
-
+    /**
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param Action $action
+     * @param $routeName
+     * @param $method
+     * @param $path
+     */
     public function addRoute(Resource $resource, Action $action, $routeName, $method, $path)
     {
         $defaults = array(
@@ -44,9 +55,20 @@ class RoutesBuilder
             '_format'     => null
         );
 
-        $reqs = $options = array();
+        // Dispatch the route event
+        $event = new RouteEvent(
+            $resource, $action,
+            $path . '.{_format}',
+            $defaults,
+            array(),    // Requirements
+            array(),    // Options
+            $method
+        );
+
+        $this->eventDispatcher->dispatch(RestAdminEvents::ROUTE, $event);
+
         $route = new Route(
-            $path . '.{_format}', $defaults, $reqs, $options, '', array(), array($method)
+            $event->path, $event->defaults, $event->requirements, $event->options, $event->host, $event->schemes, $event->method
         );
 
         $this->collection->add($resource->getRouteName($routeName), $route);

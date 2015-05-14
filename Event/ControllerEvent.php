@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ControllerEvent
+ *
+ * todo: refactor ? delete ?
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

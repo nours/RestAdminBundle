@@ -39,6 +39,14 @@ services:
     arguments: [ '@rest_admin.action_manager', '%rest_admin.resource_class%' ]
 
 ##############################
+# Routing
+##############################
+  rest_admin.routing_loader:
+    class: Nours\RestAdminBundle\Routing\RoutingLoader
+    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager', '@event_dispatcher' ]
+    tags: [ { name: 'routing.loader' } ]
+
+##############################
 # Core
 ##############################
   rest_admin.manager:
@@ -47,11 +55,6 @@ services:
 
   rest_admin.action_manager:
     class: Nours\RestAdminBundle\ActionManager
-
-  rest_admin.routing_loader:
-    class: Nours\RestAdminBundle\Routing\RoutingLoader
-    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager' ]
-    tags: [ { name: 'routing.loader' } ]
 
   rest_admin.view_handler:
     class: Nours\RestAdminBundle\View\ViewHandler

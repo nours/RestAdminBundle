@@ -50,7 +50,7 @@ class ResourceTest extends AdminTestCase
     {
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
 
-        $params = $this->postResource->getRouteParams($post);
+        $params = $this->postResource->getRouteParamsFromData($post);
 
         $this->assertCount(0, $params);
     }
@@ -72,15 +72,29 @@ class ResourceTest extends AdminTestCase
     /**
      * The global route params for a resource having a parent should contain it's parent identifier only.
      */
-    public function testGetRouteParamsForResourceHavingParent()
+    public function testGetRouteParamsFromDataForResourceHavingParent()
     {
         $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
 
-        $params = $this->commentResource->getRouteParams($comment);
+        $params = $this->commentResource->getRouteParamsFromData($comment);
 
         $this->assertCount(1, $params);
         $this->assertArrayHasKey('post', $params);
         $this->assertEquals($comment->getPost()->getId(), $params['post']);
+    }
+
+    /**
+     * The global route params for a resource having a parent should contain it's parent identifier only.
+     */
+    public function testGetRouteParamsFromParentForResourceHavingParent()
+    {
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        $params = $this->commentResource->getRouteParamsFromParent($post);
+
+        $this->assertCount(1, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals($post->getId(), $params['post']);
     }
 
     /**

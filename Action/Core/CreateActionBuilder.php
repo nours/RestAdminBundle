@@ -43,7 +43,7 @@ class CreateActionBuilder extends AbstractBuilder
 
         $builder
             ->setMethod('POST')
-            ->setAction($generator->generate($routeName, $resource->getRouteParams($data)));
+            ->setAction($generator->generate($routeName, $resource->getRouteParamsFromData($data)));
         ;
     }
 
