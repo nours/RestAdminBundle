@@ -26,16 +26,17 @@ class LoadAll extends AbstractFixture
 
     public function load(ObjectManager $manager)
     {
+        // First post (id = 1), with one comment (id = 1)
         $post = new Post();
         $post->setContent('content');
-
-        $manager->persist($post);
 
         $comment = new Comment($post);
         $comment->setComment('comment');
 
+        $manager->persist($post);
         $manager->persist($comment);
 
+        // Other post (id = 2), without comment
         $post = new Post();
         $post->setContent('second post');
 

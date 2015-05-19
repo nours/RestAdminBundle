@@ -17,14 +17,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * Class CommentController
+ * Class CommentBisController
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
+ *  name = "commentbis",
  *  parent = "post",
- *  service = "tests.controller.comment",
  *  foo = "bar"
  * )
  *
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
  *  "edit", form = "comment"
  * )
  */
-class CommentController
+class CommentBisController
 {
     /**
      * @Rest\Factory()
@@ -51,20 +51,22 @@ class CommentController
     }
 
     /**
+     * @Rest\Handler("create")
+     *
+     * @return Response
+     */
+    public function onCreateSuccess()
+    {
+        return new Response('created!', 201);
+    }
+
+    /**
+     * @Rest\Handler("edit", priority = 10)
+     *
      * @return Response
      */
     public function onEditSuccess()
     {
         return new Response('success!');
-    }
-
-    /**
-     * @Rest\Action(
-     *  "publish"
-     * )
-     */
-    public function publishAction()
-    {
-
     }
 }

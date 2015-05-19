@@ -52,6 +52,11 @@ class AnnotationClassLoader implements LoaderInterface
     protected $factoryAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Factory';
 
     /**
+     * @var string
+     */
+    protected $handlerAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Handler';
+
+    /**
      * Constructor.
      *
      * @param Reader $reader
@@ -106,7 +111,7 @@ class AnnotationClassLoader implements LoaderInterface
         foreach ($class->getMethods() as $method) {
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
                 if ($annot instanceof $this->factoryAnnotationClass) {
-                    $factory = $this->getControllerName($annotation, $method);
+                    $factory = $this->getControllerName($class, $annotation, $method);
                 }
             }
         }
@@ -119,6 +124,13 @@ class AnnotationClassLoader implements LoaderInterface
         return $this->factory->createResource($annotation->class, $config);
     }
 
+    /**
+     * Creates the actions configuration from annotations.
+     *
+     * @param \ReflectionClass $class
+     * @param $resourceAnnotation
+     * @return array
+     */
     private function processActions(\ReflectionClass $class, $resourceAnnotation)
     {
         $configs = array();
@@ -135,11 +147,32 @@ class AnnotationClassLoader implements LoaderInterface
             foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
                 if ($annotation instanceof $this->actionAnnotationClass) {
                     $configs[$annotation->name] = array_merge($annotation->options, array(
-                        'controller' => $this->getControllerName($resourceAnnotation, $method)
+                        'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
                     ));
                 }
             }
         }
+
+        // Second pass to find handlers
+        foreach ($class->getMethods() as $method) {
+            foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
+                if ($annotation instanceof $this->handlerAnnotationClass) {
+                    $actionName = $annotation->action;
+
+                    if (!isset($configs[$actionName])) {
+                        throw new \DomainException(sprintf(
+                            "Handler method %s::%s is configured for action %s, which is not found for resource (%s are)",
+                            $class->getName(), $method->getName(), $actionName, implode(', ', array_keys($configs))
+                        ));
+                    }
+
+                    $configs[$actionName]['handlers'][] = array(
+                        $this->getControllerName($class, $resourceAnnotation, $method), $annotation->priority ?: 0
+                    );
+                }
+            }
+        }
+
 
         return $configs;
     }
@@ -151,13 +184,15 @@ class AnnotationClassLoader implements LoaderInterface
      * @param \ReflectionMethod $method
      * @return string
      */
-    private function getControllerName($resourceAnnotation, \ReflectionMethod $method)
+    private function getControllerName(\ReflectionClass $class, $resourceAnnotation, \ReflectionMethod $method)
     {
-        if (!($service = $resourceAnnotation->service)) {
-            throw new \DomainException("service param must be set on @Resource annotation to use @Action on methods");
+        if ($service = $resourceAnnotation->service) {
+            // Use service_id:method notation
+            return $service . ':' . $method->getName();
         }
 
-        return $service . ':' . $method->getName();
+        // Use class::method notation
+        return $class->getName() . '::' . $method->getName();
     }
 
     /**

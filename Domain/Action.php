@@ -62,7 +62,7 @@ class Action
      */
     public function getForm()
     {
-        return $this->config['form'];
+        return $this->getConfig('form');
     }
 
     /**
@@ -87,5 +87,13 @@ class Action
     public function getController()
     {
         return $this->getConfig('controller');
+    }
+
+    /**
+     * @return array
+     */
+    public function getHandlers()
+    {
+        return $this->getConfig('handlers', array());
     }
 }

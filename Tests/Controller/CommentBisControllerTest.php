@@ -14,11 +14,11 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 
 /**
- * Class CommentControllerTest
+ * Class CommentBisControllerTest
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class CommentControllerTest extends AdminTestCase
+class CommentBisControllerTest extends AdminTestCase
 {
     /**
      * Index action.
@@ -28,11 +28,11 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comments');
+        $crawler = $client->request('GET', '/posts/1/commentbis');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>post.comment index</h1>',
+            '<h1>post.commentbis index</h1>',
             $client->getResponse()->getContent()
         );
     }
@@ -45,13 +45,13 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comments/1');
+        $crawler = $client->request('GET', '/posts/1/commentbis/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
         $this->assertContains(
-            '<h1>post.comment 1</h1>',
+            '<h1>post.commentbis 1</h1>',
             $response->getContent()
         );
         $this->assertContains(
@@ -68,23 +68,26 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/2/comments/create');
+        $crawler = $client->request('GET', '/posts/2/commentbis/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>create post.comment</h1>',
+            '<h1>create post.commentbis</h1>',
             $client->getResponse()->getContent()
         );
 
-        $button = $crawler->selectButton('comment[submit]');
+        $button = $crawler->selectButton('commentbis[submit]');
         $form = $button->form(array(
-            'comment[comment]' => 'updated'
+            'commentbis[comment]' => 'creation'
         ));
 
         $client->submit($form);
 
         $response = $client->getResponse();
-        $this->assertRedirect($response, '/posts/2/comments');
+
+        // Response should be overrided by CommentBisController::onEditSuccess
+        $this->assertTrue($response->getStatusCode() == 201);
+        $this->assertEquals('created!', $response->getContent());
 
         $this->getEntityManager()->clear();
         $newComment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->findOneBy(array(
@@ -92,7 +95,8 @@ class CommentControllerTest extends AdminTestCase
         ));
 
         // Object has been created
-        $this->assertEquals('updated', $newComment->getComment());
+        $this->assertNotNull($newComment);
+        $this->assertEquals('creation', $newComment->getComment());
     }
 
     /**
@@ -103,23 +107,26 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comments/1/edit');
+        $crawler = $client->request('GET', '/posts/1/commentbis/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>edit post.comment 1</h1>',
+            '<h1>edit post.commentbis 1</h1>',
             $client->getResponse()->getContent()
         );
 
-        $button = $crawler->selectButton('comment[submit]');
+        $button = $crawler->selectButton('commentbis[submit]');
         $form = $button->form(array(
-            'comment[comment]' => 'updated!'
+            'commentbis[comment]' => 'updated!'
         ));
 
         $client->submit($form);
 
         $response = $client->getResponse();
-        $this->assertRedirect($response, '/posts/1/comments');
+
+        // Response should be overrided by CommentBisController::onEditSuccess
+        $this->assertTrue($response->isSuccessful());
+        $this->assertEquals('success!', $response->getContent());
 
         $this->getEntityManager()->clear();
         $newComment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->find(1);

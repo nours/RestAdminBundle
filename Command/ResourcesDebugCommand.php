@@ -10,21 +10,35 @@
 
 namespace Nours\RestAdminBundle\Command;
 
+use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ResourcesDebugCommand
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class ResourcesDebugCommand extends ContainerAwareCommand
 {
     public function configure()
     {
-        $this->setName('debug:rest_admin');
+        $this
+            ->setName('debug:rest_admin')
+            ->addArgument('resource', InputArgument::OPTIONAL)
+            ->addArgument('action', InputArgument::OPTIONAL)
+            ->setDescription('Dumps resources and their actions')
+            ->setHelp(<<<EOF
+The <info>%command.name%</info> command lists resources and its actions :
+
+  <info>php %command.full_name%</info>
+  <info>php %command.full_name% <resource></info>
+  <info>php %command.full_name% <resource> <action></info>
+EOF
+            )
+        ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -33,20 +47,50 @@ class ResourcesDebugCommand extends ContainerAwareCommand
 
         $resources = $manager->getResourceCollection();
 
-        foreach ($resources as $resource) {
-            $this->dumpResource($output, $resource);
+        if ($resourceName = $input->getArgument('resource')) {
+            $this->dumpResource($input, $output, $resources->get($resourceName));
+        } else {
+            foreach ($resources as $resource) {
+                $this->dumpResource($input, $output, $resource);
+            }
         }
     }
 
-    private function dumpResource(OutputInterface $output, Resource $resource)
+    private function dumpResource(InputInterface $input, OutputInterface $output, Resource $resource)
     {
-        $output->writeln('<info>'.$resource->getFullName().'</info> :');
+        $length = strlen($resource->getFullName()) + 2;
+        $output->writeln('<info>'.str_repeat('=', $length).'</info>');
+        $output->writeln('<info>'.$resource->getFullName().' :</info>');
+        $output->writeln('<info>'.str_repeat('=', $length).'</info>');
 
-        $output->writeln("  <error>actions</error> : ");
-
-        foreach ($resource->getActions() as $action) {
-            $output->writeln("    " . $action->getName());
+        if ($actionName = $input->getArgument('action')) {
+            $this->dumpAction($output, $resource->getAction($actionName));
+        } else {
+            foreach ($resource->getActions() as $action) {
+                $this->dumpAction($output, $action);
+            }
         }
 
+        $output->writeln('');
+    }
+
+    private function dumpAction(OutputInterface $output, Action $action)
+    {
+        $output->writeln("Action <info>" . $action->getName() . '</info>');
+
+        $output->writeln('Controller : <comment>'.$action->getController().'</comment>');
+        $output->writeln('Template : <comment>'.$action->getTemplate().'</comment>');
+        if ($form = $action->getForm()) {
+            $output->writeln('Form : <comment>'.$form.'</comment>');
+        }
+
+        if ($handlers = $action->getHandlers()) {
+            $output->writeln('Handlers :');
+            foreach ($handlers as $handler) {
+                $output->writeln("<comment>" . $handler . '</comment>');
+            }
+        }
+
+        $output->writeln('');
     }
 }

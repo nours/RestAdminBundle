@@ -15,7 +15,7 @@ use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * BaseEvent, having knowledge of a resource and an action (optionnaly)
+ * BaseEvent, having knowledge of a resource and an action (optional)
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

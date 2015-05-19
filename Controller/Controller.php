@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Controller;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,17 +40,18 @@ class Controller extends BaseController
      */
     protected function createResourceForm($data, Resource $resource, Action $action)
     {
-        $formName = $action->getForm() ?: $resource->getForm();
+        return $this->get('rest_admin.action_form_factory')->createForm($data, $resource, $action);
+    }
 
-        if (empty($formName)) {
-            throw new \DomainException(sprintf(
-                "Resource %s Action %s doesn't have any form",
-                $resource->getFullName(), $action->getName()
-            ));
-        }
-
-        return $this->get('rest_admin.action_form_factory')->createForm($data, $resource, $action, array(
-//            'csrf_protection' => false
-        ));
+    /**
+     * @param mixed $data
+     * @param FormInterface $form
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param Action $action
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function handleSuccess($data, FormInterface $form, Resource $resource, Action $action)
+    {
+        return $this->get('rest_admin.resource_handler')->handleSuccess($data, $form, $resource, $action);
     }
 }

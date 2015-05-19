@@ -36,7 +36,7 @@ services:
 
   rest_admin.loader.resource_factory:
     class: Nours\RestAdminBundle\Loader\ResourceFactory
-    arguments: [ '@rest_admin.action_manager', '%rest_admin.resource_class%' ]
+    arguments: [ '@rest_admin.action_manager', '@event_dispatcher', '%rest_admin.resource_class%' ]
 
 ##############################
 # Routing
@@ -63,6 +63,14 @@ services:
   rest_admin.resource_factory:
     class: Nours\RestAdminBundle\Domain\ResourceFactory
     arguments: [ '@controller_resolver' ]
+
+  rest_admin.resource_handler:
+    class: Nours\RestAdminBundle\Domain\ResourceHandler
+    arguments: [ '@controller_resolver' ]
+
+  rest_admin.handler.redirect:
+    class: Nours\RestAdminBundle\Handler\RedirectHandler
+    arguments: [ '@router' ]
 
 ##############################
 # Core actions
@@ -109,4 +117,9 @@ services:
   rest_admin.listener.request:
     class: Nours\RestAdminBundle\EventListener\RequestListener
     arguments: [ '@rest_admin.manager' ]
+    tags: [ { name: 'kernel.event_subscriber' }]
+
+  rest_admin.listener.redirect_action_config:
+    class: Nours\RestAdminBundle\EventListener\RedirectActionConfigListener
+#    arguments: [ '@rest_admin.manager' ]
     tags: [ { name: 'kernel.event_subscriber' }]

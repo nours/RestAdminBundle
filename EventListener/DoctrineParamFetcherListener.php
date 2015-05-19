@@ -21,16 +21,16 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class DoctrineListener implements EventSubscriberInterface
+class DoctrineParamFetcherListener implements EventSubscriberInterface
 {
     /**
      * @var DoctrineParamFetcher
      */
-    private $repository;
+    private $paramFetcher;
 
-    public function __construct(DoctrineParamFetcher $repository)
+    public function __construct(DoctrineParamFetcher $paramFetcher)
     {
-        $this->repository = $repository;
+        $this->paramFetcher = $paramFetcher;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -42,7 +42,7 @@ class DoctrineListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if ($request->attributes->has('resource') && $request->attributes->has('action')) {
-            $this->repository->fetchParams($request);
+            $this->paramFetcher->fetchParams($request);
         }
     }
 

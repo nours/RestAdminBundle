@@ -47,6 +47,35 @@ class DefaultController extends Controller
     }
 
     /**
+     * Basic form action
+     *
+     * @param Request $request
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param Action $action
+     * @param mixed $data
+     * @return ArrayCollection
+     */
+    public function formAction(Request $request, Resource $resource, Action $action, $data = null)
+    {
+        // Initialize data if not found from routing
+        $data = $data ?: $this->createData($request);
+
+        // Create form
+        $form = $this->createResourceForm($data, $resource, $action);
+
+        if ($request->getMethod() == $form->getConfig()->getMethod()) {
+            // Handle request only if method matches
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                return $this->handleSuccess($data, $form, $resource, $action);
+            }
+        }
+
+        return $form;
+    }
+
+    /**
      * Create action
      *
      * @param Request $request
@@ -78,7 +107,7 @@ class DefaultController extends Controller
      * Create action
      *
      * @param Request $request
-     * @param Resource $resource
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -94,7 +123,7 @@ class DefaultController extends Controller
 
                 $this->addFlash('success', $resource->getFullName().'.edit');
 
-                return $this->redirectToRoute($resource->getRouteName('index'));
+                return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParamsFromData($data));
             }
         }
 
@@ -105,7 +134,7 @@ class DefaultController extends Controller
      * Create action
      *
      * @param Request $request
-     * @param Resource $resource
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @return \Symfony\Component\HttpFoundation\Response
      */

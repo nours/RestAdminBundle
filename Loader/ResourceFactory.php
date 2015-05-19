@@ -12,6 +12,9 @@ namespace Nours\RestAdminBundle\Loader;
 
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Event\ActionConfigEvent;
+use Nours\RestAdminBundle\Event\RestAdminEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
 /**
@@ -25,15 +28,22 @@ class ResourceFactory
      * @var ActionManager
      */
     private $builders;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
     private $resourceClass;
 
     /**
      * @param ActionManager $builders
+     * @param EventDispatcherInterface $dispatcher
      * @param string $resourceClass
      */
-    public function __construct(ActionManager $builders, $resourceClass)
+    public function __construct(ActionManager $builders, EventDispatcherInterface $dispatcher, $resourceClass)
     {
         $this->builders      = $builders;
+        $this->dispatcher    = $dispatcher;
         $this->resourceClass = $resourceClass;
     }
 
@@ -67,7 +77,11 @@ class ResourceFactory
         foreach ($actions as $name => $config) {
             $builder = $this->builders->getActionBuilder($name);
 
-            $resource->addAction($builder->createAction($resource, $config));
+            // Dispatch action config event
+            $event = new ActionConfigEvent($resource, $name, $config);
+            $this->dispatcher->dispatch(RestAdminEvents::ACTION_CONFIG, $event);
+
+            $resource->addAction($builder->createAction($resource, $event->config));
         }
     }
 
@@ -82,6 +96,10 @@ class ResourceFactory
             if (is_string($config)) {
                 $name   = $config;
                 $config = array();
+            }
+
+            if (empty($config['handlers'])) {
+                $config['handlers'] = array();
             }
 
             $result[$name] = $config;

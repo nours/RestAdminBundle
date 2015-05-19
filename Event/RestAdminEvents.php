@@ -24,5 +24,14 @@ class RestAdminEvents
      *
      * @see RouteEvent
      */
-    const ROUTE = 'route';
+    const ROUTE = 'rest_admin.route';
+
+    /**
+     * Action config events are triggered when an action is built, and enables to update it's configuration.
+     *
+     * The main use of this event is to append handlers for actions.
+     *
+     * @see ActionConfigEvent
+     */
+    const ACTION_CONFIG = 'rest_admin.action_config';
 }

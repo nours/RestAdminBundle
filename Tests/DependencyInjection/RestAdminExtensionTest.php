@@ -49,7 +49,7 @@ class RestAdminExtensionTest extends AdminTestCase
 
         $this->assertEquals(array(
             'template'   => 'create.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:create',
+            'controller' => 'NoursRestAdminBundle:Default:form',
             'form'       => null,
             'icon'       => 'plus'        // See Tests/app/config/config_test.yml
         ), $params);
@@ -62,7 +62,7 @@ class RestAdminExtensionTest extends AdminTestCase
 
         $this->assertEquals(array(
             'template'   => 'edit.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:edit',
+            'controller' => 'NoursRestAdminBundle:Default:form',
             'form'       => null
         ), $params);
     }
@@ -74,7 +74,7 @@ class RestAdminExtensionTest extends AdminTestCase
 
         $this->assertEquals(array(
             'template'   => 'delete.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:delete',
+            'controller' => 'NoursRestAdminBundle:Default:form',
             'form'       => 'rest_admin_delete'
         ), $params);
     }
