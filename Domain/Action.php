@@ -48,9 +48,17 @@ class Action
     }
 
     /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->getConfig('type', $this->name);
+    }
+
+    /**
      * @param string $key
      * @param mixed $default
-     * @return string
+     * @return mixed
      */
     public function getConfig($key, $default = null)
     {

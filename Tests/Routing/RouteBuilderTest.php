@@ -25,7 +25,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteBuilderTest extends AdminTestCase
 {
     /**
-     * Checks that routes parameters can be overriden using events
+     * Checks that routes parameters can be overridden using events
      */
     public function testBuildRouteEvent()
     {
@@ -49,10 +49,12 @@ class RouteBuilderTest extends AdminTestCase
 
         $route = $routes->get($resource->getRouteName($routeName));
 
+        // Route options has been overridden by event
         $options = $route->getOptions();
         $this->assertArrayHasKey('test', $options);
         $this->assertEquals('ok', $options['test']);
 
+        // Method changed
         $this->assertEquals(array('POST'), $route->getMethods());
     }
 

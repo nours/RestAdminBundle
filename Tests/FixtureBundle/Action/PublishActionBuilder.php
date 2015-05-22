@@ -59,9 +59,9 @@ class PublishActionBuilder extends AbstractBuilder
     public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'template' => '',
+            'template'   => '',
             'controller' => '',
-            'form' => '',
+            'form'       => '',
         ));
     }
 

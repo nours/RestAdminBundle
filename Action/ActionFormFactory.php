@@ -69,7 +69,7 @@ class ActionFormFactory
         }
 
         // Find action builder
-        $actionBuilder = $this->manager->getActionBuilder($action->getName());
+        $actionBuilder = $this->manager->getActionBuilder($action->getType());
 
         // Create builder
         $builder = $this->factory->createNamedBuilder($resource->getName(), $formName, $data, $options);

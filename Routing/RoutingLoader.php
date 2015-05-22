@@ -11,7 +11,6 @@
 namespace Nours\RestAdminBundle\Routing;
 
 use Nours\RestAdminBundle\AdminManager;
-use Nours\RestAdminBundle\Api\KernelProvider;
 use Nours\RestAdminBundle\ActionManager;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
@@ -69,7 +68,7 @@ class RoutingLoader extends Loader
             /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
 
             foreach ($resource->getActions() as $action) {
-                $builder = $this->builders->getActionBuilder($action->getName());
+                $builder = $this->builders->getActionBuilder($action->getType());
                 $builder->buildRoutes($routesBuilder, $resource, $action);
             }
         }

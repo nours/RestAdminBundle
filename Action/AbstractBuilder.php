@@ -39,12 +39,33 @@ abstract class AbstractBuilder implements ActionBuilderInterface
      */
     public function createAction(Resource $resource, array $options = array())
     {
+        return new Action($this->getName(), $this->resolveOptions($options));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
+    {
+
+    }
+
+    /**
+     * Builds the option resolver and returns resolved options.
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function resolveOptions(array $options)
+    {
         $resolver = new OptionsResolver();
         $resolver->setRequired(array(
-            'template', 'controller'
+            'controller'
         ));
         $resolver->setDefaults(array(
-            'handlers' => array()
+            'template' => null,
+            'handlers' => array(),
+            'type'     => null
         ));
         $resolver->setDefaults($this->defaultOptions);
 
@@ -61,16 +82,6 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             return iterator_to_array($priorityQueue);
         });
 
-        $options = $resolver->resolve($options);
-
-        return new Action($this->getName(), $options);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
-    {
-
+        return $resolver->resolve($options);
     }
 }

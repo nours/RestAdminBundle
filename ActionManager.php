@@ -34,17 +34,40 @@ class ActionManager
     }
 
     /**
-     * @param string $name
-     * @return ActionBuilderInterface
+     * @param string $type
+     * @return bool
      */
-    public function getActionBuilder($name)
+    public function hasActionBuilder($type)
     {
-        if (!isset($this->actionBuilders[$name])) {
+        return isset($this->actionBuilders[$type]);
+    }
+
+    /**
+     * @param string $type
+     * @return ActionBuilderInterface|null
+     */
+    public function getActionBuilder($type)
+    {
+        if (!$this->hasActionBuilder($type)) {
             throw new \InvalidArgumentException(sprintf(
-                "Action builder %s not registered (%s)", $name, implode(', ', array_keys($this->actionBuilders))
+                "Action builder %s not registered (%s are)", $type, implode(', ', array_keys($this->actionBuilders))
             ));
         }
-        return $this->actionBuilders[$name];
+        return $this->actionBuilders[$type];
+    }
+
+    /**
+     * @return ActionBuilderInterface
+     */
+    public function getDefaultActionBuilder()
+    {
+        if (!isset($this->actionBuilders['default'])) {
+            throw new \InvalidArgumentException(sprintf(
+                "There is no default action builder registered (%s are)", implode(', ', array_keys($this->actionBuilders))
+            ));
+        }
+
+        return $this->actionBuilders['default'];
     }
 
     /**

@@ -1,3 +1,6 @@
+parameters:
+  rest_admin.actions.default: []
+
 services:
 ##############################
 # Resources loading
@@ -75,6 +78,11 @@ services:
 ##############################
 # Core actions
 ##############################
+  rest_admin.action_builder.default:
+    class: Nours\RestAdminBundle\Action\Core\DefaultActionBuilder
+    arguments: [ '%rest_admin.actions.default%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
   rest_admin.action_builder.index:
     class: Nours\RestAdminBundle\Action\Core\IndexActionBuilder
     arguments: [ '%rest_admin.actions.index%' ]

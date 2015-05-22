@@ -10,7 +10,6 @@
 
 namespace Nours\RestAdminBundle\Loader;
 
-use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -97,7 +96,7 @@ class YamlResourceLoader extends FileLoader
 
         $resource = $this->resourceFactory->createResource($class, $config);
 
-        $this->resourceFactory->configureActions($resource, isset($config['actions']) ? $config['actions'] : array());
+        $this->resourceFactory->configureActions($resource, $this->normalizeActionsConfig($config));
 
         return $resource;
     }
@@ -122,5 +121,25 @@ class YamlResourceLoader extends FileLoader
         }
 
         return $this->parser;
+    }
+
+    /**
+     * Extracts and normalize the action configuration
+     *
+     * @param array $configs
+     * @return array
+     */
+    private function normalizeActionsConfig(array $configs)
+    {
+        $actions = isset($configs['actions']) ? $configs['actions'] : array();
+
+        foreach ($actions as $name => $config) {
+            if (is_string($config)) {
+                $actions[$config] = array();
+                unset($actions[$name]);
+            }
+        }
+
+        return $actions;
     }
 }

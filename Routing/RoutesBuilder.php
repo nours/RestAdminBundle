@@ -45,23 +45,29 @@ class RoutesBuilder
      * @param $routeName
      * @param $method
      * @param $path
+     * @param array $defaults
+     * @param array $requirements
+     * @param array $options
      */
-    public function addRoute(Resource $resource, Action $action, $routeName, $method, $path)
-    {
-        $defaults = array(
+    public function addRoute(
+        Resource $resource, Action $action, $routeName, $method, $path,
+        array $defaults = array(), array $requirements = array(),
+        array $options = array()
+    ) {
+        $defaults = array_merge(array(
             '_resource'   => $resource->getFullName(),
             '_action'     => $action->getName(),
             '_controller' => $action->getController(),
             '_format'     => null
-        );
+        ), $defaults);
 
         // Dispatch the route event
         $event = new RouteEvent(
             $resource, $action,
             $path . '.{_format}',
             $defaults,
-            array(),    // Requirements
-            array(),    // Options
+            $requirements,  // Requirements
+            $options,       // Options
             $method
         );
 

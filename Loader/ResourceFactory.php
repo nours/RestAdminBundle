@@ -27,7 +27,7 @@ class ResourceFactory
     /**
      * @var ActionManager
      */
-    private $builders;
+    private $actionManager;
 
     /**
      * @var EventDispatcherInterface
@@ -36,18 +36,20 @@ class ResourceFactory
     private $resourceClass;
 
     /**
-     * @param ActionManager $builders
+     * @param ActionManager $actionManager
      * @param EventDispatcherInterface $dispatcher
      * @param string $resourceClass
      */
-    public function __construct(ActionManager $builders, EventDispatcherInterface $dispatcher, $resourceClass)
+    public function __construct(ActionManager $actionManager, EventDispatcherInterface $dispatcher, $resourceClass)
     {
-        $this->builders      = $builders;
+        $this->actionManager = $actionManager;
         $this->dispatcher    = $dispatcher;
         $this->resourceClass = $resourceClass;
     }
 
     /**
+     * Factory for resource instances.
+     *
      * @param $class
      * @param array $configs
      * @return \Nours\RestAdminBundle\Domain\Resource
@@ -58,24 +60,29 @@ class ResourceFactory
     }
 
     /**
-     * Configure the actions for a resource from its config.
+     * Configure the actions for a resource from a configuration array.
      *
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param array $configs
      */
     public function configureActions(Resource $resource, array $configs)
     {
-        $actions = $this->prepareConfig($configs);
-
-        // Append default actions
-        foreach (array('index', 'get') as $name) {
-            if (!isset($actions[$name])) {
-                $actions[$name] = array();
-            }
-        }
+        $actions = $this->normalizeConfig($configs);
 
         foreach ($actions as $name => $config) {
-            $builder = $this->builders->getActionBuilder($name);
+            // Type may be defined in config, otherwise defaults to name
+            $type = isset($config['type']) ? $config['type'] : $name;
+
+            // Check if this action type is registered
+            if (!$this->actionManager->hasActionBuilder($type)) {
+                // Fallback to default action type
+                $type = 'default';
+
+                // Add the name to config
+                $config['name'] = $name;
+            }
+
+            $builder = $this->actionManager->getActionBuilder($type);
 
             // Dispatch action config event
             $event = new ActionConfigEvent($resource, $name, $config);
@@ -86,21 +93,34 @@ class ResourceFactory
     }
 
     /**
+     *
+     *
      * @param array $configs
      * @return array
      */
-    private function prepareConfig(array $configs)
+    private function normalizeConfig(array $configs)
     {
+        // Append default actions if not set
+        foreach (array('index', 'get') as $name) {
+            if (!array_key_exists($name, $configs)) {
+                $configs[$name] = array();
+            }
+        }
+
         $result = array();
         foreach ($configs as $name => $config) {
-            if (is_string($config)) {
-                $name   = $config;
-                $config = array();
+            // Disable the action if config is false
+            if (false === $config) {
+                continue;
             }
+//            if (is_string($config)) {
+//                $name   = $config;
+//                $config = array();
+//            }
 
-            if (empty($config['handlers'])) {
-                $config['handlers'] = array();
-            }
+//            if (empty($config['handlers'])) {
+//                $config['handlers'] = array();
+//            }
 
             $result[$name] = $config;
         }

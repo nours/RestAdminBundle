@@ -23,13 +23,11 @@ class Action
 
     public function __construct(array $values)
     {
-        if (!isset($values['value'])) {
-            throw new \InvalidArgumentException("Missing action name");
+        if (isset($values['value'])) {
+            $this->name = $values['value'];
+            unset($values['value']);
         }
 
-        $this->name = $values['value'];
-
-        unset($values['value']);
         $this->options = $values;
     }
 }

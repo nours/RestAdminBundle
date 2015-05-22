@@ -11,8 +11,8 @@
 namespace Nours\RestAdminBundle\Loader;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Inflector\Inflector;
 use Nours\RestAdminBundle\Annotation\Resource;
+use Nours\RestAdminBundle\Annotation\Route;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -55,6 +55,11 @@ class AnnotationClassLoader implements LoaderInterface
      * @var string
      */
     protected $handlerAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Handler';
+
+    /**
+     * @var string
+     */
+    protected $routeAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Route';
 
     /**
      * Constructor.
@@ -135,46 +140,80 @@ class AnnotationClassLoader implements LoaderInterface
     {
         $configs = array();
 
-        // Class annotations
+        // @Action class annotations
         foreach ($this->reader->getClassAnnotations($class) as $annotation) {
             if ($annotation instanceof $this->actionAnnotationClass) {
+                if (empty($annotation->name)) {
+                    throw new \DomainException(sprintf(
+                        "Missing action name from @Action annotation on class %s", $class->getName()
+                    ));
+                }
                 $configs[$annotation->name] = $annotation->options;
             }
         }
 
-        // Methods annotations
+        // @Action method annotations
         foreach ($class->getMethods() as $method) {
-            foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
-                if ($annotation instanceof $this->actionAnnotationClass) {
-                    $configs[$annotation->name] = array_merge($annotation->options, array(
-                        'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
-                    ));
+            if ($annotation = $this->reader->getMethodAnnotation($method, $this->actionAnnotationClass)) {
+                // Action name can be ommitted from annotation
+                $actionName = $annotation->name ?: $this->guessActionName($method);
+
+                $config = array_merge($annotation->options, array(
+                    'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
+                ));
+
+                // @Route method annotation
+                /** @var Route[] $routes */
+                $routes = $this->getMethodAnnotations($method, $this->routeAnnotationClass);
+                if ($routes) {
+                    foreach ($routes as $route) {
+                        $routeConfig = $route->toArray();
+
+                        // Name defaults to action name
+                        if (!isset($routeConfig['name'])) {
+                            $routeConfig['name'] = $actionName;
+                        }
+
+                        // Add the route config to action, assuming it's a default one
+                        $config['routes'][] = $routeConfig;
+                    }
                 }
+
+                $configs[$actionName] = $config;
             }
         }
 
-        // Second pass to find handlers
+        // @Handler method annotation
         foreach ($class->getMethods() as $method) {
-            foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
-                if ($annotation instanceof $this->handlerAnnotationClass) {
-                    $actionName = $annotation->action;
+            foreach ($this->getMethodAnnotations($method, $this->handlerAnnotationClass) as $annotation) {
+                $actionName = $annotation->action;
 
-                    if (!isset($configs[$actionName])) {
-                        throw new \DomainException(sprintf(
-                            "Handler method %s::%s is configured for action %s, which is not found for resource (%s are)",
-                            $class->getName(), $method->getName(), $actionName, implode(', ', array_keys($configs))
-                        ));
-                    }
-
-                    $configs[$actionName]['handlers'][] = array(
-                        $this->getControllerName($class, $resourceAnnotation, $method), $annotation->priority ?: 0
-                    );
+                if (!isset($configs[$actionName])) {
+                    throw new \DomainException(sprintf(
+                        "Handler method %s::%s is configured for action %s, which is not found for resource (%s are)",
+                        $class->getName(), $method->getName(), $actionName, implode(', ', array_keys($configs))
+                    ));
                 }
+
+                $configs[$actionName]['handlers'][] = array(
+                    $this->getControllerName($class, $resourceAnnotation, $method), $annotation->priority ?: 0
+                );
             }
         }
 
 
         return $configs;
+    }
+
+    /**
+     * Guess the action name from a controller method (just strip 'Action' from the end of the method name).
+     *
+     * @param \ReflectionMethod $method
+     * @return string
+     */
+    private function guessActionName(\ReflectionMethod $method)
+    {
+        return preg_replace('/(\w+)Action/i', '$1', $method->getName());
     }
 
     /**
@@ -193,6 +232,25 @@ class AnnotationClassLoader implements LoaderInterface
 
         // Use class::method notation
         return $class->getName() . '::' . $method->getName();
+    }
+
+    /**
+     * Loads annotations of a given type from a method.
+     *
+     * @param \ReflectionMethod $method
+     * @param $type
+     * @return array of $type
+     */
+    private function getMethodAnnotations(\ReflectionMethod $method, $type)
+    {
+        $found = array();
+        foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
+            if ($annotation instanceof $type) {
+                $found[] = $annotation;
+            }
+        }
+
+        return $found;
     }
 
     /**

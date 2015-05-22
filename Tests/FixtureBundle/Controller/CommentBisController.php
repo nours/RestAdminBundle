@@ -69,4 +69,23 @@ class CommentBisController
     {
         return new Response('success!');
     }
+
+    /**
+     * @Rest\Action()
+     * @Rest\Route("test", methods={"GET"})
+     */
+    public function testAction()
+    {
+
+    }
+
+    /**
+     * @Rest\Action("other")
+     * @Rest\Route("{commentbis}/test", methods={"GET"})
+     * @Rest\Route("{commentbis}/test", name="other_do", methods={"POST"})
+     */
+    public function anotherTestAction()
+    {
+
+    }
 }
