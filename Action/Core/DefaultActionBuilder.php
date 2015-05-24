@@ -33,7 +33,7 @@ class DefaultActionBuilder extends AbstractBuilder
         $name = $options['name'];
         unset($options['name']);
 
-        return new Action($name, $options);
+        return new Action($name, $resource, $options);
     }
 
     /**

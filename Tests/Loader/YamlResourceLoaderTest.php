@@ -10,21 +10,58 @@
 
 namespace Nours\RestAdminBundle\Tests\Loader;
 
-use Nours\RestAdminBundle\Loader\YamlResourceLoader;
+use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Symfony\Component\Config\Loader\DelegatingLoader;
 
 class YamlResourceLoaderTest extends AdminTestCase
 {
+    /**
+     * @var DelegatingLoader
+     */
+    private $loader;
 
-    public function testLoad()
+    public function setUp()
     {
-//        $loader = new YamlResourceLoader($this->getFileLocator());
-//
-//        $file = 'resources.yml';
-//
-//        $resources = $loader->load($file);
-//
-//        $this->assertCount(2, $resources);
+        parent::setUp();
+
+        $this->loader = $this->get('rest_admin.loader');
+    }
+
+    /**
+     * The post resource is configured in app/config/resources.yml
+     *
+     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
+     */
+    public function testLoadPostResource()
+    {
+        /** @var ResourceCollection $resources */
+        $resources = $this->loader->load('../config/resources.yml');
+
+        $this->assertTrue($resources->has('post'));
+
+        $post = $resources->get('post');
+
+        // Actions
+        $index = $post->getAction('index');
+        $this->assertNotNull($index);
+        $this->assertSame($index->getResource(), $post);
+
+        $get = $post->getAction('get');
+        $this->assertNotNull($get);
+        $this->assertSame($get->getResource(), $post);
+
+        $create = $post->getAction('create');
+        $this->assertNotNull($create);
+        $this->assertSame($create->getResource(), $post);
+
+        $edit = $post->getAction('edit');
+        $this->assertNotNull($edit);
+        $this->assertSame($edit->getResource(), $post);
+
+        $delete = $post->getAction('delete');
+        $this->assertNotNull($delete);
+        $this->assertSame($delete->getResource(), $post);
     }
 
 }

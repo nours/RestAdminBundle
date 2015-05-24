@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
 
 use Nours\RestAdminBundle\Annotation as Rest;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
-use Symfony\Component\HttpFoundation\Request;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -40,14 +40,12 @@ class CommentBisController
     /**
      * @Rest\Factory()
      *
-     * @param Request $request
+     * @param Post $parent
      * @return Comment
      */
-    public function makeComment(Request $request)
+    public function makeComment(Post $parent)
     {
-        $post = $request->attributes->get('parent');
-
-        return new Comment($post);
+        return new Comment($parent);
     }
 
     /**

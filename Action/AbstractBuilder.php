@@ -39,7 +39,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
      */
     public function createAction(Resource $resource, array $options = array())
     {
-        return new Action($this->getName(), $this->resolveOptions($options));
+        return new Action($this->getName(), $resource, $this->resolveOptions($options));
     }
 
     /**

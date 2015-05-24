@@ -68,8 +68,6 @@ class YamlResourceLoader extends FileLoader
         // Process imports
         if (isset($configs['imports'])) {
             foreach ($configs['imports'] as $name => $config) {
-//                var_dump($config['resource'], self::$loading);
-                self::$loading = array();
                 $import = $this->import($config['resource'], isset($config['type']) ? $config['type'] : null);
 
                 $resources->merge($import);

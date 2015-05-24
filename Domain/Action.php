@@ -25,18 +25,25 @@ class Action
     private $name;
 
     /**
+     * @var \Nours\RestAdminBundle\Domain\Resource
+     */
+    private $resource;
+
+    /**
      * @var array
      */
     private $config = array();
 
     /**
      * @param $name
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param array $config
      */
-    public function __construct($name, array $config)
+    public function __construct($name, Resource $resource, array $config)
     {
-        $this->name    = $name;
-        $this->config = $config;
+        $this->name     = $name;
+        $this->resource = $resource;
+        $this->config   = $config;
     }
 
     /**
@@ -45,6 +52,14 @@ class Action
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     /**
