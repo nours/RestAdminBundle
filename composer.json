@@ -23,7 +23,11 @@
         "phpunit/phpunit": "4.*",
         "symfony/browser-kit": "~2.6",
         "symfony/monolog-bundle" : "~2.7",
-        "doctrine/data-fixtures": "~1.1"
+        "doctrine/data-fixtures": "~1.1",
+        "knplabs/knp-menu": ">=2.0"
+    },
+    "suggest": {
+      "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)"
     },
     "autoload": {
         "psr-0": { "Nours\\RestAdminBundle": "" }

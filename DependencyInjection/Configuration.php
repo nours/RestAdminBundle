@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('view')->defaultTrue()->end()
                     ->end()
                 ->end()
+                ->scalarNode('knp_menu_voter')->defaultTrue()->end()
                 ->arrayNode('extras')
                     ->children()
                         ->variableNode('index')->defaultValue(array())->end()

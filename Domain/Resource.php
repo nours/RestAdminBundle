@@ -235,6 +235,16 @@ class Resource
     }
 
     /**
+     * Get the route prefix
+     *
+     * @return string
+     */
+    public function getRoutePrefix()
+    {
+        return $this->routePrefix;
+    }
+
+    /**
      * Get route name for an action
      *
      * @param string $actionName

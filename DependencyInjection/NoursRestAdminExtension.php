@@ -34,12 +34,19 @@ class NoursRestAdminExtension extends Extension
         $loader->load('services.yml');
         $loader->load('twig.yml');
 
+        // ORM integration
         if ($config['listeners']['orm']) {
             $loader->load('orm.yml');
         }
 
+        // View handlers
         if ($config['listeners']['view']) {
             $loader->load('view.yml');
+        }
+
+        // Knp Menu voter
+        if ($config['knp_menu_voter']) {
+            $loader->load('menu.yml');
         }
 
         $container->setParameter('rest_admin.resource', $config['resource']);

@@ -1,0 +1,5 @@
+services:
+  rest_admin.menu.voter:
+    class: Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
+    tags:
+        - { name: knp_menu.voter, request: true }
