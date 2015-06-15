@@ -59,7 +59,8 @@ class ResourceRouteVoterTest extends AdminTestCase
     public function testMatchesWithIndexRoute()
     {
         $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post')
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_index'
         ));
 
         $item = $this->createItem('post_index');
@@ -71,7 +72,8 @@ class ResourceRouteVoterTest extends AdminTestCase
     public function testMatchesWithEditRoute()
     {
         $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post')
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_edit'
         ));
 
         $item = $this->createItem('post_edit');
@@ -83,7 +85,8 @@ class ResourceRouteVoterTest extends AdminTestCase
     public function testDoesntMatchWithParentResource()
     {
         $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post')
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_edit'
         ));
 
         $item = $this->createItem('post_comment_edit');
@@ -92,15 +95,16 @@ class ResourceRouteVoterTest extends AdminTestCase
     }
 
 
-    public function testDoesntMatchArbitraryRouteNames()
+    public function testReturnsNullIfRouteNameDoNotMatch()
     {
         $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post')
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'foobar'
         ));
 
-        $item = $this->createItem('post_foo');
+        $item = $this->createItem('post_index');
 
-        $this->assertFalse($this->voter->matchItem($item));
+        $this->assertNull($this->voter->matchItem($item));
     }
 
 

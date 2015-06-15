@@ -48,4 +48,22 @@ class AdminManagerTest extends AdminTestCase
         $this->assertSame($post, $comment->getParent());
     }
 
+    /**
+     * The resources from app/config.resources.yml should be loaded
+     */
+    public function testResourceDeserialization()
+    {
+        $this->manager->getResourceCollection();
+
+        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/RestResourceCollection.txt';
+
+        $this->assertFileExists($path);
+        $collection = unserialize(file_get_contents($path));
+
+        $this->assertInstanceOf('Nours\RestAdminBundle\Domain\ResourceCollection', $collection);
+        $this->assertTrue($collection->has('post'));
+        $this->assertTrue($collection->has('post.comment'));
+        $this->assertTrue($collection->has('post.commentbis'));
+    }
+
 }

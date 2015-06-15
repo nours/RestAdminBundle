@@ -18,7 +18,7 @@ use Nours\RestAdminBundle\Domain\Action;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ActionConfigEvent extends BaseEvent
+class ActionConfigEvent extends ResourceEvent
 {
     /**
      * @var string

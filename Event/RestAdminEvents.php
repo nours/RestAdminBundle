@@ -34,4 +34,11 @@ class RestAdminEvents
      * @see ActionConfigEvent
      */
     const ACTION_CONFIG = 'rest_admin.action_config';
+
+    /**
+     * Resource event is triggered juste before resource
+     *
+     * @see ActionConfigEvent
+     */
+    const RESOURCE_CONFIG = 'rest_admin.resource';
 }

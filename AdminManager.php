@@ -10,10 +10,11 @@
 
 namespace Nours\RestAdminBundle;
 
-use Nours\RestAdminBundle\Action\ActionBuilderInterface;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
  * The admin manager.
@@ -22,7 +23,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class AdminManager
+class AdminManager implements CacheWarmerInterface
 {
     /**
      * @var ResourceCollection
@@ -30,23 +31,29 @@ class AdminManager
     private $resources = array();
 
     /**
-     * @var string
+     * @var mixed
      */
     private $resource;
 
     /**
-     * @var
+     * @var LoaderInterface
      */
     private $loader;
+    private $cacheDir;
+    private $debug;
 
     /**
      * @param LoaderInterface $loader
-     * @param $resource
+     * @param mixed $resource
+     * @param $cacheDir
+     * @param $debug
      */
-    public function __construct(LoaderInterface $loader, $resource)
+    public function __construct(LoaderInterface $loader, $resource, $cacheDir, $debug)
     {
         $this->loader   = $loader;
         $this->resource = $resource;
+        $this->cacheDir = $cacheDir;
+        $this->debug    = $debug;
     }
 
     /**
@@ -55,7 +62,21 @@ class AdminManager
     public function getResourceCollection()
     {
         if (empty($this->resources)) {
-            $this->resources = $this->loader->load($this->resource);
+            $filePath = $this->cacheDir.'/RestResourceCollection.txt';
+            $cache = new ConfigCache($filePath, $this->debug);
+
+            if (!$cache->isFresh()) {
+                /** @var ResourceCollection $collection */
+                $collection = $this->loader->load($this->resource);
+
+                $serialized = serialize($collection);
+                $cache->write($serialized, $collection->getConfigResources());
+
+                $this->resources = $collection;
+            } else {
+                $this->resources = unserialize(file_get_contents($filePath));
+            }
+
             $this->resources->resolveParents();
         }
 
@@ -106,5 +127,27 @@ class AdminManager
         }
 
         return new \ArrayIterator(array_reverse($parents));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function warmUp($cacheDir)
+    {
+        $currentDir = $this->cacheDir;
+
+        // force cache generation
+        $this->cacheDir = $cacheDir;
+        $this->getResourceCollection();
+
+        $this->cacheDir = $currentDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isOptional()
+    {
+        return false;
     }
 }

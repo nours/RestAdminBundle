@@ -52,10 +52,17 @@ class ResourceRouteVoter implements VoterInterface
             return null;
         }
 
-        $routes = (array) $item->getExtra('routes', array());
+        $route = $this->request->attributes->get('_route');
 
         $routePrefix    = $resource->getRoutePrefix();
         $routePrefixLen = strlen($routePrefix);
+
+        // Check that current route matches the prefix
+        if (substr($route, 0, $routePrefixLen) != $routePrefix) {
+            return null;
+        }
+
+        $routes = (array) $item->getExtra('routes', array());
         foreach ($routes as $route) {
             $routeName = $route['route'];
 

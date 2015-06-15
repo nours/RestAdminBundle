@@ -96,9 +96,9 @@ class AnnotationClassLoader implements LoaderInterface
 
             $resource = $this->processResource($class, $annotation);
 
-            $this->factory->configureActions($resource, $this->processActions($class, $annotation));
-
             $collection->add($resource);
+
+            $this->factory->finishResource($resource, $collection);
         }
 
         return $collection;
@@ -126,7 +126,11 @@ class AnnotationClassLoader implements LoaderInterface
             $config['factory'] = $factory;
         }
 
-        return $this->factory->createResource($annotation->class, $config);
+        $resource = $this->factory->createResource($annotation->class, $config);
+
+        $this->factory->configureActions($resource, $this->processActions($class, $annotation));
+
+        return $resource;
     }
 
     /**

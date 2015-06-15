@@ -12,7 +12,10 @@ namespace Nours\RestAdminBundle\Loader;
 
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Event\ActionConfigEvent;
+use Nours\RestAdminBundle\Event\ResourceCollectionEvent;
+use Nours\RestAdminBundle\Event\ResourceEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -90,6 +93,19 @@ class ResourceFactory
 
             $resource->addAction($builder->createAction($resource, $event->config));
         }
+    }
+
+    /**
+     * To called when a resource loading is done, to dispatch an event
+     *
+     * @param Resource $resource
+     * @param ResourceCollection $collection
+     */
+    public function finishResource(Resource $resource, ResourceCollection $collection)
+    {
+        // Dispatch resource config event
+        $event = new ResourceCollectionEvent($resource, $collection);
+        $this->dispatcher->dispatch(RestAdminEvents::RESOURCE_CONFIG, $event);
     }
 
     /**

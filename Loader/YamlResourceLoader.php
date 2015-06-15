@@ -62,6 +62,8 @@ class YamlResourceLoader extends FileLoader
                 $resource = $this->loadResource($name, $config);
 
                 $resources->add($resource);
+
+                $this->resourceFactory->finishResource($resource, $resources);
             }
         }
 

@@ -54,7 +54,8 @@ services:
 ##############################
   rest_admin.manager:
     class: Nours\RestAdminBundle\AdminManager
-    arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
+    arguments: [ '@rest_admin.loader', '%rest_admin.resource%', '%kernel.cache_dir%', '%kernel.debug%' ]
+    tags: [ { name: 'kernel.cache_warmer' } ]
 
   rest_admin.action_manager:
     class: Nours\RestAdminBundle\ActionManager

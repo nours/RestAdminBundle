@@ -119,4 +119,17 @@ class Action
     {
         return $this->getConfig('handlers', array());
     }
+
+    /**
+     * Duplicate this action for another resource.
+     *
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @return Action
+     */
+    public function duplicate(Resource $resource)
+    {
+        $clone = clone $this;
+        $clone->resource = $resource;
+        return $clone;
+    }
 }

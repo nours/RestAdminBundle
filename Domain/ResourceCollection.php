@@ -9,15 +9,16 @@
  */
 
 namespace Nours\RestAdminBundle\Domain;
-use Symfony\Component\Config\Resource\ResourceInterface;
 
+use Symfony\Component\Config\Resource\ResourceInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Class ResourceCollection
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ResourceCollection implements \Countable, \IteratorAggregate
+class ResourceCollection implements \Countable, \IteratorAggregate, \Serializable
 {
     /**
      * @var Resource[]
@@ -26,6 +27,8 @@ class ResourceCollection implements \Countable, \IteratorAggregate
 
     /**
      * @var array
+     *
+     * @Serializer\Exclude()
      */
     private $configResources = array();
 
@@ -134,5 +137,23 @@ class ResourceCollection implements \Countable, \IteratorAggregate
         foreach ($other->configResources as $resource) {
             $this->addConfigResource($resource);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        // Serialize resources
+        return serialize($this->resources);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        $this->resources = unserialize($serialized);
+        $this->configResources = array();
     }
 }

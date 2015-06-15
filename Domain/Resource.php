@@ -99,6 +99,35 @@ class Resource
     }
 
     /**
+     * @param string $newName
+     * @param array $configs
+     * @return Resource
+     */
+    public function duplicate($newName, array $configs = array())
+    {
+        $configs = array_merge($this->configs, $configs);
+        $configs['name'] = $newName;
+
+        $clone = new self($this->class, $configs);
+
+        foreach ($this->actions as $action) {
+            $clone->addAction($action->duplicate($clone));
+        }
+
+        return $clone;
+    }
+
+    /**
+     * Used to override or set a config param
+     *
+     * @return mixed
+     */
+    public function setConfig($name, $value)
+    {
+        $this->configs[$name] = $value;
+    }
+
+    /**
      * @return mixed
      */
     public function getConfig($name, $default = null)

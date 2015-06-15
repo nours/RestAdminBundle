@@ -11,6 +11,8 @@
 namespace Nours\RestAdminBundle\Tests\Loader;
 
 use Nours\RestAdminBundle\Domain\ResourceCollection;
+use Nours\RestAdminBundle\Event\ResourceCollectionEvent;
+use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 
@@ -62,6 +64,39 @@ class YamlResourceLoaderTest extends AdminTestCase
         $delete = $post->getAction('delete');
         $this->assertNotNull($delete);
         $this->assertSame($delete->getResource(), $post);
+    }
+
+
+    /**
+     * The post resource is configured in app/config/resources.yml
+     *
+     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
+     */
+    public function testDispatchResourceConfigEvent()
+    {
+        $this->get('event_dispatcher')->addListener(RestAdminEvents::RESOURCE_CONFIG, function(ResourceCollectionEvent $event) {
+            $resource = $event->getResource();
+
+            $resource->setConfig('foo', 'bar');
+
+            if ($resource->getName() == 'post') {
+                $event->getCollection()->add($resource->duplicate('postbis'));
+            }
+        });
+
+        /** @var ResourceCollection $resources */
+        $resources = $this->loader->load('../config/resources.yml');
+
+        $post = $resources->get('post.comment');
+        $this->assertEquals('bar', $post->getConfig('foo'));
+
+        $post = $resources->get('post.commentbis');
+        $this->assertEquals('bar', $post->getConfig('foo'));
+
+        $post = $resources->get('post');
+        $this->assertEquals('bar', $post->getConfig('foo'));
+
+        $this->assertTrue($resources->has('postbis'));
     }
 
 }

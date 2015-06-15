@@ -18,7 +18,7 @@ use Nours\RestAdminBundle\Domain\Action;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class RouteEvent extends BaseEvent
+class RouteEvent extends ResourceEvent
 {
     /**
      * @var string
