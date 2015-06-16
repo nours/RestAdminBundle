@@ -101,14 +101,14 @@ class Resource
     /**
      * @param string $newName
      * @param array $configs
-     * @return Resource
+     * @return \Nours\RestAdminBundle\Domain\Resource
      */
     public function duplicate($newName, array $configs = array())
     {
         $configs = array_merge($this->configs, $configs);
         $configs['name'] = $newName;
 
-        $clone = new self($this->class, $configs);
+        $clone = new static($this->class, $configs);
 
         foreach ($this->actions as $action) {
             $clone->addAction($action->duplicate($clone));
