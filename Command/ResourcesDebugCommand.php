@@ -87,7 +87,7 @@ EOF
         if ($handlers = $action->getHandlers()) {
             $output->writeln('Handlers :');
             foreach ($handlers as $handler) {
-                $output->writeln("<comment>" . $handler . '</comment>');
+                $output->writeln("<comment>" . is_array($handler) ? '<array>' : $handler . '</comment>');
             }
         }
 
