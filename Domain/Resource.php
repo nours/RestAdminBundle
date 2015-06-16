@@ -136,6 +136,14 @@ class Resource
     }
 
     /**
+     * @return array
+     */
+    public function getConfigs()
+    {
+        return $this->configs;
+    }
+
+    /**
      * @return string|null
      */
     public function getFactory()

@@ -81,6 +81,14 @@ class Action
     }
 
     /**
+     * @return array
+     */
+    public function getConfigs()
+    {
+        return $this->config;
+    }
+
+    /**
      * @return string
      */
     public function getForm()

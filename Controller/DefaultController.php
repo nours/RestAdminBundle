@@ -68,7 +68,7 @@ class DefaultController extends Controller
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                return $this->handleSuccess($data, $form, $resource, $action);
+                return $this->handleSuccess($data, $request, $form, $resource, $action);
             }
         }
 

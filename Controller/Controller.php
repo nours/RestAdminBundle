@@ -45,13 +45,14 @@ class Controller extends BaseController
 
     /**
      * @param mixed $data
+     * @param Request $request
      * @param FormInterface $form
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @return \Symfony\Component\Form\Form
      */
-    protected function handleSuccess($data, FormInterface $form, Resource $resource, Action $action)
+    protected function handleSuccess($data, Request $request, FormInterface $form, Resource $resource, Action $action)
     {
-        return $this->get('rest_admin.resource_handler')->handleSuccess($data, $form, $resource, $action);
+        return $this->get('rest_admin.resource_handler')->handleSuccess($data, $request, $form, $resource, $action);
     }
 }

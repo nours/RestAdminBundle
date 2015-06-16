@@ -29,15 +29,15 @@ class ResourceHandler
     }
 
 
-    public function handleSuccess($data, FormInterface $form, Resource $resource, Action $action)
+    public function handleSuccess($data, Request $request, FormInterface $form, Resource $resource, Action $action)
     {
         // Init a request for resolver
-        $request = new Request(array(), array(), array(
+        $request = new Request(array(), array(), array_replace($request->attributes->all(), array(
             'resource' => $resource,
             'action'   => $action,
             'form'     => $form,
             'data'     => $data
-        ));
+        )));
 
         foreach ($action->getHandlers() as $handler) {
             $request->attributes->set('_controller', $handler);

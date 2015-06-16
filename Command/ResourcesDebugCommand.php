@@ -51,17 +51,25 @@ EOF
             $this->dumpResource($input, $output, $resources->get($resourceName));
         } else {
             foreach ($resources as $resource) {
-                $this->dumpResource($input, $output, $resource);
+                $this->dumpResourceLight($output, $resource);
             }
         }
     }
 
+    private function dumpResourceLight(OutputInterface $output, Resource $resource)
+    {
+        $length = strlen($resource->getFullName());
+        $output->writeln('<info>'.$resource->getFullName().'</info>');
+        $output->writeln('<info>'.str_repeat('*', $length).'</info>');
+        $this->writeVal($output, 'class', $resource->getClass());
+    }
+
     private function dumpResource(InputInterface $input, OutputInterface $output, Resource $resource)
     {
-        $length = strlen($resource->getFullName()) + 2;
-        $output->writeln('<info>'.str_repeat('=', $length).'</info>');
-        $output->writeln('<info>'.$resource->getFullName().' :</info>');
-        $output->writeln('<info>'.str_repeat('=', $length).'</info>');
+        $this->dumpResourceLight($output, $resource);
+        foreach ($resource->getConfigs() as $name => $value) {
+            $this->writeVal($output, $name, $value);
+        }
 
         if ($actionName = $input->getArgument('action')) {
             $this->dumpAction($output, $resource->getAction($actionName));
@@ -76,21 +84,40 @@ EOF
 
     private function dumpAction(OutputInterface $output, Action $action)
     {
-        $output->writeln("Action <info>" . $action->getName() . '</info>');
+        $output->writeln("\nAction <info>" . $action->getName() . '</info>');
+        $output->writeln(str_repeat('*', 7 + strlen($action->getName())));
 
-        $output->writeln('Controller : <comment>'.$action->getController().'</comment>');
-        $output->writeln('Template : <comment>'.$action->getTemplate().'</comment>');
-        if ($form = $action->getForm()) {
-            $output->writeln('Form : <comment>'.$form.'</comment>');
-        }
-
-        if ($handlers = $action->getHandlers()) {
-            $output->writeln('Handlers :');
-            foreach ($handlers as $handler) {
-                $output->writeln("<comment>" . is_array($handler) ? '<array>' : $handler . '</comment>');
+        foreach ($action->getConfigs() as $name => $value) {
+            if ($name == 'handlers') {
+                if ($value) {
+                    $output->write('Handlers : ');
+                    $first = true;
+                    foreach ($value as $handler) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $output->write('           ');
+                        }
+                        $output->writeln("<info>" . (is_array($handler) ?
+                                ((is_object($handler[0]) ? get_class($handler[0]) : $handler[0]). ':' . $handler[1]) :
+                                $handler) . '</info>');
+                    }
+                }
+            } else {
+                $this->writeVal($output, $name, $value);
             }
         }
+    }
 
-        $output->writeln('');
+    private function writeVal(OutputInterface $output, $label, $value)
+    {
+        if (is_array($value)) {
+            $value = '[' . implode(', ', $value) . ']';
+        } elseif (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        } elseif (is_null($value)) {
+            $value = 'null';
+        }
+        $output->writeln($label . ' : <info>'.$value.'</info>');
     }
 }
