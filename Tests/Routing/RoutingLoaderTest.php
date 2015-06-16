@@ -224,4 +224,61 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('other', $route->getDefault('_action'));
         $this->assertEquals(array('POST'), $route->getMethods());
     }
+
+    public function testPostPrefixedControllerRouteLoading()
+    {
+        // Comment index
+        $route = $this->collection->get('prf_post_index');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('index', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
+
+        // Comment get
+        $route = $this->collection->get('prf_post_get');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts/{post}.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('get', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
+
+        // Comment create
+        $route = $this->collection->get('prf_post_create');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts/create.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('create', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
+
+        // Comment new
+        $route = $this->collection->get('prf_post_new');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('create', $route->getDefault('_action'));
+        $this->assertEquals(array('POST'), $route->getMethods());
+
+        // Comment edit
+        $route = $this->collection->get('prf_post_edit');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts/{post}/edit.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('edit', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
+
+        // Comment new
+        $route = $this->collection->get('prf_post_update');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/prefixed/posts/{post}.{_format}', $route->getPath());
+        $this->assertEquals('post_prefixed', $route->getDefault('_resource'));
+        $this->assertEquals('edit', $route->getDefault('_action'));
+        $this->assertEquals(array('PUT'), $route->getMethods());
+    }
 }

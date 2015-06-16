@@ -41,7 +41,7 @@ class DoctrineParamFetcher
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
-        $resourceId = $request->attributes->get($resource->getName());
+        $resourceId = $request->attributes->get($resource->getParamName());
 
         if (empty($resourceId)) {
             // No resource parameter is set, but it's parent should
@@ -86,11 +86,15 @@ class DoctrineParamFetcher
      */
     private function findSingle(Request $request, Resource $resource, Action $action = null)
     {
-        $resourceId = $request->attributes->get($resource->getName());
+        $resourceId = $request->attributes->get($resource->getParamName());
 
-        $finder = $action ? $action->getConfig('finder', 'find') : 'find';
+        if ($resourceId) {
+            $finder = $action ? $action->getConfig('finder', 'find') : 'find';
 
-        return $this->manager->getRepository($resource->getClass())->$finder($resourceId);
+            return $this->manager->getRepository($resource->getClass())->$finder($resourceId);
+        }
+
+        return null;
     }
 
     /**
@@ -112,7 +116,7 @@ class DoctrineParamFetcher
             ->where('r.'.$resource->getIdentifier().' = :'.$resource->getName());
 
         $parameters = array(
-            $resource->getName() => $request->attributes->get($resource->getName())
+            $resource->getName() => $request->attributes->get($resource->getParamName())
         );
 
         $parentAlias = 'r';
@@ -123,7 +127,7 @@ class DoctrineParamFetcher
             $builder->addSelect($alias)->innerJoin($parentAlias.'.'.$parent->getName(), $alias)
                 ->andWhere($alias.'.'.$parent->getIdentifier().' = :'.$parent->getName());
 
-            $parameters[$parent->getName()] = $request->attributes->get($parent->getName());
+            $parameters[$parent->getName()] = $request->attributes->get($parent->getParamName());
 
             $parentAlias = $alias;
             ++$index;

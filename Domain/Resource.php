@@ -94,7 +94,7 @@ class Resource
 
         $this->configs = $configs;
 
-        $this->basePrefix = $this->name . '_';
+        $this->basePrefix = $this->getConfig('route_prefix', $this->name) . '_';
         $this->routePrefix = $this->basePrefix;
     }
 
@@ -256,6 +256,27 @@ class Resource
     }
 
     /**
+     * Retourne les actions disponibles pour chaque objet.
+     *
+     * @param array $names
+     * @return array
+     */
+    public function getActionList(array $names)
+    {
+        $results = array();
+
+        foreach ($names as $name) {
+            if ($action = $this->getAction($name)) {
+                $results[] = $action;
+            } else {
+                throw new \DomainException("Action $name not found");
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * @param Action $action
      */
     public function addAction(Action $action)
@@ -300,10 +321,14 @@ class Resource
             $parts[] = $parent->getResourceUriPath();
         }
 
+        if ($path = $this->getConfig('base_path')) {
+            $parts[] = $path;
+        }
+
         $parts[] = $this->getSlug();
 
         if ($objectPart) {
-            $parts[] = '{' . $this->getName() . '}';
+            $parts[] = '{' . $this->getParamName() . '}';
         }
 
         if ($suffix) {
@@ -355,6 +380,16 @@ class Resource
     }
 
     /**
+     * Returns the param name used in routing, and parent retrieval
+     *
+     * @return mixed
+     */
+    public function getParamName()
+    {
+        return $this->getConfig('param_name', $this->name);
+    }
+
+    /**
      * Build route parameters for an instance of this resource
      *
      * @param $data
@@ -363,7 +398,7 @@ class Resource
     public function getResourceRouteParams($data)
     {
         $params = array(
-            $this->getName() => $this->getObjectIdentifier($data)
+            $this->getParamName() => $this->getObjectIdentifier($data)
         );
 
         if ($parent = $this->getParent()) {
@@ -382,7 +417,7 @@ class Resource
     public function getParentObject($data)
     {
         if ($parent = $this->getParent()) {
-            return $this->getPropertyAccessor()->getValue($data, $parent->getName());
+            return $this->getPropertyAccessor()->getValue($data, $parent->getParamName());
         }
 
         return null;

@@ -27,18 +27,20 @@ class RestAdminEvents
     const ROUTE = 'rest_admin.route';
 
     /**
-     * Action config events are triggered when an action is built, and enables to update it's configuration.
+     * Action events are triggered when an action is built, and enables to update it's configuration.
      *
      * The main use of this event is to append handlers for actions.
      *
      * @see ActionConfigEvent
      */
-    const ACTION_CONFIG = 'rest_admin.action_config';
+    const ACTION = 'rest_admin.action';
 
     /**
-     * Resource event is triggered juste before resource
+     * Triggered on resource creation, able to update the resource's configuration.
      *
-     * @see ActionConfigEvent
+     * It receives a ResourceCollectionEvent so the collection can be used to append new resources onto it.
+     *
+     * @see ResourceCollectionEvent
      */
-    const RESOURCE_CONFIG = 'rest_admin.resource';
+    const RESOURCE = 'rest_admin.resource';
 }

@@ -15,7 +15,6 @@ use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Event\ActionConfigEvent;
 use Nours\RestAdminBundle\Event\ResourceCollectionEvent;
-use Nours\RestAdminBundle\Event\ResourceEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -89,7 +88,7 @@ class ResourceFactory
 
             // Dispatch action config event
             $event = new ActionConfigEvent($resource, $name, $config);
-            $this->dispatcher->dispatch(RestAdminEvents::ACTION_CONFIG, $event);
+            $this->dispatcher->dispatch(RestAdminEvents::ACTION, $event);
 
             $resource->addAction($builder->createAction($resource, $event->config));
         }
@@ -105,7 +104,7 @@ class ResourceFactory
     {
         // Dispatch resource config event
         $event = new ResourceCollectionEvent($resource, $collection);
-        $this->dispatcher->dispatch(RestAdminEvents::RESOURCE_CONFIG, $event);
+        $this->dispatcher->dispatch(RestAdminEvents::RESOURCE, $event);
     }
 
     /**

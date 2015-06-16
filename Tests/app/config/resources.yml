@@ -9,6 +9,16 @@ resources:
     form: post
     actions: [ create, edit, delete ]
 
+  post_prefixed:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
+    form: post
+    actions: [ create, edit, delete ]
+    route_prefix: prf_post
+    base_path: prefixed
+    slug: posts
+    param_name: post
+
+
 #  comment:
 #    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment
 #    parent: post

@@ -74,7 +74,7 @@ class YamlResourceLoaderTest extends AdminTestCase
      */
     public function testDispatchResourceConfigEvent()
     {
-        $this->get('event_dispatcher')->addListener(RestAdminEvents::RESOURCE_CONFIG, function(ResourceCollectionEvent $event) {
+        $this->get('event_dispatcher')->addListener(RestAdminEvents::RESOURCE, function(ResourceCollectionEvent $event) {
             $resource = $event->getResource();
 
             $resource->setConfig('foo', 'bar');
