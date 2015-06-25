@@ -49,6 +49,10 @@ services:
     arguments: [ '@rest_admin.manager', '@rest_admin.action_manager', '@event_dispatcher' ]
     tags: [ { name: 'routing.loader' } ]
 
+  rest_admin.routing.url_generator:
+    class: Nours\RestAdminBundle\Routing\UrlGenerator
+    arguments: [ '@router' ]
+
 ##############################
 # Core
 ##############################
