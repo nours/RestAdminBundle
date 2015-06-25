@@ -47,7 +47,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Basic form action
+     * Form handling action
      *
      * @param Request $request
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
@@ -70,87 +70,6 @@ class DefaultController extends Controller
             if ($form->isValid()) {
                 return $this->handleSuccess($data, $request, $form, $resource, $action);
             }
-        }
-
-        return $form;
-    }
-
-    /**
-     * Create action
-     *
-     * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param Action $action
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function createAction(Request $request, Resource $resource, Action $action)
-    {
-        $data = $this->createData($request);
-
-        $form = $this->createResourceForm($data, $resource, $action);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->persist($data);
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', $resource->getFullName().'.create');
-
-            return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParamsFromData($data));
-        }
-
-        return $form;
-    }
-
-    /**
-     * Create action
-     *
-     * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param Action $action
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function editAction(Request $request, Resource $resource, Action $action, $data)
-    {
-        $form = $this->createResourceForm($data, $resource, $action);
-
-        if ($request->getMethod() == $form->getConfig()->getMethod()) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
-
-                $this->addFlash('success', $resource->getFullName().'.edit');
-
-                return $this->redirectToRoute($resource->getRouteName('index'), $resource->getRouteParamsFromData($data));
-            }
-        }
-
-        return $form;
-    }
-
-    /**
-     * Create action
-     *
-     * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param Action $action
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction(Request $request, Resource $resource, Action $action, $data)
-    {
-        $form = $this->createResourceForm($data, $resource, $action);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->remove($data);
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', $resource->getFullName().'.delete');
-
-            return $this->redirectToRoute($resource->getRouteName('index'));
         }
 
         return $form;

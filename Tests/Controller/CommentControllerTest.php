@@ -28,7 +28,7 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comments');
+        $client->request('GET', '/posts/1/comments');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
@@ -45,7 +45,7 @@ class CommentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comments/1');
+        $client->request('GET', '/posts/1/comments/1');
 
         $response = $client->getResponse();
 
@@ -58,6 +58,21 @@ class CommentControllerTest extends AdminTestCase
             'comment',
             $response->getContent()
         );
+    }
+
+    /**
+     * Index action.
+     */
+    public function testGetAction404ForBadParent()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $client->request('GET', '/posts/9999/comments/1');
+
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**

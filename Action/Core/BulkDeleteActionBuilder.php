@@ -14,31 +14,37 @@ use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Default action builder.
- *
+ * Class BulkDeleteActionBuilder
+ * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class DefaultActionBuilder extends AbstractBuilder
+class BulkDeleteActionBuilder extends AbstractBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
     {
-        foreach ($action->getConfig('routes') as $route) {
-            $builder->addRoute(
-                $resource, $action,
-                $route['name'],
-                $route['methods'],
-                $resource->getUriPath($route['path']),
-                $route['defaults'],
-                $route['requirements'],
-                $route['options']
-            );
-        }
+        $builder->addRoute($resource, $action, 'bulk_delete', 'GET', $resource->getUriPath('delete'));
+        $builder->addRoute($resource, $action, 'bulk_remove', 'DELETE', $resource->getUriPath());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
+    {
+        $routeName = $resource->getRouteName('bulk_remove');
+
+        $builder
+            ->setMethod('DELETE')
+            ->setAction($generator->generate($routeName, $resource->getCollectionRouteParams($data)));
+        ;
     }
 
     /**
@@ -46,13 +52,6 @@ class DefaultActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        // Overrides default options :
-        $resolver->setDefaults(array(
-            'type'     => 'default',    // this builder's type is default
-            'name'     => null,
-            'template' => '',
-            'routes'   => array()
-        ));
     }
 
     /**
@@ -60,6 +59,6 @@ class DefaultActionBuilder extends AbstractBuilder
      */
     public function getName()
     {
-        return 'default';
+        return 'bulk_delete';
     }
 }

@@ -7,7 +7,7 @@ resources:
   post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
     form: post
-    actions: [ create, edit, delete ]
+    actions: [ create, edit, delete, bulk_delete ]
 
   post_prefixed:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post

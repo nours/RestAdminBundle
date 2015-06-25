@@ -112,4 +112,14 @@ class ResourceTest extends AdminTestCase
         $this->assertEquals($comment->getPost()->getId(), $params['post']);
         $this->assertEquals($comment->getId(), $params['comment']);
     }
+
+    /**
+     * getAction throws
+     */
+    public function testGetActionThrowsIfActionIsUnknown()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $this->postResource->getAction('foo');
+    }
 }

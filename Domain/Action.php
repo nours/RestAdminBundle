@@ -18,13 +18,6 @@ namespace Nours\RestAdminBundle\Domain;
 class Action
 {
     /**
-     * The action name
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var \Nours\RestAdminBundle\Domain\Resource
      */
     private $resource;
@@ -35,13 +28,11 @@ class Action
     private $config = array();
 
     /**
-     * @param $name
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param array $config
      */
-    public function __construct($name, Resource $resource, array $config)
+    public function __construct(Resource $resource, array $config)
     {
-        $this->name     = $name;
         $this->resource = $resource;
         $this->config   = $config;
     }
@@ -51,7 +42,7 @@ class Action
      */
     public function getName()
     {
-        return $this->name;
+        return $this->getConfig('name');
     }
 
     /**
@@ -67,7 +58,7 @@ class Action
      */
     public function getType()
     {
-        return $this->getConfig('type', $this->name);
+        return $this->getConfig('type');
     }
 
     /**

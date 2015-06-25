@@ -252,6 +252,12 @@ class Resource
      */
     public function getAction($name)
     {
+        if (!$this->hasAction($name)) {
+            throw new \InvalidArgumentException(sprintf(
+                "The action %s is not registered in resource %s (actions : %)",
+                $name, $this->getFullName(), implode(array_keys($this->actions))
+            ));
+        }
         return isset($this->actions[$name]) ? $this->actions[$name] : null;
     }
 
@@ -417,6 +423,28 @@ class Resource
     }
 
     /**
+     * Build route parameters for a collection of this resource
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getCollectionRouteParams(array $data)
+    {
+        $params = array(
+            $this->getIdentifier() => array_map(array($this, 'getObjectIdentifier'), $data)
+        );
+
+        if ($parent = $this->getParent()) {
+            // Use first item of collection
+            $object = reset($data);
+
+            $params = array_merge($params, $parent->getResourceRouteParams($this->getParentObject($object)));
+        }
+
+        return $params;
+    }
+
+    /**
      * Retrieve parent object from data.
      *
      * @param $data
@@ -442,7 +470,9 @@ class Resource
         return $this->getPropertyAccessor()->getValue($data, $this->getIdentifier());
     }
 
-
+    /**
+     * @return PropertyAccessor
+     */
     private function getPropertyAccessor()
     {
         if (empty(self::$propertyAccessor)) {

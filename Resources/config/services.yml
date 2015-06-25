@@ -109,6 +109,11 @@ services:
     arguments: [ '%rest_admin.actions.delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
+  rest_admin.action_builder.bulk_delete:
+    class: Nours\RestAdminBundle\Action\Core\BulkDeleteActionBuilder
+    arguments: [ '%rest_admin.actions.bulk_delete%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
 ##############################
 # Forms
 ##############################
@@ -119,6 +124,11 @@ services:
   rest_admin.form_type.delete:
     class: Nours\RestAdminBundle\Form\Type\DeleteType
     tags: [ { name: 'form.type', alias: 'rest_admin_delete' } ]
+
+  rest_admin.form_type.bulk_delete:
+    class: Nours\RestAdminBundle\Form\Type\BulkDeleteType
+    tags: [ { name: 'form.type', alias: 'rest_admin_bulk_delete' } ]
+
 
 ##############################
 # Event listeners

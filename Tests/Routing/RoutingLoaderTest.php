@@ -95,13 +95,13 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals(array('PUT'), $postCreate->getMethods());
 
         // Delete form
-        $postCreateForm = $this->collection->get('post_delete');
+        $route = $this->collection->get('post_delete');
 
-        $this->assertNotNull($postCreateForm);
-        $this->assertEquals('/posts/{post}/delete.{_format}', $postCreateForm->getPath());
-        $this->assertEquals('post', $postCreateForm->getDefault('_resource'));
-        $this->assertEquals('delete', $postCreateForm->getDefault('_action'));
-        $this->assertEquals(array('GET'), $postCreateForm->getMethods());
+        $this->assertNotNull($route);
+        $this->assertEquals('/posts/{post}/delete.{_format}', $route->getPath());
+        $this->assertEquals('post', $route->getDefault('_resource'));
+        $this->assertEquals('delete', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
 
         // Remove post
         $postCreate = $this->collection->get('post_remove');
@@ -111,6 +111,24 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('post', $postCreate->getDefault('_resource'));
         $this->assertEquals('delete', $postCreate->getDefault('_action'));
         $this->assertEquals(array('DELETE'), $postCreate->getMethods());
+
+        // Bulk Delete form
+        $route = $this->collection->get('post_bulk_delete');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/posts/delete.{_format}', $route->getPath());
+        $this->assertEquals('post', $route->getDefault('_resource'));
+        $this->assertEquals('bulk_delete', $route->getDefault('_action'));
+        $this->assertEquals(array('GET'), $route->getMethods());
+
+        // Bulk Remove action
+        $route = $this->collection->get('post_bulk_remove');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/posts.{_format}', $route->getPath());
+        $this->assertEquals('post', $route->getDefault('_resource'));
+        $this->assertEquals('bulk_delete', $route->getDefault('_action'));
+        $this->assertEquals(array('DELETE'), $route->getMethods());
     }
 
     public function testCommentControllerRouteLoading()

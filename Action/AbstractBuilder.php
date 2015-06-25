@@ -39,7 +39,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
      */
     public function createAction(Resource $resource, array $options = array())
     {
-        return new Action($this->getName(), $resource, $this->resolveOptions($options));
+        return new Action($resource, $this->resolveOptions($options));
     }
 
     /**
@@ -53,6 +53,8 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * Builds the option resolver and returns resolved options.
      *
+     * @see Nours\RestAdminBundle\Loader\ResourceFactory::configureActions
+     *
      * @param array $options
      * @return array
      */
@@ -63,9 +65,13 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'controller'
         ));
         $resolver->setDefaults(array(
+            'name'     => function(Options $options) {
+                // The name defaults to type
+                return $options['type'];
+            },
+            'type'     => $this->getName(),
             'template' => null,
-            'handlers' => array(),
-            'type'     => null
+            'handlers' => array()
         ));
         $resolver->setDefaults($this->defaultOptions);
 

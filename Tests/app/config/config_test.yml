@@ -46,17 +46,18 @@ nours_rest_admin:
     resource: "%kernel.root_dir%/config/resources.yml"
     listeners:
         view: true
-    extras:
-        index:
-            icon: list
-        create:
-            icon: plus
     templates:
         index: index.html.twig
         get: get.html.twig
         create: create.html.twig
         edit: edit.html.twig
         delete: delete.html.twig
+        bulk_delete: bulk_delete.html.twig
+    extras:
+        index:
+            icon: list
+        create:
+            icon: plus
 
 doctrine:
     dbal:

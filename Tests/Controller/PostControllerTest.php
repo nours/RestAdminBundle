@@ -28,7 +28,7 @@ class PostControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts');
+        $client->request('GET', '/posts');
 
 
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -46,7 +46,7 @@ class PostControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts.json');
+        $client->request('GET', '/posts.json');
 
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
@@ -62,14 +62,14 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
-     * Index action.
+     * Get action.
      */
     public function testGetAction()
     {
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1');
+        $client->request('GET', '/posts/1');
 
         $response = $client->getResponse();
 
@@ -85,6 +85,21 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
+     * Get action returns 404 if entity is not found.
+     */
+    public function testGetAction404()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $client->request('GET', '/posts/9999');
+
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
      * Get action in JSON (using header .
      */
     public function testGetJsonAction()
@@ -92,7 +107,7 @@ class PostControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request(
+        $client->request(
             'GET', '/posts/1',
             array(),
             array(),
@@ -112,7 +127,7 @@ class PostControllerTest extends AdminTestCase
     /**
      * Create action form
      */
-    public function testCreateFormAction()
+    public function testCreateAction()
     {
         $this->loadFixtures();
         $client = $this->getClient();
@@ -145,7 +160,7 @@ class PostControllerTest extends AdminTestCase
     /**
      * Create action form
      */
-    public function testEditFormAction()
+    public function testEditAction()
     {
         $this->loadFixtures();
         $client = $this->getClient();
@@ -178,9 +193,24 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
+     * Edit action returns 404 if entity is not found.
+     */
+    public function testEditAction404()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $client->request('GET', '/posts/9999/edit');
+
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
      * Create action form
      */
-    public function testDeleteFormAction()
+    public function testDeleteAction()
     {
         $this->loadFixtures();
         $client = $this->getClient();
@@ -206,5 +236,49 @@ class PostControllerTest extends AdminTestCase
         $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
 
         $this->assertNull($post);
+    }
+
+    /**
+     * Delete action returns 404 if entity is not found.
+     */
+    public function testDeleteAction404()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $client->request('GET', '/posts/9999/delete');
+
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+
+    public function testBulkDeleteAction()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $crawler = $client->request('GET', '/posts/delete?id[]=1&id[]=2');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>bulk delete post</h1>',
+            $client->getResponse()->getContent()
+        );
+
+        $button = $crawler->selectButton('post[submit]');
+        $form = $button->form();
+
+        $client->submit($form);
+
+        $response = $client->getResponse();
+        $this->assertRedirect($response, '/posts');
+
+        // All posts has been deleted
+        $this->getEntityManager()->clear();
+        $all = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findAll();
+
+        $this->assertCount(0, $all);
     }
 }

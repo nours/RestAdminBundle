@@ -39,7 +39,7 @@ class ResourceFactoryTest extends AdminTestCase
     {
         $resource = $this->makeFooResource();
 
-        $this->assertEquals('Foo', $resource->getClass());
+        $this->assertEquals('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo', $resource->getClass());
         $this->assertEquals('foo', $resource->getName());
         $this->assertEquals('foo', $resource->getFullName());
         $this->assertEquals('foos', $resource->getSlug());
@@ -85,7 +85,7 @@ class ResourceFactoryTest extends AdminTestCase
      */
     public function makeFooResource()
     {
-        return $this->factory->createResource('Foo', array(
+        return $this->factory->createResource('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo', array(
             'form' => 'form_foo'
         ));
     }

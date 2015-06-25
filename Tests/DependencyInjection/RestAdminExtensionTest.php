@@ -79,4 +79,15 @@ class RestAdminExtensionTest extends AdminTestCase
         ), $params);
     }
 
+
+    public function testBulkDeleteActionsParams()
+    {
+        $params = $this->getContainer()->getParameter('rest_admin.actions.bulk_delete');
+
+        $this->assertEquals(array(
+            'template'   => 'bulk_delete.html.twig',
+            'controller' => 'NoursRestAdminBundle:Default:form',
+            'form'       => 'rest_admin_bulk_delete'
+        ), $params);
+    }
 }

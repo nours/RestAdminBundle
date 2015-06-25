@@ -44,7 +44,7 @@ class ActionManager
 
     /**
      * @param string $type
-     * @return ActionBuilderInterface|null
+     * @return ActionBuilderInterface
      */
     public function getActionBuilder($type)
     {

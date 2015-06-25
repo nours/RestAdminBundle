@@ -24,7 +24,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     /**
      * @var DoctrineParamFetcher
      */
-    private $subject;
+    private $fetcher;
 
     public function setUp()
     {
@@ -32,7 +32,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->loadFixtures();
 
-        $this->subject = new DoctrineParamFetcher($this->getEntityManager());
+        $this->fetcher = new DoctrineParamFetcher($this->getEntityManager());
     }
 
     /**
@@ -51,7 +51,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->subject->fetchParams($request);
+        $this->fetcher->fetchParams($request);
 
         $found = $request->attributes->get('data');
 
@@ -76,7 +76,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->subject->fetchParams($request);
+        $this->fetcher->fetchParams($request);
 
         $found = $request->attributes->get('data');
 
@@ -100,10 +100,146 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->subject->fetchParams($request);
+        $this->fetcher->fetchParams($request);
 
         $found = $request->attributes->get('parent');
 
         $this->assertSame($post, $found);
+    }
+
+    /**
+     * Parent only use case : the resource has only it's parent parameter.
+     */
+    public function testFindParentModelThrowsIfParentDoNotMatch()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request();
+        $request->attributes->add(array(
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
+            'post' => 2,
+            'comment' => 1,
+        ));
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $this->fetcher->fetchParams($request);
+    }
+
+    /**
+     * Searches a collection of posts (ids 1 and 2)
+     */
+    public function testFindCollection()
+    {
+        $resource = $this->getAdminManager()->getResource('post');
+
+        $request = new Request(array('id' => array(1, 2)), array(), array(
+            'resource' => $resource,
+            'action'   => $resource->getAction('bulk_delete')
+        ));
+
+        $this->fetcher->fetchParams($request);
+
+        $data = $request->attributes->get('data');
+
+        $this->assertInternalType('array', $data);
+        $this->assertCount(2, $data);
+
+        $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post', $data[0]);
+        $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post', $data[1]);
+        $this->assertEquals(1, $data[0]->getId());
+        $this->assertEquals(2, $data[1]->getId());
+    }
+
+    /**
+     * Searches a collection of comments
+     */
+    public function testFindChildrenCollection()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request(array('id' => 1), array(), array(
+            'resource' => $resource,
+            'post' => 1     // The comments are loaded from post 1
+        ));
+
+        $this->fetcher->fetchParams($request);
+
+        $data = $request->attributes->get('data');
+
+        $this->assertInternalType('array', $data);
+        $this->assertCount(1, $data);
+
+        $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment', $data[0]);
+        $this->assertEquals(1, $data[0]->getId());
+    }
+
+    /**
+     * If the collection result is empty, throws
+     */
+    public function testFindCollectionThrowsIfCollectionEmpty()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request(array('id' => array()), array(), array(
+            'resource' => $resource,
+            'post' => 1
+        ));
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $this->fetcher->fetchParams($request);
+    }
+
+    /**
+     * If a resource id is not found, it throws
+     */
+    public function testFindCollectionThrowsIfAnyEntityIsNotFound()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request(array('id' => array(1, 9999)), array(), array(
+            'resource' => $resource,
+            'post' => 1
+        ));
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $this->fetcher->fetchParams($request);
+    }
+
+    /**
+     * If the parent entity cannot be retrieved, it throws
+     */
+    public function testFindCollectionThrowsIfParentNotFound()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request(array('id' => 1), array(), array(
+            'resource' => $resource,
+            'post' => 9999
+        ));
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $this->fetcher->fetchParams($request);
+    }
+
+    /**
+     * If the parent entity is not the parent of the resources fetched, it throws
+     */
+    public function testFindCollectionThrowsIfParentDoNotMatch()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment');
+
+        $request = new Request(array('id' => 1), array(), array(
+            'resource' => $resource,
+            'post' => 2
+        ));
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+
+        $this->fetcher->fetchParams($request);
     }
 }

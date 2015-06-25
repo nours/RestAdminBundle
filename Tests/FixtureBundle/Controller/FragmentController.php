@@ -15,7 +15,9 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * Class FragmentController
+ * Class FragmentController.
+ *
+ * The controller methods render templates which render rest actions as fragments.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

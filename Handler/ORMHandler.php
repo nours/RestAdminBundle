@@ -45,4 +45,12 @@ class ORMHandler
         $this->entityManager->remove($data);
         $this->entityManager->flush();
     }
+
+    public function handleBulkDelete($data)
+    {
+        foreach ($data as $object) {
+            $this->entityManager->remove($object);
+        }
+        $this->entityManager->flush();
+    }
 }

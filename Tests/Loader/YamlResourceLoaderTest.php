@@ -46,24 +46,22 @@ class YamlResourceLoaderTest extends AdminTestCase
 
         // Actions
         $index = $post->getAction('index');
-        $this->assertNotNull($index);
         $this->assertSame($index->getResource(), $post);
 
         $get = $post->getAction('get');
-        $this->assertNotNull($get);
         $this->assertSame($get->getResource(), $post);
 
         $create = $post->getAction('create');
-        $this->assertNotNull($create);
         $this->assertSame($create->getResource(), $post);
 
         $edit = $post->getAction('edit');
-        $this->assertNotNull($edit);
         $this->assertSame($edit->getResource(), $post);
 
         $delete = $post->getAction('delete');
-        $this->assertNotNull($delete);
         $this->assertSame($delete->getResource(), $post);
+
+        $bulkDelete = $post->getAction('bulk_delete');
+        $this->assertSame($bulkDelete->getResource(), $post);
     }
 
 

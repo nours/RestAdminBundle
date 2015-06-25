@@ -12,9 +12,9 @@ namespace Nours\RestAdminBundle\ParamFetcher;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Doctrine param fetcher implementation
@@ -38,42 +38,62 @@ class DoctrineParamFetcher
      */
     public function fetchParams(Request $request)
     {
+        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
-        $resourceId = $request->attributes->get($resource->getParamName());
+        $param = $resource->getParamName();
 
-        if (empty($resourceId)) {
-            // No resource parameter is set, but it's parent should
-            if ($parent = $resource->getParent()) {
-                $data = $this->fetch($request, $parent);
+        if ($request->attributes->has($param)) {
+            // Request has a resource parameter : it should be fetched
 
-                $request->attributes->set('parent', $data);
-            }
-        } else {
-            // Search resource data
-            $data = $this->fetch($request, $resource, $action);
+            // todo test using finder
+            $finder = $action->getConfig('finder', 'find');
+
+            $data = $this->fetch($request, $resource, $finder);
 
             $request->attributes->set('data', $data);
+        } else {
+            // Load collection if request has id parameter in query string
+            if ($request->query->has($resource->getIdentifier())) {
+                $data = $this->fetchCollection($request, $resource);
+
+                $request->attributes->set('data', $data);
+            }
+
+            // Request do not concern a single resource nor collection : fetch parent
+            elseif ($parentResource = $resource->getParent()) {
+                // If the resource has a parent, fetch it
+                $parent = $this->fetch($request, $parentResource);
+
+                $request->attributes->set('parent', $parent);
+            }
         }
     }
 
 
     /**
-     * Fetches data for one resource.
+     * Fetches data for a resource.
      *
      * @param Request $request
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param Action $action
+     * @param string $finderMethod
      * @return mixed
      */
-    protected function fetch(Request $request, Resource $resource, Action $action = null)
+    protected function fetch(Request $request, Resource $resource, $finderMethod = 'find')
     {
         if ($resource->getParent()) {
-            return $this->findHierarchy($request, $resource);
+            $data = $this->findHierarchy($request, $resource);
         } else {
-            return $this->findSingle($request, $resource, $action);
+            $data = $this->findSingle($request, $resource, $finderMethod);
         }
+
+        if (empty($data)) {
+            // Data must be found, otherwise throw
+            throw new NotFoundHttpException();
+        }
+
+        return $data;
     }
 
     /**
@@ -81,17 +101,15 @@ class DoctrineParamFetcher
      *
      * @param Request $request
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @param Action $action
+     * @param string $finderMethod
      * @return mixed
      */
-    private function findSingle(Request $request, Resource $resource, Action $action = null)
+    private function findSingle(Request $request, Resource $resource, $finderMethod)
     {
         $resourceId = $request->attributes->get($resource->getParamName());
 
         if ($resourceId) {
-            $finder = $action ? $action->getConfig('finder', 'find') : 'find';
-
-            return $this->manager->getRepository($resource->getClass())->$finder($resourceId);
+            return $this->manager->getRepository($resource->getClass())->$finderMethod($resourceId);
         }
 
         return null;
@@ -115,10 +133,66 @@ class DoctrineParamFetcher
             ->createQueryBuilder('r')
             ->where('r.'.$resource->getIdentifier().' = :'.$resource->getName());
 
-        $parameters = array(
-            $resource->getName() => $request->attributes->get($resource->getParamName())
-        );
+        // Sets the resource parameter
+        $builder->setParameter($resource->getName(), $request->attributes->get($resource->getParamName()));
 
+        $this->buildQueryForParent($builder, $request, $resource);
+
+        return $builder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Fetches a collection for the resource.
+     *
+     * @param Request $request
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @return array
+     */
+    protected function fetchCollection(Request $request, Resource $resource)
+    {
+        /** @var QueryBuilder $builder */
+        $builder = $this->manager->getRepository($resource->getClass())
+            ->createQueryBuilder('r')
+        ;
+
+        $identifier = $resource->getIdentifier();
+        $ids = $request->query->get($identifier);
+
+        if (empty($ids)) {
+            // Must fetch at least one object
+            throw new NotFoundHttpException();
+        }
+
+        $builder->where($builder->expr()->in(
+            'r.'.$identifier,
+            $ids
+        ));
+
+        if ($resource->getParent()) {
+            $this->buildQueryForParent($builder, $request, $resource);
+        }
+
+        $collection = $builder->getQuery()->execute();
+
+        if (count($collection) != count($ids)) {
+            // Item count must match
+            throw new NotFoundHttpException();
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Builds the query builder to select and filter on resource parent.
+     *
+     * Resource must have parent
+     *
+     * @param QueryBuilder $builder
+     * @param Request $request
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     */
+    private function buildQueryForParent(QueryBuilder $builder, Request $request, Resource $resource)
+    {
         $parentAlias = 'r';
         $index = 1;
         $parent = $resource;
@@ -127,15 +201,11 @@ class DoctrineParamFetcher
             $builder->addSelect($alias)->innerJoin($parentAlias.'.'.$parent->getName(), $alias)
                 ->andWhere($alias.'.'.$parent->getIdentifier().' = :'.$parent->getName());
 
-            $parameters[$parent->getName()] = $request->attributes->get($parent->getParamName());
+            $builder->setParameter($parent->getName(), $request->attributes->get($parent->getParamName()));
 
             $parentAlias = $alias;
             ++$index;
         }
-
-        $builder->setParameters($parameters);
-
-        return $builder->getQuery()->getSingleResult();
     }
 
     /**

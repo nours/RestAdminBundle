@@ -50,18 +50,20 @@ EOF
         if ($resourceName = $input->getArgument('resource')) {
             $this->dumpResource($input, $output, $resources->get($resourceName));
         } else {
+            $count = count($resources);
+            $output->writeln("\n" . $count . " resource" . ($count > 1 ? 's' : '' ) . " are available :\n");
+
             foreach ($resources as $resource) {
                 $this->dumpResourceLight($output, $resource);
             }
+
+            $output->writeln("");
         }
     }
 
     private function dumpResourceLight(OutputInterface $output, Resource $resource)
     {
-        $length = strlen($resource->getFullName());
-        $output->writeln('<info>'.$resource->getFullName().'</info>');
-        $output->writeln('<info>'.str_repeat('*', $length).'</info>');
-        $this->writeVal($output, 'class', $resource->getClass());
+        $output->writeln("\t<info>".$resource->getFullName().'</info> : ' . $resource->getClass());
     }
 
     private function dumpResource(InputInterface $input, OutputInterface $output, Resource $resource)
@@ -104,6 +106,12 @@ EOF
                     }
                 }
             } else {
+//                //
+//                $method = 'get' . ucfirst($name);
+//                if (method_exists($action, $method)) {
+//                    $value = $action->$method;
+//                }
+
                 $this->writeVal($output, $name, $value);
             }
         }
@@ -111,13 +119,19 @@ EOF
 
     private function writeVal(OutputInterface $output, $label, $value)
     {
+        $output->writeln($label . ' : <info>'.$this->escape($value).'</info>');
+    }
+
+    private function escape($value)
+    {
         if (is_array($value)) {
-            $value = '[' . implode(', ', $value) . ']';
+            return '[' . implode(', ', array_map(array($this, 'escape'), $value)) . ']';
         } elseif (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
+            return $value ? 'true' : 'false';
         } elseif (is_null($value)) {
-            $value = 'null';
+            return 'null';
+        } else {
+            return $value;
         }
-        $output->writeln($label . ' : <info>'.$value.'</info>');
     }
 }

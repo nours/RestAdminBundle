@@ -69,7 +69,7 @@ class ResourceFactory
      */
     public function configureActions(Resource $resource, array $configs)
     {
-        $actions = $this->normalizeConfig($configs);
+        $actions = $this->normalizeActionsConfig($configs);
 
         foreach ($actions as $name => $config) {
             // Type may be defined in config, otherwise defaults to name
@@ -97,7 +97,7 @@ class ResourceFactory
     /**
      * To called when a resource loading is done, to dispatch an event
      *
-     * @param Resource $resource
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param ResourceCollection $collection
      */
     public function finishResource(Resource $resource, ResourceCollection $collection)
@@ -108,12 +108,14 @@ class ResourceFactory
     }
 
     /**
+     * Normalizes actions configuration array.
      *
+     * Automatically appends index and get actions by default if they are not set.
      *
      * @param array $configs
      * @return array
      */
-    private function normalizeConfig(array $configs)
+    private function normalizeActionsConfig(array $configs)
     {
         // Append default actions if not set
         foreach (array('index', 'get') as $name) {
@@ -128,14 +130,6 @@ class ResourceFactory
             if (false === $config) {
                 continue;
             }
-//            if (is_string($config)) {
-//                $name   = $config;
-//                $config = array();
-//            }
-
-//            if (empty($config['handlers'])) {
-//                $config['handlers'] = array();
-//            }
 
             $result[$name] = $config;
         }

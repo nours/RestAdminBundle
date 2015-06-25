@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Routing;
 
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\ActionManager;
+use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -68,7 +69,7 @@ class RoutingLoader extends Loader
             /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
 
             foreach ($resource->getActions() as $action) {
-                $builder = $this->builders->getActionBuilder($action->getType());
+                $builder = $this->getActionBuilder($action);
                 $builder->buildRoutes($routesBuilder, $resource, $action);
             }
         }
@@ -88,5 +89,21 @@ class RoutingLoader extends Loader
     public function supports($resource, $type = null)
     {
         return $type == 'admin';
+    }
+
+    /**
+     * @param Action $action
+     * @return \Nours\RestAdminBundle\Action\ActionBuilderInterface
+     */
+    private function getActionBuilder(Action $action)
+    {
+        try {
+            return $this->builders->getActionBuilder($action->getType());
+        } catch (\InvalidArgumentException $e) {
+            throw new \DomainException(sprintf(
+                'Cannot find builder for action %s of resource %s',
+                $action->getName(), $action->getResource()->getFullName()
+            ), 0, $e);
+        }
     }
 }

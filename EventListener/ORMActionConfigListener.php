@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Nours\RestAdminBundle\Event\ActionConfigEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,17 +22,30 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ORMActionConfigListener implements EventSubscriberInterface
 {
+    /**
+     * @var ManagerRegistry
+     */
+    private $registry;
 
-    public function __construct()
+    /**
+     * @param ManagerRegistry $registry
+     */
+    public function __construct(ManagerRegistry $registry)
     {
-
+        $this->registry = $registry;
     }
 
+    /**
+     * @param ActionConfigEvent $event
+     */
     public function onActionConfig(ActionConfigEvent $event)
     {
         $priority = 20;
 
-        // todo : check if resource entity is known in em
+        // todo : test this using a non Doctrine based resource
+        if (!$this->registry->getManagerForClass($event->getResource()->getClass())) {
+            return;
+        }
 
         switch ($event->getActionName()) {
             case 'create' :
@@ -42,6 +56,9 @@ class ORMActionConfigListener implements EventSubscriberInterface
                 break;
             case 'delete' :
                 $event->addHandler('rest_admin.handler.orm:handleDelete', $priority);
+                break;
+            case 'bulk_delete' :
+                $event->addHandler('rest_admin.handler.orm:handleBulkDelete', $priority);
                 break;
         }
     }
