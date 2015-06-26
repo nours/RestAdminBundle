@@ -42,13 +42,24 @@ class JsonHandler implements ViewHandler
 
     public function handle($data, Request $request)
     {
+        $responseStatus = Response::HTTP_OK;
+
+        // todo : test this
+
         if ($data instanceof FormInterface) {
-            $data = $data->getData();
+            // Change response status if any error
+            if ($data->isSubmitted() && !$data->isValid()) {
+                $responseStatus = Response::HTTP_BAD_REQUEST;
+                $data = $data->getErrors();
+            } else {
+                // Display form data if is valid
+                $data = $data->getData();
+            }
         }
 
         $serialized = $this->getSerializer()->serialize($data, 'json');
 
-        return new Response($serialized, Response::HTTP_OK, array(
+        return new Response($serialized, $responseStatus, array(
             'Content-Type' => $request->getMimeType($request->getRequestFormat())
         ));
     }

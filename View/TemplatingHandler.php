@@ -51,6 +51,14 @@ class TemplatingHandler implements ViewHandler
 
         $template = $action->getTemplate();
 
+        if (empty($template)) {
+            throw new \DomainException(sprintf(
+                'The action %s do not have default template. ' .
+                'Either set a default template in action builder, or manually render one in controller %s',
+                $action->getName(), $action->getController()
+            ));
+        }
+
         $parameters = array(
             'resource' => $resource,
             'action' => $action,
@@ -60,11 +68,6 @@ class TemplatingHandler implements ViewHandler
         if ($data instanceof FormInterface) {
             $parameters['form'] = $data->createView();
             $parameters['data'] = $data->getData();
-
-            // Change response status if any error
-            if ($data->isSubmitted() && !$data->isValid()) {
-                $responseStatus = Response::HTTP_BAD_REQUEST;
-            }
         } elseif (is_array($data)) {
             $parameters = $data;
         } else {
