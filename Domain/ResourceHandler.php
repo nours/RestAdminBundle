@@ -32,7 +32,7 @@ class ResourceHandler
     public function handleSuccess($data, Request $request, FormInterface $form, Resource $resource, Action $action)
     {
         // Init a request for resolver
-        $request = new Request(array(), array(), array_replace($request->attributes->all(), array(
+        $request = $request->duplicate(array(), array(), array_replace($request->attributes->all(), array(
             'resource' => $resource,
             'action'   => $action,
             'form'     => $form,
