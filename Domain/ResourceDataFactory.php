@@ -15,11 +15,14 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 
 /**
- * Class ResourceFactory
+ * Creates resource instances.
+ *
+ * A resource can define it's own factory callback, using SF2 controller syntax. Otherwise, the new operator is called
+ * on resource class.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ResourceFactory
+class ResourceDataFactory
 {
     /**
      * @var ControllerResolverInterface
@@ -42,14 +45,14 @@ class ResourceFactory
      * @param Request $request
      * @return mixed
      */
-    public function createResource(Request $request)
+    public function create(Request $request)
     {
         /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
         $resource = $request->attributes->get('resource');
 
         if ($factory = $resource->getFactory()) {
             // Clone request to use it's _controller attribute for resolver
-            $subRequest = clone $request;
+            $subRequest = $request->duplicate();
             $subRequest->attributes->set('_controller', $factory);
 
             // Find controller

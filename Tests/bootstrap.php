@@ -1,25 +1,16 @@
 <?php
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+// Autoload
+require $_SERVER['KERNEL_DIR'] . 'autoload.php';
 
-if (!is_file($loaderFile = __DIR__.'/../vendor/autoload.php')) {
-    throw new \LogicException('Could not find autoload.php in vendor/. Did you run "composer install --dev"?');
-}
+// Clear cache
+passthru(sprintf(
+    'php "%sconsole" cache:clear --env=test --no-warmup',
+    $_SERVER['KERNEL_DIR']
+));
 
-$loader = require $loaderFile;
-
-AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
-
-// Loads bundle annotations
-AnnotationRegistry::registerLoader(function($class) {
-    $namespace = 'Nours\RestAdminBundle\Annotation';
-    if (strpos($class, $namespace) === 0) {
-        $className = explode('\\', $class);
-        $className = array_pop($className);
-
-        $file = __DIR__ . '/../Annotation/' . $className . '.php';
-
-        require $file;
-        return true;
-    }
-});
+// Update sqlite DB
+passthru(sprintf(
+    'php "%s/console" doctrine:schema:update --env=test --force',
+    $_SERVER['KERNEL_DIR']
+));

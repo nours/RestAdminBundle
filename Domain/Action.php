@@ -46,6 +46,16 @@ class Action
     }
 
     /**
+     * Resource full name prepended to this action's name.
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->getResource()->getFullName() . ':' . $this->getName();
+    }
+
+    /**
      * @return \Nours\RestAdminBundle\Domain\Resource
      */
     public function getResource()
@@ -84,7 +94,7 @@ class Action
      */
     public function getForm()
     {
-        return $this->getConfig('form');
+        return $this->getConfig('form', $this->getResource()->getForm());
     }
 
     /**

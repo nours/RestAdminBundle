@@ -50,25 +50,24 @@ class DefaultController extends Controller
      * Form handling action
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @param mixed $data
      * @return ArrayCollection
      */
-    public function formAction(Request $request, Resource $resource, Action $action, $data = null)
+    public function formAction(Request $request, Action $action, $data = null)
     {
         // Initialize data if not found from routing
         $data = $data ?: $this->createData($request);
 
         // Create form
-        $form = $this->createResourceForm($data, $resource, $action);
+        $form = $this->createResourceForm($data, $action);
 
         if ($request->getMethod() == $form->getConfig()->getMethod()) {
             // Handle request only if method matches
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                return $this->handleSuccess($data, $request, $form, $resource, $action);
+                return $this->handleSuccess($data, $request, $form, $action);
             }
         }
 

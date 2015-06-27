@@ -29,10 +29,5 @@ class ActionManagerPass implements CompilerPassInterface
         foreach ($ids as $id => $tags) {
             $definition->addMethodCall('addActionBuilder', array(new Reference($id)));
         }
-
-        $ids = $container->findTaggedServiceIds('rest_admin.event_builder');
-        foreach ($ids as $id => $tags) {
-            $definition->addMethodCall('addEventBuilder', array(new Reference($id)));
-        }
     }
 }

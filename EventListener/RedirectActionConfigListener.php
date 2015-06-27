@@ -23,12 +23,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RedirectActionConfigListener implements EventSubscriberInterface
 {
-
-    public function __construct()
-    {
-
-    }
-
     public function onActionConfig(ActionConfigEvent $event)
     {
         // Skip index and get actions

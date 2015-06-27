@@ -8,11 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Action;
+namespace Nours\RestAdminBundle\Form;
 
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -51,20 +50,19 @@ class ActionFormFactory
      * Creates a form for a certain type
      *
      * @param mixed $data
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @param array $options
      * @return \Symfony\Component\Form\Form
      */
-    public function createForm($data, Resource $resource, Action $action, array $options = array())
+    public function createForm($data, Action $action, array $options = array())
     {
         // Find form name
-        $formName = $action->getForm() ?: $resource->getForm();
+        $formName = $action->getForm();
 
         if (empty($formName)) {
             throw new \DomainException(sprintf(
-                "Missing form for resource %s, action %s",
-                $resource->getFullName(), $action->getName()
+                "Missing form for action %s",
+                $action->getFullName()
             ));
         }
 
@@ -72,9 +70,9 @@ class ActionFormFactory
         $actionBuilder = $this->manager->getActionBuilder($action->getType());
 
         // Create builder
-        $builder = $this->factory->createNamedBuilder($resource->getParamName(), $formName, $data, $options);
+        $builder = $this->factory->createNamedBuilder($action->getResource()->getParamName(), $formName, $data, $options);
 
-        $actionBuilder->buildForm($builder, $resource, $this->generator, $data);
+        $actionBuilder->buildForm($builder, $action->getResource(), $this->generator, $data);
 
         return $builder->getForm();
     }

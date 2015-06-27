@@ -11,7 +11,6 @@
 namespace Nours\RestAdminBundle\Controller;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,30 +28,28 @@ class Controller extends BaseController
      */
     protected function createData(Request $request)
     {
-        return $this->get('rest_admin.resource_factory')->createResource($request);
+        return $this->get('rest_admin.data_factory')->create($request);
     }
 
     /**
      * @param $data
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @return \Symfony\Component\Form\Form
      */
-    protected function createResourceForm($data, Resource $resource, Action $action)
+    protected function createResourceForm($data, Action $action)
     {
-        return $this->get('rest_admin.action_form_factory')->createForm($data, $resource, $action);
+        return $this->get('rest_admin.action_form_factory')->createForm($data, $action);
     }
 
     /**
      * @param mixed $data
      * @param Request $request
      * @param FormInterface $form
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @return \Symfony\Component\Form\Form
      */
-    protected function handleSuccess($data, Request $request, FormInterface $form, Resource $resource, Action $action)
+    protected function handleSuccess($data, Request $request, FormInterface $form, Action $action)
     {
-        return $this->get('rest_admin.resource_handler')->handleSuccess($data, $request, $form, $resource, $action);
+        return $this->get('rest_admin.form_success_handler')->handle($data, $request, $form, $action);
     }
 }

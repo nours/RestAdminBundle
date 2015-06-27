@@ -18,6 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
+ * Debug resources command.
+ *
+ * Without arguments, prints all available resources.
+ *
+ * The first argument is the resource name, the command will dump it's actions.
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */

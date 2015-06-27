@@ -8,18 +8,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Domain;
+namespace Nours\RestAdminBundle\Form;
 
+use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
- * A ResourceHandler
+ * Entry point for form success handling.
+ *
+ * Delegates to action success handler, which will be executed in their priority order until
+ * one returns a response (which can be anything).
+ *
+ * The handlers are invoked using SF2 Controller Resolver, which enables to use standard syntax
+ * for handlers definitions.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ResourceHandler
+class FormSuccessHandler
 {
     private $resolver;
 
@@ -28,12 +35,18 @@ class ResourceHandler
         $this->resolver = $resolver;
     }
 
-
-    public function handleSuccess($data, Request $request, FormInterface $form, Resource $resource, Action $action)
+    /**
+     * @param $data
+     * @param Request $request
+     * @param FormInterface $form
+     * @param Action $action
+     * @return mixed|FormInterface
+     */
+    public function handle($data, Request $request, FormInterface $form, Action $action)
     {
         // Init a request for resolver
         $request = $request->duplicate(array(), array(), array_replace($request->attributes->all(), array(
-            'resource' => $resource,
+            'resource' => $action->getResource(),
             'action'   => $action,
             'form'     => $form,
             'data'     => $data
@@ -47,15 +60,13 @@ class ResourceHandler
             if ($controller === false) {
                 throw new \DomainException(sprintf(
                     "Handler %s for resource %s and action %s could not be resolved",
-                    $handler, $resource->getFullName(), $action->getName()
+                    $handler, $action->getResource()->getFullName(), $action->getName()
                 ));
             }
 
             $arguments  = $this->resolver->getArguments($request, $controller);
 
             $response = call_user_func_array($controller, $arguments);
-
-//            var_dump($response);die;
 
             if (!empty($response)) {
                 return $response;

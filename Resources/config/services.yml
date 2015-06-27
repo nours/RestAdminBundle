@@ -68,13 +68,13 @@ services:
     class: Nours\RestAdminBundle\View\ViewHandler
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
 
-  rest_admin.resource_factory:
-    class: Nours\RestAdminBundle\Domain\ResourceFactory
+  rest_admin.data_factory:
+    class: Nours\RestAdminBundle\Domain\ResourceDataFactory
     arguments: [ '@controller_resolver' ]
 
-  rest_admin.resource_handler:
-    class: Nours\RestAdminBundle\Domain\ResourceHandler
-    arguments: [ '@controller_resolver' ]
+#  rest_admin.resource_handler:
+#    class: Nours\RestAdminBundle\Domain\ResourceHandler
+#    arguments: [ '@controller_resolver' ]
 
   rest_admin.handler.redirect:
     class: Nours\RestAdminBundle\Handler\RedirectHandler
@@ -122,8 +122,12 @@ services:
 # Forms
 ##############################
   rest_admin.action_form_factory:
-    class: Nours\RestAdminBundle\Action\ActionFormFactory
+    class: Nours\RestAdminBundle\Form\ActionFormFactory
     arguments: [ '@rest_admin.action_manager', '@form.factory', '@router' ]
+
+  rest_admin.form_success_handler:
+    class: Nours\RestAdminBundle\Form\FormSuccessHandler
+    arguments: [ '@controller_resolver' ]
 
   rest_admin.form_type.delete:
     class: Nours\RestAdminBundle\Form\Type\DeleteType
