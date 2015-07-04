@@ -10,6 +10,10 @@ services:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\CommentType
     tags: [ { name: form.type, alias: comment } ]
 
+  tests.form.foo:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType
+    tags: [ { name: form.type, alias: foo } ]
+
   tests.action.publish:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Action\PublishActionBuilder
     tags: [ { name: 'rest_admin.action_builder' } ]

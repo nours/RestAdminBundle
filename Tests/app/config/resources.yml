@@ -18,6 +18,15 @@ resources:
     slug: posts
     param_name: post
 
+  secured:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo
+    actions:
+      create: { form: foo }
+      edit: {}
+      delete: {}
+      index: { controller: 'FixtureBundle:Secured:index' }
+    role: ROLE_ADMIN
+    slug: secured
 
 #  comment:
 #    class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment

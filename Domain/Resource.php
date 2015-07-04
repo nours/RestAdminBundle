@@ -238,6 +238,14 @@ class Resource
     }
 
     /**
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->getConfig('role');
+    }
+
+    /**
      * @param string $name
      * @return bool
      */

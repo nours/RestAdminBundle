@@ -1,0 +1,19 @@
+security:
+  encoders:
+    Symfony\Component\Security\Core\User\User: plaintext
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+
+  providers:
+    default:
+      memory:
+        users:
+          user:  { password: passuser, roles: 'ROLE_USER' }
+          admin: { password: passadmin, roles: 'ROLE_ADMIN' }
+
+  firewalls:
+    main:
+      pattern: ^/
+      http_basic: ~
+      anonymous:  ~

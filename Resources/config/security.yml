@@ -1,0 +1,6 @@
+services:
+  rest_admin.security_listener:
+    class: Nours\RestAdminBundle\EventListener\SecurityListener
+    arguments: [ '@security.authorization_checker' ]
+    tags:
+      - { name: 'kernel.event_subscriber' }

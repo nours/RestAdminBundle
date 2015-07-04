@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Nours\RestAdminBundle\Event\ActionConfigEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -23,16 +23,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ORMActionConfigListener implements EventSubscriberInterface
 {
     /**
-     * @var ManagerRegistry
+     * @var EntityManagerInterface
      */
-    private $registry;
+    private $manager;
 
     /**
-     * @param ManagerRegistry $registry
+     * @param EntityManagerInterface $manager
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(EntityManagerInterface $manager)
     {
-        $this->registry = $registry;
+        $this->manager = $manager;
     }
 
     /**
@@ -42,10 +42,10 @@ class ORMActionConfigListener implements EventSubscriberInterface
     {
         $priority = 20;
 
-        // todo : test this using a non Doctrine based resource
-        if (!$this->registry->getManagerForClass($event->getResource()->getClass())) {
-            return;
-        }
+        // The listener should not apply on non Doctrine based resources
+//        if (!$this->manager->getMetadataFactory()->isTransient($event->getResource()->getClass())) {
+//            return;
+//        }
 
         switch ($event->getActionName()) {
             case 'create' :

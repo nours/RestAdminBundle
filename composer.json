@@ -11,7 +11,6 @@
     "require": {
         "symfony/framework-bundle": ">2.6",
         "doctrine/orm" : "~2.5",
-        "doctrine/doctrine-bundle" : "~1.4",
         "symfony/yaml": ">2.6",
         "symfony/form": ">2.6",
         "jms/serializer-bundle": "~0.13",
@@ -20,6 +19,8 @@
         "symfony/twig-bundle": "~2.6"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle" : "~1.4",
+        "symfony/security-bundle": ">2.6",
         "phpunit/phpunit": "4.*",
         "symfony/browser-kit": "~2.6",
         "symfony/monolog-bundle" : "~2.7",
@@ -27,6 +28,8 @@
         "knplabs/knp-menu": ">=2.0"
     },
     "suggest": {
+      "doctrine/doctrine-bundle" : "Support for Doctrine ORM persistence and loading",
+      "symfony/security-bundle": "Integrate security checks based on security bundle",
       "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)"
     },
     "autoload": {

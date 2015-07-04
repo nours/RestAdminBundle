@@ -34,6 +34,15 @@ class DoctrineParamFetcher
     }
 
     /**
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @return bool
+     */
+    private function supports(Resource $resource)
+    {
+        return $this->manager->getMetadataFactory()->isTransient($resource->getClass());
+    }
+
+    /**
      * @param Request $request
      */
     public function fetchParams(Request $request)
@@ -41,6 +50,11 @@ class DoctrineParamFetcher
         /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
+
+        // This do not work, delete
+//        if (!$this->supports($resource)) {
+//            return;
+//        }
 
         $param = $resource->getParamName();
 
@@ -206,14 +220,5 @@ class DoctrineParamFetcher
             $parentAlias = $alias;
             ++$index;
         }
-    }
-
-    /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @return bool
-     */
-    public function supports(Resource $resource)
-    {
-        return $this->manager->getMetadataFactory()->hasMetadataFor($resource->getClass());
     }
 }

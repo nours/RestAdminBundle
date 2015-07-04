@@ -44,6 +44,11 @@ class NoursRestAdminExtension extends Extension
             $loader->load('view.yml');
         }
 
+        // Security
+        if ($config['listeners']['security']) {
+            $loader->load('security.yml');
+        }
+
         // Knp Menu voter
         if ($config['knp_menu_voter']) {
             $loader->load('menu.yml');

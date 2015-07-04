@@ -16,5 +16,5 @@ services:
 
   rest_admin.listener.orm_action_config:
     class: Nours\RestAdminBundle\EventListener\ORMActionConfigListener
-    arguments: [ '@doctrine' ]
+    arguments: [ '@doctrine.orm.entity_manager' ]
     tags: [ { name: 'kernel.event_subscriber' }]

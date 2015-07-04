@@ -138,7 +138,7 @@ class AdminTestCase extends WebTestCase
 
         if ($response->headers->has('Location')) {
             $this->assertEquals($location, $loc = $response->headers->get('Location'),
-                "Response location $loc do not match ($location expectd)");
+                "Response location $loc do not match ($location expected)");
         } else {
             $this->fail("Response has no header Location.");
         }

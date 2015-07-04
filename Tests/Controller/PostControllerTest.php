@@ -154,6 +154,7 @@ class PostControllerTest extends AdminTestCase
         $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(3);
 
         // Object has been created
+        $this->assertNotNull($newPost);
         $this->assertEquals('updated', $newPost->getContent());
     }
 
