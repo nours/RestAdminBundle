@@ -163,82 +163,82 @@ class RoutingLoaderTest extends AdminTestCase
     public function testCommentBisControllerRouteLoading()
     {
         // Comment index
-        $route = $this->collection->get('post_commentbis_index');
+        $route = $this->collection->get('post_comment_bis_index');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('index', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
         // Comment get
-        $route = $this->collection->get('post_commentbis_get');
+        $route = $this->collection->get('post_comment_bis_get');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/{commentbis}.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('get', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
         // Comment create
-        $route = $this->collection->get('post_commentbis_create');
+        $route = $this->collection->get('post_comment_bis_create');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/create.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/create.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('create', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
         // Comment new
-        $route = $this->collection->get('post_commentbis_new');
+        $route = $this->collection->get('post_comment_bis_new');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('create', $route->getDefault('_action'));
         $this->assertEquals(array('POST'), $route->getMethods());
 
         // Comment edit
-        $route = $this->collection->get('post_commentbis_edit');
+        $route = $this->collection->get('post_comment_bis_edit');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/{commentbis}/edit.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}/edit.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('edit', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
         // Comment new
-        $route = $this->collection->get('post_commentbis_update');
+        $route = $this->collection->get('post_comment_bis_update');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/{commentbis}.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('edit', $route->getDefault('_action'));
         $this->assertEquals(array('PUT'), $route->getMethods());
 
         // Comment test action
-        $route = $this->collection->get('post_commentbis_test');
+        $route = $this->collection->get('post_comment_bis_test');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/test.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/test.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('test', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
         // Comment other action
-        $route = $this->collection->get('post_commentbis_other');
+        $route = $this->collection->get('post_comment_bis_other');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/{commentbis}/test.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}/test.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('other', $route->getDefault('_action'));
         $this->assertEquals(array('GET'), $route->getMethods());
 
-        $route = $this->collection->get('post_commentbis_other_do');
+        $route = $this->collection->get('post_comment_bis_other_do');
 
         $this->assertNotNull($route);
-        $this->assertEquals('/posts/{post}/commentbis/{commentbis}/test.{_format}', $route->getPath());
-        $this->assertEquals('post.commentbis', $route->getDefault('_resource'));
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}/test.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('other', $route->getDefault('_action'));
         $this->assertEquals(array('POST'), $route->getMethods());
     }

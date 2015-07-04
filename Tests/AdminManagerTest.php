@@ -63,7 +63,7 @@ class AdminManagerTest extends AdminTestCase
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\ResourceCollection', $collection);
         $this->assertTrue($collection->has('post'));
         $this->assertTrue($collection->has('post.comment'));
-        $this->assertTrue($collection->has('post.commentbis'));
+        $this->assertTrue($collection->has('post.comment_bis'));
     }
 
 }

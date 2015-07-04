@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
- *  name = "commentbis",
+ *  name = "comment_bis",
  *  parent = "post",
  *  foo = "bar"
  * )
@@ -79,8 +79,8 @@ class CommentBisController
 
     /**
      * @Rest\Action("other")
-     * @Rest\Route("{commentbis}/test", methods={"GET"})
-     * @Rest\Route("{commentbis}/test", name="other_do", methods={"POST"})
+     * @Rest\Route("{comment_bis}/test", methods={"GET"})
+     * @Rest\Route("{comment_bis}/test", name="other_do", methods={"POST"})
      */
     public function anotherTestAction()
     {

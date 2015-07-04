@@ -88,7 +88,7 @@ class YamlResourceLoaderTest extends AdminTestCase
         $post = $resources->get('post.comment');
         $this->assertEquals('bar', $post->getConfig('foo'));
 
-        $post = $resources->get('post.commentbis');
+        $post = $resources->get('post.comment_bis');
         $this->assertEquals('bar', $post->getConfig('foo'));
 
         $post = $resources->get('post');

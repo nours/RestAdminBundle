@@ -28,11 +28,11 @@ class CommentBisControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/commentbis');
+        $crawler = $client->request('GET', '/posts/1/comment-bis');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>post.commentbis index</h1>',
+            '<h1>post.comment_bis index</h1>',
             $client->getResponse()->getContent()
         );
     }
@@ -45,13 +45,13 @@ class CommentBisControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/commentbis/1');
+        $crawler = $client->request('GET', '/posts/1/comment-bis/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
         $this->assertContains(
-            '<h1>post.commentbis 1</h1>',
+            '<h1>post.comment_bis 1</h1>',
             $response->getContent()
         );
         $this->assertContains(
@@ -68,17 +68,17 @@ class CommentBisControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/2/commentbis/create');
+        $crawler = $client->request('GET', '/posts/2/comment-bis/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>create post.commentbis</h1>',
+            '<h1>create post.comment_bis</h1>',
             $client->getResponse()->getContent()
         );
 
-        $button = $crawler->selectButton('commentbis[submit]');
+        $button = $crawler->selectButton('comment_bis[submit]');
         $form = $button->form(array(
-            'commentbis[comment]' => 'creation'
+            'comment_bis[comment]' => 'creation'
         ));
 
         $client->submit($form);
@@ -107,17 +107,17 @@ class CommentBisControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/commentbis/1/edit');
+        $crawler = $client->request('GET', '/posts/1/comment-bis/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
-            '<h1>edit post.commentbis 1</h1>',
+            '<h1>edit post.comment_bis 1</h1>',
             $client->getResponse()->getContent()
         );
 
-        $button = $crawler->selectButton('commentbis[submit]');
+        $button = $crawler->selectButton('comment_bis[submit]');
         $form = $button->form(array(
-            'commentbis[comment]' => 'updated!'
+            'comment_bis[comment]' => 'updated!'
         ));
 
         $client->submit($form);

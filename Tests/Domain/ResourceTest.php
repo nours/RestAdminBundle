@@ -29,12 +29,18 @@ class ResourceTest extends AdminTestCase
      */
     private $commentResource;
 
+    /**
+     * @var \Nours\RestAdminBundle\Domain\Resource
+     */
+    private $commentBisResource;
+
     public function setUp()
     {
         $this->loadFixtures();
 
         $this->postResource = $this->getAdminManager()->getResource('post');
         $this->commentResource = $this->getAdminManager()->getResource('post.comment');
+        $this->commentBisResource = $this->getAdminManager()->getResource('post.comment_bis');
     }
 
 
@@ -121,5 +127,15 @@ class ResourceTest extends AdminTestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $this->postResource->getAction('foo');
+    }
+
+    /**
+     * The param name defaults to the name of the resource
+     */
+    public function testGetParamName()
+    {
+        $this->assertEquals('post', $this->postResource->getParamName());
+        $this->assertEquals('comment', $this->commentResource->getParamName());
+        $this->assertEquals('comment_bis', $this->commentBisResource->getParamName());
     }
 }

@@ -89,7 +89,7 @@ class Resource
             $this->slug = $configs['slug'];
             unset($configs['slug']);
         } else {
-            $this->slug = Inflector::pluralize($this->name);
+            $this->slug = Inflector::pluralize(str_replace('_', '-', $this->name));
         }
 
         $this->configs = $configs;
@@ -454,6 +454,8 @@ class Resource
 
     /**
      * Retrieve parent object from data.
+     *
+     * todo : use a property path different of param name (for underscores in resource name)
      *
      * @param $data
      * @return null|mixed
