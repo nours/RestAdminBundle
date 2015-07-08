@@ -74,8 +74,9 @@ class RequestListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
+        // Must be executed after router listener (which has priority 32)
         return array(
-            KernelEvents::REQUEST => array(array('onKernelRequest', 24))
+            KernelEvents::REQUEST => array('onKernelRequest', 24)
         );
     }
 }

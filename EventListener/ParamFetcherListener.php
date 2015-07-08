@@ -11,7 +11,6 @@
 namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -99,8 +98,9 @@ class ParamFetcherListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
+        // Can be executed after all listeners
         return array(
-            KernelEvents::REQUEST => array(array('onKernelRequest', 20))
+            KernelEvents::REQUEST => array('onKernelRequest', 1)
         );
     }
 }
