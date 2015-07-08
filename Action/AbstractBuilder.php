@@ -71,7 +71,9 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             },
             'type'     => $this->getName(),
             'template' => null,
-            'handlers' => array()
+            'handlers' => array(),
+            'fetcher' => null,
+            'fetcher_callback' => null
         ));
         $resolver->setDefaults($this->defaultOptions);
 

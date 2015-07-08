@@ -139,6 +139,14 @@ services:
 
 
 ##############################
+# Param fetcher
+##############################
+  rest_admin.param_fetcher.custom:
+    class: Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher
+    arguments: [ '@controller_resolver' ]
+    tags: [ { name: rest_admin.param_fetcher, alias: custom }]
+
+##############################
 # Event listeners
 ##############################
   rest_admin.listener.request:

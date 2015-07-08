@@ -62,19 +62,19 @@ class AdminManager implements CacheWarmerInterface
     public function getResourceCollection()
     {
         if (empty($this->resources)) {
-            $filePath = $this->cacheDir.'/RestResourceCollection.txt';
+            $filePath = $this->cacheDir.'/RestResourceCollection.php';
             $cache = new ConfigCache($filePath, $this->debug);
 
             if (!$cache->isFresh()) {
                 /** @var ResourceCollection $collection */
                 $collection = $this->loader->load($this->resource);
 
-                $serialized = serialize($collection);
-                $cache->write($serialized, $collection->getConfigResources());
+                $export = var_export(serialize($collection), true);
+                $cache->write('<?php return unserialize('.$export.');', $collection->getConfigResources());
 
                 $this->resources = $collection;
             } else {
-                $this->resources = unserialize(file_get_contents($filePath));
+                $this->resources = require $filePath;
             }
 
             $this->resources->resolveParents();

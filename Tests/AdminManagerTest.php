@@ -55,10 +55,10 @@ class AdminManagerTest extends AdminTestCase
     {
         $this->manager->getResourceCollection();
 
-        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/RestResourceCollection.txt';
+        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/RestResourceCollection.php';
 
         $this->assertFileExists($path);
-        $collection = unserialize(file_get_contents($path));
+        $collection = require $path;
 
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\ResourceCollection', $collection);
         $this->assertTrue($collection->has('post'));

@@ -138,4 +138,25 @@ class ResourceTest extends AdminTestCase
         $this->assertEquals('comment', $this->commentResource->getParamName());
         $this->assertEquals('comment_bis', $this->commentBisResource->getParamName());
     }
+
+    /**
+     * The ParamFetcher annotation enables the custom param fetcher for the resource or an action
+     *
+     * @see FooController
+     */
+    public function testParamFetcherAnnotation()
+    {
+        $fooResource = $this->getAdminManager()->getResource('foo');
+        $index = $fooResource->getAction('index');
+        $get   = $fooResource->getAction('get');
+
+        $this->assertEquals('custom', $fooResource->getConfig('fetcher'));
+        $this->assertEquals('custom', $index->getConfig('fetcher'));
+        $this->assertEquals(null, $get->getConfig('fetcher'));
+
+        $controllerClass = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FooController';
+        $this->assertEquals($controllerClass . '::fetchParamsDefault', $fooResource->getConfig('fetcher_callback'));
+        $this->assertEquals($controllerClass . '::fetchParamsIndex', $index->getConfig('fetcher_callback'));
+
+    }
 }

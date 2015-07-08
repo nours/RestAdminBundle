@@ -62,6 +62,11 @@ class AnnotationClassLoader implements LoaderInterface
     protected $routeAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Route';
 
     /**
+     * @var string
+     */
+    protected $fetcherAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\ParamFetcher';
+
+    /**
      * Constructor.
      *
      * @param Reader $reader
@@ -105,25 +110,42 @@ class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
+     *
+     * @see Nours\RestAdminBundle\Annotation\Resource
+     *
      * @param \ReflectionClass $class
      * @param \Nours\RestAdminBundle\Annotation\Resource $annotation
      * @return \Nours\RestAdminBundle\Domain\Resource
      */
     private function processResource(\ReflectionClass $class, Resource $annotation)
     {
-        // Look for @Factory annotation
         $factory = null;
+        $fetcher = null;
         foreach ($class->getMethods() as $method) {
+            // Look for @Factory annotation
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
                 if ($annot instanceof $this->factoryAnnotationClass) {
                     $factory = $this->getControllerName($class, $annotation, $method);
                 }
             }
+
+            // Look for @ParamFetcher annotation for the resource (it's action param is not set)
+            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
+                if ($annot instanceof $this->fetcherAnnotationClass && null === $annot->action) {
+                    $fetcher = $this->getControllerName($class, $annotation, $method);
+                }
+            }
         }
 
+        // Get resource config from annotation
         $config = $annotation->config;
+
         if ($factory) {
             $config['factory'] = $factory;
+        }
+        if ($fetcher) {
+            $config['fetcher'] = 'custom';
+            $config['fetcher_callback'] = $fetcher;
         }
 
         $resource = $this->factory->createResource($annotation->class, $config);
@@ -166,6 +188,12 @@ class AnnotationClassLoader implements LoaderInterface
                     'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
                 ));
 
+                // Custom param fetcher ?
+                if (isset($fetchers[$actionName])) {
+                    $config['fetcher'] = 'custom';
+                    $config['fetcher_callback'] = $fetchers[$actionName];
+                }
+
                 // @Route method annotation
                 /** @var Route[] $routes */
                 $routes = $this->getMethodAnnotations($method, $this->routeAnnotationClass);
@@ -187,8 +215,34 @@ class AnnotationClassLoader implements LoaderInterface
             }
         }
 
-        // @Handler method annotation
+        // Load all @ParamFetcher annotation for a specific action
         foreach ($class->getMethods() as $method) {
+            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
+                if ($annot instanceof $this->fetcherAnnotationClass && ($actionName = $annot->action)) {
+                    // Check the action was previously found
+                    if (!isset($configs[$actionName])) {
+                        if (!in_array($actionName, array('index', 'get'))) {
+                            throw new \DomainException(sprintf(
+                                "ParamFetcher annotation bound to unknown action %s in controller %s",
+                                $actionName, $class
+                            ));
+                        }
+
+                        // Initialize config for index or get actions (others must be explicitly defined)
+                        $configs[$actionName] = array();
+                    }
+
+                    $configs[$actionName]['fetcher'] = 'custom';
+                    $configs[$actionName]['fetcher_callback'] = $this->getControllerName(
+                        $class, $resourceAnnotation, $method
+                    );
+                }
+            }
+        }
+
+        // Other method annotations
+        foreach ($class->getMethods() as $method) {
+            // @Handler method annotation
             foreach ($this->getMethodAnnotations($method, $this->handlerAnnotationClass) as $annotation) {
                 $actionName = $annotation->action;
 

@@ -8,22 +8,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Tests\FixtureBundle\Entity;
+namespace Nours\RestAdminBundle\Annotation;
 
 
 /**
- * Class Foo
- *
- * Non Doctrine mapped entity.
+ * @Annotation
+ * @Target("METHOD")
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class Foo
+class ParamFetcher
 {
-    public $id;
+    public $action;
 
-    public function __construct($id = null)
+    public function __construct(array $values)
     {
-        $this->id = $id;
+        $this->action = isset($values['value']) ? $values['value'] : null;
     }
 }
