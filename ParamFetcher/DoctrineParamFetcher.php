@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class DoctrineParamFetcher
+class DoctrineParamFetcher implements ParamFetcherInterface
 {
     /**
      * @var EntityManagerInterface
@@ -34,37 +34,21 @@ class DoctrineParamFetcher
     }
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @return bool
-     */
-    private function supports(Resource $resource)
-    {
-        return $this->manager->getMetadataFactory()->isTransient($resource->getClass());
-    }
-
-    /**
      * @param Request $request
      */
-    public function fetchParams(Request $request)
+    public function fetch(Request $request)
     {
         /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
-        // This do not work, delete
-//        if (!$this->supports($resource)) {
-//            return;
-//        }
-
         $param = $resource->getParamName();
 
         if ($request->attributes->has($param)) {
             // Request has a resource parameter : it should be fetched
-
-            // todo test using finder
             $finder = $action->getConfig('finder', 'find');
 
-            $data = $this->fetch($request, $resource, $finder);
+            $data = $this->fetchSingle($request, $resource, $finder);
 
             $request->attributes->set('data', $data);
         } else {
@@ -78,7 +62,7 @@ class DoctrineParamFetcher
             // Request do not concern a single resource nor collection : fetch parent
             elseif ($parentResource = $resource->getParent()) {
                 // If the resource has a parent, fetch it
-                $parent = $this->fetch($request, $parentResource);
+                $parent = $this->fetchSingle($request, $parentResource);
 
                 $request->attributes->set('parent', $parent);
             }
@@ -94,7 +78,7 @@ class DoctrineParamFetcher
      * @param string $finderMethod
      * @return mixed
      */
-    protected function fetch(Request $request, Resource $resource, $finderMethod = 'find')
+    protected function fetchSingle(Request $request, Resource $resource, $finderMethod = 'find')
     {
         if ($resource->getParent()) {
             $data = $this->findHierarchy($request, $resource);

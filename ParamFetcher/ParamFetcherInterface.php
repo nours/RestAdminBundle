@@ -8,23 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Event;
+namespace Nours\RestAdminBundle\ParamFetcher;
 
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class ControllerEvents
  *
- * todo: refactor ? delete ?
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ControllerEvents
+interface ParamFetcherInterface
 {
-
-    const CREATE = 'create';
-
-    const SUCCESS = 'success';
-
-    const ERROR = 'error';
-
+    public function fetch(Request $request);
 }

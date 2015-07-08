@@ -150,3 +150,11 @@ services:
     class: Nours\RestAdminBundle\EventListener\RedirectActionConfigListener
 #    arguments: [ '@rest_admin.manager' ]
     tags: [ { name: 'kernel.event_subscriber' }]
+
+  rest_admin.listener.param_fetcher:
+    class: Nours\RestAdminBundle\EventListener\ParamFetcherListener
+    arguments:
+      - '@service_container'
+      - []  # To be replaced in Compiler/ParamFetcherPass
+      - '%rest_admin.default_param_fetcher%'
+    tags: [ { name: 'kernel.event_subscriber' }]

@@ -51,7 +51,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
 
         $found = $request->attributes->get('data');
 
@@ -76,7 +76,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
 
         $found = $request->attributes->get('data');
 
@@ -100,7 +100,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => $post->getId()
         ));
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
 
         $found = $request->attributes->get('parent');
 
@@ -124,7 +124,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
     }
 
     /**
@@ -139,7 +139,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'action'   => $resource->getAction('bulk_delete')
         ));
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
 
         $data = $request->attributes->get('data');
 
@@ -164,7 +164,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => 1     // The comments are loaded from post 1
         ));
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
 
         $data = $request->attributes->get('data');
 
@@ -189,7 +189,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
     }
 
     /**
@@ -206,7 +206,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
     }
 
     /**
@@ -223,7 +223,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
     }
 
     /**
@@ -240,6 +240,6 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
-        $this->fetcher->fetchParams($request);
+        $this->fetcher->fetch($request);
     }
 }

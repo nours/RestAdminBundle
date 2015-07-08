@@ -55,6 +55,7 @@ class NoursRestAdminExtension extends Extension
         }
 
         $container->setParameter('rest_admin.resource', $config['resource']);
+        $container->setParameter('rest_admin.default_param_fetcher', $config['default_param_fetcher']);
 
         // Domain classes
         $this->configureDomainClasses($config, $container);
