@@ -51,7 +51,10 @@ class SecurityListener implements EventSubscriberInterface
         // If the resource has a role, check it
         if ($role = $resource->getRole()) {
             if (!$this->checker->isGranted($role)) {
-                throw new AccessDeniedHttpException();
+                throw new AccessDeniedHttpException(sprintf(
+                    'Security check failure (%s is not granted for resource %s)',
+                    $role, $resource->getFullName()
+                ));
             }
         }
     }
