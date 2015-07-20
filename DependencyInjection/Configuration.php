@@ -59,6 +59,7 @@ class Configuration implements ConfigurationInterface
                         ->variableNode('edit')->defaultValue(array())->end()
                         ->variableNode('delete')->defaultValue(array())->end()
                         ->variableNode('bulk_delete')->defaultValue(array())->end()
+                        ->variableNode('form')->defaultValue(array())->end()
                     ->end()
                 ->end()
                 ->arrayNode('templates')
