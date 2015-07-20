@@ -87,7 +87,7 @@ class ResourceFactory
             $builder = $this->actionManager->getActionBuilder($type);
 
             // Dispatch action config event
-            $event = new ActionConfigEvent($resource, $name, $config);
+            $event = new ActionConfigEvent($resource, $name, $type, $config);
             $this->dispatcher->dispatch(RestAdminEvents::ACTION, $event);
 
             $resource->addAction($builder->createAction($resource, $event->config));

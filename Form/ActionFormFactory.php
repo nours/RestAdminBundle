@@ -72,7 +72,7 @@ class ActionFormFactory
         // Create builder
         $builder = $this->factory->createNamedBuilder($action->getResource()->getParamName(), $formName, $data, $options);
 
-        $actionBuilder->buildForm($builder, $action->getResource(), $this->generator, $data);
+        $actionBuilder->buildForm($builder, $action, $this->generator, $data);
 
         return $builder->getForm();
     }

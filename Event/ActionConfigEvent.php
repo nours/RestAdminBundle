@@ -24,6 +24,7 @@ class ActionConfigEvent extends ResourceEvent
      * @var string
      */
     private $actionName;
+    private $actionType;
 
     /**
      * @var array
@@ -33,16 +34,19 @@ class ActionConfigEvent extends ResourceEvent
     /**
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param string $actionName
+     * @param string $actionType
      * @param array $config
      */
     public function __construct(
         Resource $resource,
         $actionName,
+        $actionType,
         array $config
     ) {
         parent::__construct($resource);
 
         $this->actionName = $actionName;
+        $this->actionType = $actionType;
         $this->config     = $config;
     }
 
@@ -63,5 +67,13 @@ class ActionConfigEvent extends ResourceEvent
     public function getActionName()
     {
         return $this->actionName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionType()
+    {
+        return $this->actionType;
     }
 }

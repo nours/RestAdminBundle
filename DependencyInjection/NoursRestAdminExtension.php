@@ -75,7 +75,7 @@ class NoursRestAdminExtension extends Extension
      */
     private function configureActionParams(array $config, ContainerBuilder $container)
     {
-        $actions = array('index', 'get', 'create', 'edit', 'delete', 'bulk_delete');
+        $actions = array('index', 'get', 'create', 'edit', 'delete', 'bulk_delete', 'form');
         foreach ($actions as $action) {
             $params = array();
 

@@ -26,8 +26,9 @@ class GetActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
+    public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
+        $resource = $action->getResource();
         $builder->addRoute($resource, $action, 'get', 'GET', $resource->getResourceUriPath());
     }
 

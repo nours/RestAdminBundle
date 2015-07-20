@@ -26,8 +26,9 @@ class DefaultActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
+    public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
+        $resource = $action->getResource();
         foreach ($action->getConfig('routes') as $route) {
             $builder->addRoute(
                 $resource, $action,

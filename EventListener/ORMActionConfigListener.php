@@ -60,6 +60,11 @@ class ORMActionConfigListener implements EventSubscriberInterface
             case 'bulk_delete' :
                 $event->addHandler('rest_admin.handler.orm:handleBulkDelete', $priority);
                 break;
+            default :
+                // todo : refactor
+                if ($event->getActionType() == 'form') {
+                    $event->addHandler('rest_admin.handler.orm:handleUpdate', $priority);
+                }
         }
     }
 

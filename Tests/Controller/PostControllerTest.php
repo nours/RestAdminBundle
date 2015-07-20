@@ -159,7 +159,7 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
-     * Create action form
+     * Edit action form
      */
     public function testEditAction()
     {
@@ -191,6 +191,41 @@ class PostControllerTest extends AdminTestCase
 
         // Object has been created
         $this->assertEquals('edited', $newPost->getContent());
+    }
+
+    /**
+     * Form action
+     */
+    public function testFormAction()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $crawler = $client->request('GET', '/posts/1/form');
+
+//        echo $client->getResponse()->getContent();die;
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>edit post 1</h1>',
+            $client->getResponse()->getContent()
+        );
+
+        $button = $crawler->selectButton('post[submit]');
+        $form = $button->form(array(
+            'post[content]' => 'edited'
+        ));
+
+        $client->submit($form);
+
+        $response = $client->getResponse();
+        $this->assertRedirect($response, '/posts');
+
+        $this->getEntityManager()->clear();
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+
+        // Object has been edited
+        $this->assertEquals('edited', $post->getContent());
     }
 
     /**

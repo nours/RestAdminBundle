@@ -40,10 +40,9 @@ interface ActionBuilderInterface
 
     /**
      * @param RoutesBuilder $builder
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      */
-    public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action);
+    public function buildRoutes(RoutesBuilder $builder, Action $action);
 
     /**
      * Builds a form for this action.
@@ -52,11 +51,11 @@ interface ActionBuilderInterface
      * is provided to generate them.
      *
      * @param FormBuilderInterface $builder
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param Action $action
      * @param UrlGeneratorInterface $generator
      * @param mixed $data
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data);
+    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data);
 
     /**
      * @return string

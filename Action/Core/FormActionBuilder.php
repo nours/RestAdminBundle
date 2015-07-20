@@ -14,14 +14,18 @@ use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class GetAction
+ * Class FormActionBuilder.
+ *
+ * Implement the standard GET - POST form model
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class IndexActionBuilder extends AbstractBuilder
+class FormActionBuilder extends AbstractBuilder
 {
     /**
      * {@inheritdoc}
@@ -29,7 +33,21 @@ class IndexActionBuilder extends AbstractBuilder
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
         $resource = $action->getResource();
-        $builder->addRoute($resource, $action, 'index', 'GET', $resource->getUriPath());
+        $builder->addRoute($resource, $action, $action->getName(), array('GET', 'POST'), $resource->getResourceUriPath($action->getName()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
+    {
+        $resource = $action->getResource();
+        $routeName = $resource->getRouteName($action->getName());
+
+        $builder
+            ->setMethod('POST')
+            ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)))
+        ;
     }
 
     /**
@@ -44,6 +62,6 @@ class IndexActionBuilder extends AbstractBuilder
      */
     public function getName()
     {
-        return 'index';
+        return 'form';
     }
 }

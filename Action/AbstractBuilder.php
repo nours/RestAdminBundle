@@ -45,7 +45,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $data)
+    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
 
     }

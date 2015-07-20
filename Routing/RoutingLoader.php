@@ -70,7 +70,7 @@ class RoutingLoader extends Loader
 
             foreach ($resource->getActions() as $action) {
                 $builder = $this->getActionBuilder($action);
-                $builder->buildRoutes($routesBuilder, $resource, $action);
+                $builder->buildRoutes($routesBuilder, $action);
             }
         }
 

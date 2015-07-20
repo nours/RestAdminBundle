@@ -7,7 +7,14 @@ resources:
   post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
     form: post
-    actions: [ create, edit, delete, bulk_delete ]
+    actions:
+      create: {}
+      edit: {}
+      delete: {}
+      bulk_delete: {}
+      form:
+        type: form
+        template: edit.html.twig
 
   post_prefixed:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post

@@ -118,6 +118,11 @@ services:
     arguments: [ '%rest_admin.actions.bulk_delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
+  rest_admin.action_builder.form:
+    class: Nours\RestAdminBundle\Action\Core\FormActionBuilder
+    arguments: [ '%rest_admin.actions.form%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
 ##############################
 # Forms
 ##############################

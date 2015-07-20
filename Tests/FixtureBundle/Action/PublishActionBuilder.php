@@ -29,8 +29,9 @@ class PublishActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildRoutes(RoutesBuilder $builder, Resource $resource, Action $action)
+    public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
+        $resource = $action->getResource();
         $builder->addRoute($resource, $action, 'publish_form', 'GET', $resource->getResourceUriPath('publish'));
         $builder->addRoute($resource, $action, 'publish', 'PUT', $resource->getResourceUriPath('publish'));
         $builder->addRoute($resource, $action, 'unpublish', 'DELETE', $resource->getResourceUriPath('publish'));
@@ -39,13 +40,13 @@ class PublishActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Resource $resource, UrlGeneratorInterface $generator, $model)
+    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $model)
     {
         if (!$model instanceof Comment) {
             throw new \InvalidArgumentException("Comment expected !");
         }
 
-        $routeName = $resource->getRouteName('publish');
+        $routeName = $action->getResource()->getRouteName('publish');
 
         $builder
             ->setMethod('PUT')
