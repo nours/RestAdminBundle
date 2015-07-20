@@ -196,12 +196,12 @@ class PostControllerTest extends AdminTestCase
     /**
      * Form action
      */
-    public function testFormAction()
+    public function testCustomFormAction()
     {
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/form');
+        $crawler = $client->request('GET', '/posts/1/custom-form');
 
 //        echo $client->getResponse()->getContent();die;
 

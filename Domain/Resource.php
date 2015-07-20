@@ -368,7 +368,7 @@ class Resource
      */
     public function getResourceUriPath($suffix = null)
     {
-        return $this->getUriPath($suffix, true);
+        return $this->getUriPath(str_replace('_', '-', Inflector::tableize($suffix)), true);
     }
 
     /**

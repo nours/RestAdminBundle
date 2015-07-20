@@ -79,10 +79,10 @@ class ResourceFactory
             if (!$this->actionManager->hasActionBuilder($type)) {
                 // Fallback to default action type
                 $type = 'default';
-
-                // Add the name to config
-                $config['name'] = $name;
             }
+
+            // Add the name to config
+            $config['name'] = $name;
 
             $builder = $this->actionManager->getActionBuilder($type);
 

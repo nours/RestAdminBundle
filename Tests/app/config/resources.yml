@@ -12,7 +12,7 @@ resources:
       edit: {}
       delete: {}
       bulk_delete: {}
-      form:
+      custom_form:
         type: form
         form: post
         template: edit.html.twig
