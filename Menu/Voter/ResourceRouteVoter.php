@@ -42,6 +42,10 @@ class ResourceRouteVoter implements VoterInterface
      */
     public function matchItem(ItemInterface $item)
     {
+        if ($item->getExtra('disable_resource_voter')) {
+            return null;
+        }
+
         if (empty($this->request)) {
             throw new \DomainException("No request for matching item against");
         }

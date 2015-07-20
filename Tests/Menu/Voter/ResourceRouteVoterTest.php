@@ -108,12 +108,61 @@ class ResourceRouteVoterTest extends AdminTestCase
     }
 
 
+    public function testFormActionMatches()
+    {
+        $this->initRequest(array(
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_custom_form'
+        ));
+
+        $item = $this->createItem('post_custom_form');
+
+        $this->assertTrue($this->voter->matchItem($item));
+    }
+
+
     /**
+     * All resource item are matched, even if routes do not match
+     */
+    public function testFormActionDoMatchOtherRoute()
+    {
+        $this->initRequest(array(
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_edit'
+        ));
+
+        $item = $this->createItem('post_custom_form');
+
+        $this->assertTrue($this->voter->matchItem($item));
+    }
+
+
+    /**
+     * The voter can be bypassed using disable_resource_voter extra
+     */
+    public function testFormActionReturnsNull()
+    {
+        $this->initRequest(array(
+            'resource' => $this->getAdminManager()->getResource('post'),
+            '_route' => 'post_edit'
+        ));
+
+        $item = $this->createItem('post_custom_form', array(
+            'disable_resource_voter' => true
+        ));
+
+        $this->assertNull($this->voter->matchItem($item));
+    }
+
+    /**
+     * @param null $route
+     * @param array $extras
      * @return MenuItem
      */
-    private function createItem($route = null)
+    private function createItem($route = null, array $extras = array())
     {
         $item = new MenuItem('item', new MenuFactory());
+        $item->setExtras($extras);
 
         if ($route) {
             $item->setExtra('routes', array(array('route' => $route)));
