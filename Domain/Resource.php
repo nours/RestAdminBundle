@@ -59,6 +59,13 @@ class Resource
     private $parent = false;
 
     /**
+     * false means that the parent resource has not been resolved yet.
+     *
+     * @var Resource[]
+     */
+    private $children = array();
+
+    /**
      * @var string
      */
     private $routePrefix;
@@ -226,6 +233,8 @@ class Resource
 
         if ($parent) {
             $this->routePrefix = $parent->routePrefix . $this->basePrefix;
+
+            $parent->children[$this->getName()] = $this;
         }
     }
 
@@ -325,6 +334,38 @@ class Resource
     public function getRouteName($actionName)
     {
         return $this->routePrefix . $actionName;
+    }
+
+    /**
+     * @param string $name
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    public function getChild($name)
+    {
+        if (!isset($this->children[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                "Resource %s has no child resource %s",
+                $this->getFullName(), $name
+            ));
+        }
+        return $this->children[$name];
+    }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function hasChild($name)
+    {
+        return isset($this->children[$name]);
+    }
+
+    /**
+     * @return \Nours\RestAdminBundle\Domain\Resource[]
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
 

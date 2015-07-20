@@ -50,6 +50,30 @@ class ResourceTest extends AdminTestCase
     }
 
     /**
+     * The post resource has 2 children
+     */
+    public function testGetChildren()
+    {
+        $children = $this->postResource->getChildren();
+
+        $this->assertCount(2, $children);
+        $this->assertTrue(in_array($this->commentResource, $children, true));
+        $this->assertTrue(in_array($this->commentBisResource, $children, true));
+    }
+
+    /**
+     *
+     */
+    public function testGetChild()
+    {
+        $this->assertTrue($this->postResource->hasChild('comment'));
+
+        $child = $this->postResource->getChild('comment');
+
+        $this->assertSame($this->commentResource, $child);
+    }
+
+    /**
      * The global route params for a simple resource should always be empty
      */
     public function testGetRouteParamsForTopLevelResource()
