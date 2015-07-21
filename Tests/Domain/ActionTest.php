@@ -38,4 +38,11 @@ class ActionTest extends AdminTestCase
         // Extra action param
         $this->assertSame('list', $action->getConfig('icon'));
     }
+
+    public function testGetRouteName()
+    {
+        $action = $this->resource->getAction('index');
+
+        $this->assertEquals($this->resource->getRouteName('index'), $action->getRouteName());
+    }
 }

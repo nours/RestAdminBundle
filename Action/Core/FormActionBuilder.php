@@ -42,11 +42,10 @@ class FormActionBuilder extends AbstractBuilder
     public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
         $resource = $action->getResource();
-        $routeName = $resource->getRouteName($action->getName());
 
         $builder
             ->setMethod('POST')
-            ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)))
+            ->setAction($generator->generate($action->getRouteName(), $resource->getResourceRouteParams($data)))
         ;
     }
 

@@ -130,6 +130,14 @@ class Action
     }
 
     /**
+     * @return array
+     */
+    public function getRouteName()
+    {
+        return $this->resource->getRouteName($this->getName());
+    }
+
+    /**
      * Duplicate this action for another resource.
      *
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
