@@ -38,7 +38,7 @@ class CommentControllerTest extends AdminTestCase
     }
 
     /**
-     * Index action.
+     * Get action.
      */
     public function testGetAction()
     {
@@ -61,7 +61,7 @@ class CommentControllerTest extends AdminTestCase
     }
 
     /**
-     * Index action.
+     * Get action.
      */
     public function testGetAction404ForBadParent()
     {
@@ -111,7 +111,7 @@ class CommentControllerTest extends AdminTestCase
     }
 
     /**
-     * Create action form
+     * Edit action form
      */
     public function testEditFormAction()
     {

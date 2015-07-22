@@ -59,8 +59,8 @@ class DoctrineParamFetcher implements ParamFetcherInterface
                 $request->attributes->set('data', $data);
             }
 
-            // Request do not concern a single resource nor collection : fetch parent
-            elseif ($parentResource = $resource->getParent()) {
+            // Request may concern a collection with a parent
+            if ($parentResource = $resource->getParent()) {
                 // If the resource has a parent, fetch it
                 $parent = $this->fetchSingle($request, $parentResource);
 
