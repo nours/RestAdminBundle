@@ -99,6 +99,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('serializer')->defaultValue('serializer')->end()
+                        ->scalarNode('serialization_context')->defaultNull()->end()
                     ->end()
                 ->end()
             ->end()

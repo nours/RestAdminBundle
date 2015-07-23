@@ -10,10 +10,11 @@
 
 namespace Nours\RestAdminBundle\View;
 
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -57,11 +58,28 @@ class JsonHandler implements ViewHandler
             }
         }
 
-        $serialized = $this->getSerializer()->serialize($data, 'json');
+        $serializer = $this->getSerializer();
+        $arguments = array($data, 'json');
+
+        if ($serializer instanceof SerializerInterface && ($context = $this->getSerializationContext())) {
+            $arguments[] = $context;
+        }
+
+        $serialized = call_user_func_array(array($serializer, 'serialize'), $arguments);
 
         return new Response($serialized, $responseStatus, array(
             'Content-Type' => $request->getMimeType($request->getRequestFormat())
         ));
+    }
+
+    /**
+     * @return SerializationContext
+     */
+    private function getSerializationContext()
+    {
+        return $this->container->has('rest_admin.serialization_context') ?
+            $this->container->get('rest_admin.serialization_context') :
+            null;
     }
 
     /**

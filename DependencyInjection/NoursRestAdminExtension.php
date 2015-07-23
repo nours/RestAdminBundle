@@ -65,7 +65,9 @@ class NoursRestAdminExtension extends Extension
 
         // Service aliases (see Configuration for default values)
         foreach ($config['services'] as $name => $service) {
-            $container->setAlias('rest_admin.' . $name, $service);
+            if ($service) {
+                $container->setAlias('rest_admin.' . $name, $service);
+            }
         }
     }
 
