@@ -25,7 +25,8 @@
         "symfony/browser-kit": "~2.6",
         "symfony/monolog-bundle" : "~2.7",
         "doctrine/data-fixtures": "~1.1",
-        "knplabs/knp-menu": ">=2.0"
+        "knplabs/knp-menu": ">=2.0",
+        "symfony/css-selector": ">2.6"
     },
     "suggest": {
       "doctrine/doctrine-bundle" : "Support for Doctrine ORM persistence and loading",

@@ -1,6 +1,3 @@
-parameters:
-  rest_admin.actions.default: []
-
 services:
 ##############################
 # Resources loading

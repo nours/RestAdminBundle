@@ -20,6 +20,36 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
  */
 class PostControllerTest extends AdminTestCase
 {
+
+//    /**
+//     * Create action form in json
+//     */
+//    public function testCreateJsonAction()
+//    {
+//        $this->loadFixtures();
+//        $client = $this->getClient();
+//
+//        $client->request('POST', '/posts.json', array(
+//            'post[content]' => 'created'
+//        ));
+//
+//        $response = $client->getResponse();
+//        $this->assertJson($response->getContent());
+//
+//        echo $response->getContent();die;
+//        $object = json_decode($response->getContent());
+//        $this->assertNotNull($object);
+//        $this->assertEquals(3, $object->id);
+//        $this->assertEquals('created', $object->content);
+//
+//        $this->getEntityManager()->clear();
+//        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(3);
+//
+//        // Object has been created
+//        $this->assertNotNull($newPost);
+//        $this->assertEquals('created', $newPost->getContent());
+//    }
+
     /**
      * Index action.
      */
