@@ -12,7 +12,6 @@ namespace Nours\RestAdminBundle\Action\Core;
 
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,6 +36,7 @@ class IndexActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefault('read_only', true);
     }
 
     /**

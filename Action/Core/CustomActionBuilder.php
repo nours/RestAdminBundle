@@ -12,16 +12,18 @@ namespace Nours\RestAdminBundle\Action\Core;
 
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Default action builder.
+ * Custom action builder.
+ *
+ * The routing of these actions is user custom,
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class DefaultActionBuilder extends AbstractBuilder
+class CustomActionBuilder extends AbstractBuilder
 {
     /**
      * {@inheritdoc}
@@ -49,10 +51,23 @@ class DefaultActionBuilder extends AbstractBuilder
     {
         // Overrides default options :
         $resolver->setDefaults(array(
-            'type'     => 'default',    // this builder's type is default
+            'type'     => 'custom',    // this builder's type is default
             'name'     => null,
             'template' => '',
-            'routes'   => array()
+            'routes'   => array(),
+            'read_only' => function(Options $options) {
+                // Read Only can be determined automatically from routes
+                $readOnly = true;
+                foreach ($options['routes'] as $route) {
+                    foreach ($route['methods'] as $method) {
+                        if ($method != 'GET') {
+                            $readOnly = false;
+                        }
+                    }
+                }
+
+                return $readOnly;
+            }
         ));
     }
 
@@ -61,6 +76,6 @@ class DefaultActionBuilder extends AbstractBuilder
      */
     public function getName()
     {
-        return 'default';
+        return 'custom';
     }
 }

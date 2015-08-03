@@ -37,6 +37,9 @@ class ActionTest extends AdminTestCase
 
         // Extra action param
         $this->assertSame('list', $action->getConfig('icon'));
+
+        // Index action is read only
+        $this->assertTrue($action->isReadOnly());
     }
 
     public function testGetRouteName()
@@ -44,5 +47,53 @@ class ActionTest extends AdminTestCase
         $action = $this->resource->getAction('index');
 
         $this->assertEquals($this->resource->getRouteName('index'), $action->getRouteName());
+    }
+
+    public function testGetActionIsReadOnly()
+    {
+        $action = $this->resource->getAction('get');
+
+        $this->assertTrue($action->isReadOnly());
+    }
+
+    /**
+     * @dataProvider getNotReadOnlyActionNames
+     *
+     * @param $actionName
+     */
+    public function testNotReadOnlyActions($actionName)
+    {
+        $action = $this->resource->getAction($actionName);
+
+        $this->assertFalse($action->isReadOnly());
+    }
+
+    /**
+     * The actions which do have treatments
+     *
+     * @return array
+     */
+    public function getNotReadOnlyActionNames()
+    {
+        return array(
+            array('create'),
+            array('edit'),
+            array('delete'),
+            array('bulk_delete'),
+            array('custom_form'),
+        );
+    }
+
+
+    public function testCustomActionReadOnly()
+    {
+        // CommentBis resource has custom actions (test and other)
+        $resource = $this->getAdminManager()->getResource('post.comment_bis');
+
+        $action = $resource->getAction('test');
+        $this->assertTrue($action->isReadOnly());
+
+        $action = $resource->getAction('other');
+        $this->assertFalse($action->isReadOnly());
     }
 }

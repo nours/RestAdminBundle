@@ -59,15 +59,15 @@ class ActionManager
     /**
      * @return ActionBuilderInterface
      */
-    public function getDefaultActionBuilder()
+    public function getCustomActionBuilder()
     {
-        if (!isset($this->actionBuilders['default'])) {
+        if (!isset($this->actionBuilders['custom'])) {
             throw new \InvalidArgumentException(sprintf(
-                "There is no default action builder registered (%s are)", implode(', ', array_keys($this->actionBuilders))
+                "There is no custom action builder registered (%s are)", implode(', ', array_keys($this->actionBuilders))
             ));
         }
 
-        return $this->actionBuilders['default'];
+        return $this->actionBuilders['custom'];
     }
 
     /**

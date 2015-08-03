@@ -106,6 +106,18 @@ class Action
     }
 
     /**
+     * If this action is read only (it only exposes data and do not have forms and GET routes only).
+     *
+     * It is configured by read_only option
+     *
+     * @return boolean
+     */
+    public function isReadOnly()
+    {
+        return $this->getConfig('read_only');
+    }
+
+    /**
      * @return string
      */
     public function getTemplate()

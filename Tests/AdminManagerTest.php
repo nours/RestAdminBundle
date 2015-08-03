@@ -36,7 +36,6 @@ class AdminManagerTest extends AdminTestCase
      */
     public function testResourcesAreLoaded()
     {
-
         $resources = $this->manager->getResourceCollection();
 
         $this->assertTrue($resources->has('post'));
@@ -49,7 +48,7 @@ class AdminManagerTest extends AdminTestCase
     }
 
     /**
-     * The resources from app/config.resources.yml should be loaded
+     * The resource collection in cache can be deserialized.
      */
     public function testResourceDeserialization()
     {

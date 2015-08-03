@@ -25,7 +25,8 @@ class RedirectActionConfigListener implements EventSubscriberInterface
 {
     public function onActionConfig(ActionConfigEvent $event)
     {
-        // Skip index and get actions
+        // Skip readonly actions
+        // todo : find a way to use read_only here
         if (in_array($event->getActionName(), array('index', 'get'))) {
             return;
         }

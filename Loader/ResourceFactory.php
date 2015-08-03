@@ -77,8 +77,8 @@ class ResourceFactory
 
             // Check if this action type is registered
             if (!$this->actionManager->hasActionBuilder($type)) {
-                // Fallback to default action type
-                $type = 'default';
+                // Fallback to custom action type
+                $type = 'custom';
             }
 
             // Add the name to config

@@ -70,6 +70,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
                 return $options['type'];
             },
             'type'     => $this->getName(),
+            'read_only' => false,
             'template' => null,
             'handlers' => array(),
             'fetcher' => null,

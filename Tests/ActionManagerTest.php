@@ -32,14 +32,14 @@ class ActionManagerTest extends AdminTestCase
     }
 
     /**
-     * The resources from app/config.resources.yml should be loaded
+     * The custom action builder is set in action manager.
      */
-    public function testGetDefaultActionBuilder()
+    public function testGetCustomActionBuilder()
     {
-        $builder = $this->manager->getDefaultActionBuilder();
+        $builder = $this->manager->getCustomActionBuilder();
 
-        $this->assertInstanceOf('Nours\RestAdminBundle\Action\Core\DefaultActionBuilder', $builder);
-        $this->assertEquals('default', $builder->getName());
+        $this->assertInstanceOf('Nours\RestAdminBundle\Action\Core\CustomActionBuilder', $builder);
+        $this->assertEquals('custom', $builder->getName());
     }
 
 }

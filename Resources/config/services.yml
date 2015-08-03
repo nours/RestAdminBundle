@@ -81,8 +81,8 @@ services:
 # Core actions
 ##############################
   rest_admin.action_builder.default:
-    class: Nours\RestAdminBundle\Action\Core\DefaultActionBuilder
-    arguments: [ '%rest_admin.actions.default%' ]
+    class: Nours\RestAdminBundle\Action\Core\CustomActionBuilder
+    arguments: [ '%rest_admin.actions.custom%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.index:
