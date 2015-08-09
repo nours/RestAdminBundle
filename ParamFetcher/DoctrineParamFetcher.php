@@ -26,7 +26,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     /**
      * @var EntityManagerInterface
      */
-    private $manager;
+    protected $manager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

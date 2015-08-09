@@ -133,6 +133,7 @@ class YamlResourceLoader extends FileLoader
     {
         $actions = isset($configs['actions']) ? $configs['actions'] : array();
 
+        // Allow using string only to declare the action
         foreach ($actions as $name => $config) {
             if (is_string($config)) {
                 $actions[$config] = array();
