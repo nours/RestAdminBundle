@@ -164,7 +164,9 @@ class ResourceTest extends AdminTestCase
     }
 
     /**
-     * The ParamFetcher annotation enables the custom param fetcher for the resource or an action
+     * Foo resource has custom fetchers :
+     *  - uses annotation for index
+     *  - uses fetcher param for get
      *
      * @see FooController
      */
@@ -176,7 +178,7 @@ class ResourceTest extends AdminTestCase
 
         $this->assertEquals('custom', $fooResource->getConfig('fetcher'));
         $this->assertEquals('custom', $index->getConfig('fetcher'));
-        $this->assertEquals(null, $get->getConfig('fetcher'));
+        $this->assertEquals('foo', $get->getConfig('fetcher'));
 
         $controllerClass = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FooController';
         $this->assertEquals($controllerClass . '::fetchParamsDefault', $fooResource->getConfig('fetcher_callback'));

@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo"
  * )
  *
- * @Rest\Action("get", template = "foo/get.html.twig")
+ * @Rest\Action("get", template = "foo/get.html.twig", fetcher = "foo")
  */
 class FooController
 {

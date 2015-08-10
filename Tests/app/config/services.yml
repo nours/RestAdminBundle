@@ -17,3 +17,7 @@ services:
   tests.action.publish:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Action\PublishActionBuilder
     tags: [ { name: 'rest_admin.action_builder' } ]
+
+  tests.param_fetcher.test:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\ParamFetcher\FooParamFetcher
+    tags: [ { name: rest_admin.param_fetcher, alias: foo } ]
