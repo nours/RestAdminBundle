@@ -56,7 +56,7 @@ class RestAdminExtension extends \Twig_Extension
         if (is_string($action)) {
             if (strpos($action, ':') !== false) {
                 // resource:action notation
-                $action = $this->extractActionFromString($action);
+                $action = $this->adminManager->getAction($action);
             } else {
                 $action = $this->getCurrentResource()->getAction($action);
             }
@@ -94,26 +94,6 @@ class RestAdminExtension extends \Twig_Extension
         $request = $this->requestStack->getCurrentRequest();
 
         return $request;
-    }
-
-    /**
-     * @return Request
-     */
-    private function extractActionFromString($notation)
-    {
-        $exploded = explode(':', $notation, 2);
-
-        $resource = $this->adminManager->getResource($exploded[0]);
-        $action = $resource->getAction($exploded[1]);
-
-        if (empty($action)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Action %s not found for resource %s",
-                $exploded[1], $exploded[0]
-            ));
-        }
-
-        return $action;
     }
 
     /**

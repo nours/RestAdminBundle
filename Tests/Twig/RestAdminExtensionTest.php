@@ -15,13 +15,14 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Twig\Extension\RestAdminExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /**
- * Class TwigExtensionTest
+ * Class RestAdminExtensionTest
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class TwigExtensionTest extends AdminTestCase
+class RestAdminExtensionTest extends AdminTestCase
 {
     /**
      * @var RestAdminExtension
@@ -93,16 +94,15 @@ class TwigExtensionTest extends AdminTestCase
     /**
      * Asserts the controller reference is well formed for a resource action.
      *
-     * @param $reference
-     * @param $resourceName
-     * @param $actionName
+     * @param ControllerReference $reference
+     * @param string $resourceName
+     * @param string $actionName
      */
     private function assertActionControllerReference($reference, $resourceName, $actionName)
     {
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Controller\ControllerReference', $reference);
         $this->assertArrayHasKey('resource', $reference->attributes);
         $this->assertArrayHasKey('action', $reference->attributes);
-//        $this->assertArrayHasKey('_controller', $reference->attributes);
 
         /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
         $resource = $reference->attributes['resource'];
@@ -114,6 +114,6 @@ class TwigExtensionTest extends AdminTestCase
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Action', $action);
         $this->assertEquals($actionName, $action->getName());
 
-//        $this->assertEquals($action->getController(), $reference->attributes['_controller']);
+        $this->assertEquals($action->getController(), $reference->controller);
     }
 }

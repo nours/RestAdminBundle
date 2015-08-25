@@ -130,7 +130,7 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
-     * Get action in JSON (using header .
+     * Get action in JSON (using HTTP_ACCEPT header).
      */
     public function testGetJsonAction()
     {

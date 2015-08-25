@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle;
 
+use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\ConfigCache;
@@ -90,6 +91,29 @@ class AdminManager implements CacheWarmerInterface
     public function getResource($name)
     {
         return $this->getResourceCollection()->get($name);
+    }
+
+    /**
+     * Returns an action from fully qualified name.
+     *
+     * @param string $name
+     * @return Action
+     */
+    public function getAction($name)
+    {
+        $exploded = explode(':', $name, 2);
+
+        $resource = $this->getResource($exploded[0]);
+        $action = $resource->getAction($exploded[1]);
+
+        if (empty($action)) {
+            throw new \InvalidArgumentException(sprintf(
+                "Action %s not found for resource %s",
+                $exploded[1], $exploded[0]
+            ));
+        }
+
+        return $action;
     }
 
     /**

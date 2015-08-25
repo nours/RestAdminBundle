@@ -65,4 +65,19 @@ class AdminManagerTest extends AdminTestCase
         $this->assertTrue($collection->has('post.comment_bis'));
     }
 
+
+    public function testGetAction()
+    {
+        $action = $this->manager->getAction('post:index');
+
+        $this->assertEquals('post:index', $action->getFullName());
+        $this->assertEquals('index', $action->getName());
+        $this->assertEquals('post', $action->getResource()->getName());
+
+        $action = $this->manager->getAction('post.comment_bis:get');
+
+        $this->assertEquals('post.comment_bis:get', $action->getFullName());
+        $this->assertEquals('get', $action->getName());
+        $this->assertEquals('post.comment_bis', $action->getResource()->getFullName());
+    }
 }
