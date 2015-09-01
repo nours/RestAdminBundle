@@ -36,122 +36,86 @@ class ResourceRouteVoterTest extends AdminTestCase
     }
 
     /**
-     * Request must be set to use matcher.
-     */
-    public function testMatchItemThrowsIfNoRequest()
-    {
-        $this->setExpectedException('DomainException');
-
-        $this->voter->matchItem($this->createItem());
-    }
-
-    /**
-     * Matches a request without resource
+     * The request has no resource
      */
     public function testMatchItemReturnsNullIfNoResource()
     {
         $this->initRequest();
 
-        $this->assertNull($this->voter->matchItem($this->createItem()));
+        $item = $this->createItem('post_edit', array(
+            'resource' => $this->getAdminManager()->getResource('post')
+        ));
+
+        $this->assertNull($this->voter->matchItem($item));
     }
 
-
-    public function testMatchesWithIndexRoute()
+    /**
+     * The request has a resource, but the item doesn't
+     */
+    public function testReturnsNullIfItemHasNoResource()
     {
         $this->initRequest(array(
             'resource' => $this->getAdminManager()->getResource('post'),
             '_route' => 'post_index'
         ));
 
+        // The item as no resource extra
         $item = $this->createItem('post_index');
 
+        $this->assertNull($this->voter->matchItem($item));
+    }
+
+    /**
+     * The request has a resource, but the item doesn't
+     */
+    public function testReturnsNullIfRequestHasNoResource()
+    {
+        $this->initRequest(array(
+            '_route' => 'post_index'
+        ));
+
+        // The item as no resource extra
+        $item = $this->createItem('post_index', array(
+            'resource' => $this->getAdminManager()->getResource('post')
+        ));
+
+        $this->assertNull($this->voter->matchItem($item));
+    }
+
+    /**
+     * The resource of the item matches the request
+     */
+    public function testMatchItemWithSameResource()
+    {
+        $resource = $this->getAdminManager()->getResource('post');
+
+        $this->initRequest(array(
+            'resource' => $resource,
+            '_route' => 'post_edit'
+        ));
+
+        $item = $this->createItem('post_edit', array(
+            'resource' => $resource
+        ));
+
         $this->assertTrue($this->voter->matchItem($item));
     }
 
-
-    public function testMatchesWithEditRoute()
+    /**
+     * The resource of the item does not match the request.
+     */
+    public function testDoNotMatchItemWithOtherResource()
     {
         $this->initRequest(array(
             'resource' => $this->getAdminManager()->getResource('post'),
             '_route' => 'post_edit'
         ));
 
-        $item = $this->createItem('post_edit');
-
-        $this->assertTrue($this->voter->matchItem($item));
-    }
-
-
-    public function testDoesntMatchWithParentResource()
-    {
-        $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post'),
-            '_route' => 'post_edit'
+        $item = $this->createItem('post_edit', array(
+            'resource' => $this->getAdminManager()->getResource('post.comment')
         ));
-
-        $item = $this->createItem('post_comment_edit');
 
         $this->assertFalse($this->voter->matchItem($item));
-    }
-
-
-    public function testReturnsNullIfRouteNameDoNotMatch()
-    {
-        $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post'),
-            '_route' => 'foobar'
-        ));
-
-        $item = $this->createItem('post_index');
-
-        $this->assertNull($this->voter->matchItem($item));
-    }
-
-
-    public function testFormActionMatches()
-    {
-        $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post'),
-            '_route' => 'post_custom_form'
-        ));
-
-        $item = $this->createItem('post_custom_form');
-
-        $this->assertTrue($this->voter->matchItem($item));
-    }
-
-
-    /**
-     * All resource item are matched, even if routes do not match
-     */
-    public function testFormActionDoMatchOtherRoute()
-    {
-        $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post'),
-            '_route' => 'post_edit'
-        ));
-
-        $item = $this->createItem('post_custom_form');
-
-        $this->assertTrue($this->voter->matchItem($item));
-    }
-
-
-    /**
-     * The voter can be bypassed using disable_resource_voter extra
-     */
-    public function testFormActionReturnsNull()
-    {
-        $this->initRequest(array(
-            'resource' => $this->getAdminManager()->getResource('post'),
-            '_route' => 'post_edit'
-        ));
-
-        $item = $this->createItem('post_custom_form', array(
-            'disable_resource_voter' => true
-        ));
-
-        $this->assertNull($this->voter->matchItem($item));
     }
 
     /**

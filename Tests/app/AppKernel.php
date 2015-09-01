@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Nours\RestAdminBundle\NoursRestAdminBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle()
         );
     }

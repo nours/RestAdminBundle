@@ -37,47 +37,28 @@ class ResourceRouteVoter implements VoterInterface
     }
 
     /**
-     * @param ItemInterface $item
-     * @return null
+     * {@inheritdoc}
      */
     public function matchItem(ItemInterface $item)
     {
-        if ($item->getExtra('disable_resource_voter')) {
-            return null;
-        }
-
-        if (empty($this->request)) {
-            throw new \DomainException("No request for matching item against");
-        }
-
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
-        $resource = $this->request->attributes->get('resource');
-        if (empty($resource)) {
-            return null;
-        }
-
-        $route = $this->request->attributes->get('_route');
-
-        $routePrefix    = $resource->getRoutePrefix();
-        $routePrefixLen = strlen($routePrefix);
-
-        // Check that current route matches the prefix
-        if (substr($route, 0, $routePrefixLen) != $routePrefix) {
-            return null;
-        }
-
-        $routes = (array) $item->getExtra('routes', array());
-        foreach ($routes as $route) {
-            $routeName = $route['route'];
-
-            // Check that the route name matches the resource's prefix
-            if (substr($routeName, 0, $routePrefixLen) == $routePrefix) {
-
-                // Then extract the action's name
-                $actionName = substr($routeName, $routePrefixLen);
-
-                return $resource->hasAction($actionName);
+        if ($itemResource = $item->getExtra('resource')) {
+            if ($requestResource = $this->getRequestResource()) {
+                return $itemResource === $requestResource;
             }
         }
+
+        return null;
+    }
+
+    /**
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    private function getRequestResource()
+    {
+        if (empty($this->request)) {
+            return null;
+        }
+
+        return $this->request->attributes->get('resource');
     }
 }

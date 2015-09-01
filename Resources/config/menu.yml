@@ -3,3 +3,7 @@ services:
     class: Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
     tags:
         - { name: knp_menu.voter, request: true }
+
+  rest_admin.menu.helper:
+    class: Nours\RestAdminBundle\Menu\Helper\ResourceMenuHelper
+    arguments: [ '@rest_admin.manager' ]
