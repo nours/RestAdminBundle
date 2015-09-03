@@ -68,9 +68,20 @@ class RoutingLoader extends Loader
         foreach ($resources as $resource) {
             /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
 
+            // The get action routes must be appended after others
+            // (otherwise it will conflicts with global resource routes)
+            $getAction = null;
+
             foreach ($resource->getActions() as $action) {
-                $builder = $this->getActionBuilder($action);
-                $builder->buildRoutes($routesBuilder, $action);
+                if ($action->getName() == 'get') {
+                    $getAction = $action;
+                } else {
+                    $this->getActionBuilder($action)->buildRoutes($routesBuilder, $action);
+                }
+            }
+
+            if ($getAction) {
+                $this->getActionBuilder($getAction)->buildRoutes($routesBuilder, $getAction);
             }
         }
 

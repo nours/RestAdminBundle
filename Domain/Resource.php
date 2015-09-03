@@ -271,8 +271,8 @@ class Resource
     {
         if (!$this->hasAction($name)) {
             throw new \InvalidArgumentException(sprintf(
-                "The action %s is not registered in resource %s (actions : %)",
-                $name, $this->getFullName(), implode(array_keys($this->actions))
+                "The action %s is not registered in resource %s (actions : %s)",
+                $name, $this->getFullName(), implode(', ', array_keys($this->actions))
             ));
         }
         return isset($this->actions[$name]) ? $this->actions[$name] : null;

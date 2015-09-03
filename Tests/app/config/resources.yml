@@ -8,6 +8,7 @@ resources:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
     form: post
     actions:
+      get: {}
       create: {}
       edit: {}
       delete: {}
