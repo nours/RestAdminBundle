@@ -40,13 +40,15 @@ class BulkDeleteActionBuilder extends AbstractBuilder
      */
     public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
-        $resource = $action->getResource();
-        $routeName = $resource->getRouteName('bulk_remove');
+        if (!$builder->getAction()) {
+            $resource = $action->getResource();
+            $routeName = $resource->getRouteName('bulk_remove');
 
-        $builder
-            ->setMethod('DELETE')
-            ->setAction($generator->generate($routeName, $resource->getCollectionRouteParams($data)));
-        ;
+            $builder
+                ->setMethod('DELETE')
+                ->setAction($generator->generate($routeName, $resource->getCollectionRouteParams($data)));
+            ;
+        }
     }
 
     /**

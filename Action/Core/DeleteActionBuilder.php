@@ -40,13 +40,15 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
-        $resource = $action->getResource();
-        $routeName = $resource->getRouteName('remove');
+        if (!$builder->getAction()) {
+            $resource = $action->getResource();
+            $routeName = $resource->getRouteName('remove');
 
-        $builder
-            ->setMethod('DELETE')
-            ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)));
-        ;
+            $builder
+                ->setMethod('DELETE')
+                ->setAction($generator->generate($routeName, $resource->getResourceRouteParams($data)));
+            ;
+        }
     }
 
     /**
