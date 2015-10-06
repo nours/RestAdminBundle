@@ -69,7 +69,7 @@ class TemplatingHandler implements ViewHandler
             $parameters['form'] = $data->createView();
             $parameters['data'] = $data->getData();
         } elseif (is_array($data)) {
-            $parameters = $data;
+            $parameters = array_merge($parameters, $data);
         } else {
             $parameters['data'] = $data;
         }
