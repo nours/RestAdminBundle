@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Domain;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
  * Class ActionTest
@@ -95,5 +96,36 @@ class ActionTest extends AdminTestCase
 
         $action = $resource->getAction('other');
         $this->assertFalse($action->isReadOnly());
+    }
+
+
+    public function testGetRouteParamsForParent()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post.comment_bis:create');
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        $params = $action->getRouteParams($post);
+
+        $this->assertCount(1, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals(1, $params['post']);
+    }
+
+    public function testGetRouteParamsForInstance()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post.comment_bis:edit');
+        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+
+        $params = $action->getRouteParams($comment);
+
+        $this->assertCount(2, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals(1, $params['post']);
+        $this->assertArrayHasKey('comment_bis', $params);
+        $this->assertEquals(1, $params['comment_bis']);
     }
 }

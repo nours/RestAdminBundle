@@ -453,6 +453,15 @@ class Resource
     }
 
     /**
+     * @param $data
+     * @return bool
+     */
+    public function isResourceInstance($data)
+    {
+        return $data instanceof $this->class;
+    }
+
+    /**
      * Build route parameters for an instance of this resource
      *
      * @param $data

@@ -78,6 +78,14 @@ services:
     arguments: [ '@router' ]
 
 ##############################
+# Helper
+##############################
+  rest_admin.helper:
+    class: Nours\RestAdminBundle\Helper\AdminHelper
+    arguments: [ @request_stack, @rest_admin.manager, @router ]
+
+
+##############################
 # Core actions
 ##############################
   rest_admin.action_builder.default:

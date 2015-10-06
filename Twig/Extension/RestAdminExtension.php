@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Twig\Extension;
 
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Helper\AdminHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -25,11 +26,13 @@ class RestAdminExtension extends \Twig_Extension
 {
     private $requestStack;
     private $adminManager;
+    private $helper;
 
-    public function __construct(RequestStack $requestStack, AdminManager $adminManager)
+    public function __construct(RequestStack $requestStack, AdminManager $adminManager, AdminHelper $helper)
     {
         $this->requestStack = $requestStack;
         $this->adminManager = $adminManager;
+        $this->helper       = $helper;
     }
 
     /**
@@ -38,7 +41,7 @@ class RestAdminExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('rest_action', array($this, 'actionController'))
+            new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference'))
         );
     }
 
@@ -47,29 +50,9 @@ class RestAdminExtension extends \Twig_Extension
      * @param array $attributes
      * @return ControllerReference
      */
-    public function actionController($action, array $attributes = array())
+    public function createControllerReference($action, array $attributes = array())
     {
-        $request = $this->getRequest();
-
-        $defaults = $request ? $request->attributes->all() : array();
-
-        if (is_string($action)) {
-            if (strpos($action, ':') !== false) {
-                // resource:action notation
-                $action = $this->adminManager->getAction($action);
-            } else {
-                $action = $this->getCurrentResource()->getAction($action);
-            }
-        } elseif (!$action instanceof Action) {
-            throw new \InvalidArgumentException("String or Action instance expected");
-        }
-
-        $attributes = array_merge($defaults, array(
-            'resource'    => $action->getResource(),
-            'action'      => $action
-        ), $attributes);
-
-        return new ControllerReference($action->getController(), $attributes);
+        return $this->helper->createControllerReference($action, $attributes);
     }
 
     /**

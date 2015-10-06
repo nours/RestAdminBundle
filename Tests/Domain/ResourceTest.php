@@ -183,6 +183,5 @@ class ResourceTest extends AdminTestCase
         $controllerClass = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FooController';
         $this->assertEquals($controllerClass . '::fetchParamsDefault', $fooResource->getConfig('fetcher_callback'));
         $this->assertEquals($controllerClass . '::fetchParamsIndex', $index->getConfig('fetcher_callback'));
-
     }
 }

@@ -16,6 +16,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * UrlGenerator for actions
+ *
+ * @deprecated use Helper\AdminHelper instead
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

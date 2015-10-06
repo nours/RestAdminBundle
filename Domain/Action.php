@@ -142,11 +142,37 @@ class Action
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getRouteName()
     {
         return $this->resource->getRouteName($this->getName());
+    }
+
+    /**
+     * @param mixed $data
+     * @return array
+     */
+    public function getRouteParams($data)
+    {
+        if (empty($data)) {
+            return array();
+        }
+
+        $resource = $this->resource;
+
+        if ($resource->isResourceInstance($data)) {
+            return $resource->getResourceRouteParams($data);
+        } elseif ($parent = $resource->getParent()) {
+            if ($parent->isResourceInstance($data)) {
+                return $parent->getResourceRouteParams($data);
+            }
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            "Cannot find action %s route parameters for object of class %s",
+            $this->getFullName(), get_class($data)
+        ));
     }
 
     /**

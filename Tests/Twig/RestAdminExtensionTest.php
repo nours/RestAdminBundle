@@ -47,7 +47,7 @@ class RestAdminExtensionTest extends AdminTestCase
      */
     public function testColonNotationActionController()
     {
-        $reference = $this->extension->actionController('post:create');
+        $reference = $this->extension->createControllerReference('post:create');
 
         $this->assertActionControllerReference($reference, 'post', 'create');
     }
@@ -63,7 +63,7 @@ class RestAdminExtensionTest extends AdminTestCase
 
         $this->requestStack->push($request);
 
-        $reference = $this->extension->actionController('create');
+        $reference = $this->extension->createControllerReference('create');
 
         $this->assertActionControllerReference($reference, 'post.comment', 'create');
     }
@@ -75,7 +75,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $action = $this->getAdminManager()->getResource('post')->getAction('edit');
 
-        $reference = $this->extension->actionController($action);
+        $reference = $this->extension->createControllerReference($action);
 
         $this->assertActionControllerReference($reference, 'post', 'edit');
     }
@@ -88,7 +88,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertNull($this->requestStack->getCurrentRequest());
 
         $this->setExpectedException("RuntimeException");
-        $this->extension->actionController('create');
+        $this->extension->createControllerReference('create');
     }
 
     /**
