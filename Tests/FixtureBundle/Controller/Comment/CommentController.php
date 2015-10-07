@@ -8,23 +8,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
+namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment;
 
 use Nours\RestAdminBundle\Annotation as Rest;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
-use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * Class CommentBisController
+ * Class CommentController
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
- *  name = "comment_bis",
  *  parent = "post",
+ *  service = "tests.controller.comment",
  *  foo = "bar"
  * )
  *
@@ -35,32 +35,22 @@ use Symfony\Component\HttpFoundation\Response;
  *  "edit", form = "comment"
  * )
  */
-class CommentBisController
+class CommentController
 {
     /**
      * @Rest\Factory()
      *
-     * @param Post $parent
+     * @param Request $request
      * @return Comment
      */
-    public function makeComment(Post $parent)
+    public function makeComment(Request $request)
     {
-        return new Comment($parent);
+        $post = $request->attributes->get('parent');
+
+        return new Comment($post);
     }
 
     /**
-     * @Rest\Handler("create")
-     *
-     * @return Response
-     */
-    public function onCreateSuccess()
-    {
-        return new Response('created!', 201);
-    }
-
-    /**
-     * @Rest\Handler("edit", priority = 10)
-     *
      * @return Response
      */
     public function onEditSuccess()
@@ -69,20 +59,11 @@ class CommentBisController
     }
 
     /**
-     * @Rest\Action()
-     * @Rest\Route("test", methods={"GET"})
+     * @Rest\Action(
+     *  "publish"
+     * )
      */
-    public function testAction()
-    {
-
-    }
-
-    /**
-     * @Rest\Action("other")
-     * @Rest\Route("{comment_bis}/test", methods={"GET"})
-     * @Rest\Route("{comment_bis}/test", name="other_do", methods={"POST"})
-     */
-    public function anotherTestAction()
+    public function publishAction()
     {
 
     }

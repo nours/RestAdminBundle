@@ -8,23 +8,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
+namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment;
 
 use Nours\RestAdminBundle\Annotation as Rest;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
-use Symfony\Component\HttpFoundation\Request;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * Class CommentController
+ * Class CommentBisController
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
+ *  name = "comment_bis",
  *  parent = "post",
- *  service = "tests.controller.comment",
  *  foo = "bar"
  * )
  *
@@ -35,22 +35,32 @@ use Symfony\Component\HttpFoundation\Response;
  *  "edit", form = "comment"
  * )
  */
-class CommentController
+class CommentBisController
 {
     /**
      * @Rest\Factory()
      *
-     * @param Request $request
+     * @param Post $parent
      * @return Comment
      */
-    public function makeComment(Request $request)
+    public function makeComment(Post $parent)
     {
-        $post = $request->attributes->get('parent');
-
-        return new Comment($post);
+        return new Comment($parent);
     }
 
     /**
+     * @Rest\Handler("create")
+     *
+     * @return Response
+     */
+    public function onCreateSuccess()
+    {
+        return new Response('created!', 201);
+    }
+
+    /**
+     * @Rest\Handler("edit", priority = 10)
+     *
      * @return Response
      */
     public function onEditSuccess()
@@ -59,11 +69,20 @@ class CommentController
     }
 
     /**
-     * @Rest\Action(
-     *  "publish"
-     * )
+     * @Rest\Action()
+     * @Rest\Route("test", methods={"GET"})
      */
-    public function publishAction()
+    public function testAction()
+    {
+
+    }
+
+    /**
+     * @Rest\Action("other")
+     * @Rest\Route("{comment_bis}/test", methods={"GET"})
+     * @Rest\Route("{comment_bis}/test", name="other_do", methods={"POST"})
+     */
+    public function anotherTestAction()
     {
 
     }

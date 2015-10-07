@@ -23,7 +23,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
 
     public function testLoadClass()
     {
-        $class = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\CommentController';
+        $class = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment\CommentController';
 
         $loader = new AnnotationClassLoader($this->get('annotation_reader'), $this->get('rest_admin.loader.resource_factory'));
 

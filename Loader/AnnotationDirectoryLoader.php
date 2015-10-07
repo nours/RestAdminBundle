@@ -50,7 +50,8 @@ class AnnotationDirectoryLoader extends Loader
         $resources = new ResourceCollection();
         $resources->addConfigResource(new DirectoryResource($path));
 
-        $iterator = new \DirectoryIterator($path);
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+//        $iterator = new \DirectoryIterator($path);
         foreach ($iterator as $file) {
             if (!$file->isFile() || $file->getExtension() != 'php' || $file->isDir()) {
                 continue;
