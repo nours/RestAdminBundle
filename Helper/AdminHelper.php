@@ -122,7 +122,8 @@ class AdminHelper
      */
     public function getCurrentAction()
     {
-        return $this->getRequest()->attributes->get('action');
+        $request = $this->getRequest();
+        return $request ? $request->attributes->get('action') : null;
     }
 
     /**
@@ -134,7 +135,8 @@ class AdminHelper
      */
     public function getResourceInstance()
     {
-        $data = $this->getRequest()->attributes->get('data');
+        $request = $this->getRequest();
+        $data = $request ? $request->attributes->get('data') : null;
 
         if (!is_array($data)) {
             return $data;
@@ -241,5 +243,14 @@ class AdminHelper
         $request = $this->requestStack->getCurrentRequest();
 
         return $request;
+    }
+
+    /**
+     * @param $name
+     * @return \Nours\RestAdminBundle\Domain\Resource
+     */
+    public function getResource($name)
+    {
+        return $this->adminManager->getResource($name);
     }
 }

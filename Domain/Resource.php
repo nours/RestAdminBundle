@@ -368,6 +368,10 @@ class Resource
         return $this->children;
     }
 
+    public function getUriPart()
+    {
+
+    }
 
     /**
      * Get the relative uri path for this resource.
@@ -413,7 +417,9 @@ class Resource
     }
 
     /**
-     * Build route parameters for an instance of this resource
+     * Build global route parameters (without the instance) from an instance of this resource.
+     *
+     * Eg. : pass a comment to get { post: <id> }
      *
      * @param mixed $data
      * @return array
@@ -540,5 +546,82 @@ class Resource
         }
 
         return self::$propertyAccessor;
+    }
+
+    /**
+     * Default route parameters for action prototypes : placeholders are generated
+     *
+     * @param bool $includeSelf
+     * @return array
+     */
+    public function getPrototypeRouteParams($includeSelf = false)
+    {
+        $params = array();
+
+        if ($includeSelf) {
+            $params[$this->getParamName()] = '__' . $this->getName() . '__';
+        }
+
+        if ($parent = $this->getParent()) {
+            $params = array_merge($params, $parent->getPrototypeRouteParams(true));
+        }
+
+        return $params;
+    }
+
+    /**
+     * Returns the map associating placeholders and the property path
+     * which will be used to get values from domain objects
+     *
+     * @param bool $includeSelf
+     * @return array
+     */
+    public function getPrototypeParamsMapping($includeSelf = false)
+    {
+        $mapping = array();
+
+        if ($includeSelf) {
+            $mapping['__' . $this->getName() . '__'] = $this->getIdentifier();
+        }
+
+//        if ($parent = $this->getParent()) {
+//            $params = array_merge($params, $parent->getPrototypeParamsMapping(true));
+//        }
+
+        $parent = $this->getParent();
+        $suffix = '';
+        while ($parent) {
+            $suffix = $suffix . $parent->getParamName() . '.';
+            $mapping['__' . $parent->getName() . '__'] = $suffix . $parent->getIdentifier();
+
+            $parent = $parent->getParent();
+        }
+
+        return $mapping;
+    }
+
+    /**
+     * Gets the route params mapping.
+     *
+     * Currently used for generating reorder urls front side.
+     *
+     * @return array
+     */
+    public function getRouteParamsMapping()
+    {
+        $mapping = array(
+            $this->getParamName() => $this->getIdentifier()
+        );
+
+        $parent = $this->getParent();
+        $suffix = '';
+        while ($parent) {
+            $suffix = $suffix . $parent->getParamName() . '.';
+            $mapping[$parent->getParamName()] = $suffix . $parent->getIdentifier();
+
+            $parent = $parent->getParent();
+        }
+
+        return $mapping;
     }
 }

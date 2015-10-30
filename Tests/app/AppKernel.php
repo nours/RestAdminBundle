@@ -29,7 +29,8 @@ class AppKernel extends Kernel
             new Nours\RestAdminBundle\NoursRestAdminBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle()
+            new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle(),
+            new Nours\TableBundle\NoursTableBundle()
         );
     }
 

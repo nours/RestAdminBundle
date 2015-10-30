@@ -96,6 +96,13 @@ class ActionTest extends AdminTestCase
 
         $action = $resource->getAction('other');
         $this->assertFalse($action->isReadOnly());
+
+        // And also
+        $action = $resource->getAction('test_default_route');
+        $this->assertFalse($action->isReadOnly());
+
+        $action = $resource->getAction('test_default_route_global');
+        $this->assertFalse($action->isReadOnly());
     }
 
 
@@ -127,5 +134,20 @@ class ActionTest extends AdminTestCase
         $this->assertEquals(1, $params['post']);
         $this->assertArrayHasKey('comment_bis', $params);
         $this->assertEquals(1, $params['comment_bis']);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeParamsMapping()
+    {
+        $action = $this->getAdminManager()->getAction('post.comment_bis:edit');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__post__' => 'post.id',
+            '__comment_bis__' => 'id'
+        ), $mappings);
     }
 }

@@ -65,15 +65,23 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'controller'
         ));
         $resolver->setDefaults(array(
-            'name'     => function(Options $options) {
+            'name'      => function(Options $options) {
                 // The name defaults to type
                 return $options['type'];
             },
-            'type'     => $this->getName(),
-            'read_only' => false,
-            'template' => null,
-            'handlers' => array(),
-            'fetcher' => null,
+            'type'      => $this->getName(),
+            'instance'  => function(Options $options) {
+                // If the action needs an instance, it's resource's param name must be used for route building
+                // Activated by default on all non bulk actions (bulks do not need single instance, but a collection)
+                // For custom action builders, set false as default if there is no specific instance involved in it (and is non bulk)
+                // See index or create
+                return !$options['bulk'];
+            },
+            'bulk'      => false,    // If the action is bulk, it should receive and treat a data collection
+            'read_only' => false,    // A read only action do not alter or update the data instance
+            'template'  => null,
+            'handlers'  => array(),
+            'fetcher'   => null,
             'fetcher_callback' => null
         ));
         $resolver->setDefaults($this->defaultOptions);

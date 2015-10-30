@@ -241,6 +241,22 @@ class RoutingLoaderTest extends AdminTestCase
         $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
         $this->assertEquals('other', $route->getDefault('_action'));
         $this->assertEquals(array('POST'), $route->getMethods());
+
+        $route = $this->collection->get('post_comment_bis_test_default_route');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/posts/{post}/comment-bis/{comment_bis}/test-default-route.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
+        $this->assertEquals('test_default_route', $route->getDefault('_action'));
+        $this->assertEquals(array('GET', 'POST'), $route->getMethods());
+
+        $route = $this->collection->get('post_comment_bis_test_default_route_global');
+
+        $this->assertNotNull($route);
+        $this->assertEquals('/posts/{post}/comment-bis/test-default-route-global.{_format}', $route->getPath());
+        $this->assertEquals('post.comment_bis', $route->getDefault('_resource'));
+        $this->assertEquals('test_default_route_global', $route->getDefault('_action'));
+        $this->assertEquals(array('GET', 'POST'), $route->getMethods());
     }
 
     public function testPostPrefixedControllerRouteLoading()

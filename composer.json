@@ -26,12 +26,20 @@
         "symfony/monolog-bundle" : "~2.7",
         "doctrine/data-fixtures": "~1.1",
         "knplabs/knp-menu-bundle": ">=2.0",
-        "symfony/css-selector": ">2.6"
+        "symfony/css-selector": ">2.6",
+        "nours/table-bundle": "dev-master"
     },
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/nours/TableBundle"
+      }
+    ],
     "suggest": {
       "doctrine/doctrine-bundle" : "Support for Doctrine ORM persistence and loading",
       "symfony/security-bundle": "Integrate security checks based on security bundle",
-      "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)"
+      "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)",
+      "nours/table-bundle": "Table implementation"
     },
     "autoload": {
         "psr-0": { "Nours\\RestAdminBundle": "" }

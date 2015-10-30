@@ -33,6 +33,7 @@ class NoursRestAdminExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('twig.yml');
+        $loader->load('table.yml');
 
         // ORM integration
         if ($config['listeners']['orm']) {
@@ -69,6 +70,9 @@ class NoursRestAdminExtension extends Extension
                 $container->setAlias('rest_admin.' . $name, $service);
             }
         }
+
+        // Action template parameter
+        $container->setParameter('rest_admin.template.action', $config['templates']['action']);
     }
 
     /**

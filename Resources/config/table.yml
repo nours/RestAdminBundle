@@ -1,0 +1,5 @@
+services:
+  rest_admin.table.field.admin_actions:
+    class: Nours\RestAdminBundle\Table\Field\AdminActionsType
+    arguments: [ @rest_admin.helper ]
+    tags: [ { name: nours_table.field_type } ]

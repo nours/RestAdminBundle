@@ -39,7 +39,8 @@ class RestAdminExtensionTest extends AdminTestCase
         parent::setUp();
 
         $this->requestStack = $this->get('request_stack');
-        $this->extension    = $this->get('rest_admin.twig.extension');
+        $this->get('twig')->initRuntime();
+        $this->extension    = $this->get('twig')->getExtension('rest_admin');
     }
 
     /**
@@ -89,6 +90,69 @@ class RestAdminExtensionTest extends AdminTestCase
 
         $this->setExpectedException("RuntimeException");
         $this->extension->createControllerReference('create');
+    }
+
+    /**
+     * Action link rendering (without parameters)
+     */
+    public function testRenderActionLink()
+    {
+        $html = $this->extension->renderActionLink('post:create');
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/create">'));
+    }
+
+    /**
+     * Action link rendering for one resource
+     */
+    public function testRenderResourceActionLink()
+    {
+        $this->loadFixtures();
+
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $html = $this->extension->renderActionLink('post:edit', $post);
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/1/edit">'));
+    }
+
+    /**
+     * Action link for sub resource
+     */
+    public function testRenderParentActionLink()
+    {
+        $this->loadFixtures();
+
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $html = $this->extension->renderActionLink('post.comment:index', $post);
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments">'));
+    }
+
+    /**
+     * Link to sub resource instance
+     */
+    public function testRenderParentResourceActionLink()
+    {
+        $this->loadFixtures();
+
+        $comment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->find(1);
+        $html = $this->extension->renderActionLink('post.comment:get', $comment);
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments/1">'));
+    }
+
+    /**
+     * Link prototype
+     */
+    public function testRenderActionPrototype()
+    {
+        $this->loadFixtures();
+
+        $html = $this->extension->renderActionPrototype('post.comment:get', array(
+            'attr' => array('class' => 'btn')
+        ));
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments/__comment__" class="btn">'));
     }
 
     /**

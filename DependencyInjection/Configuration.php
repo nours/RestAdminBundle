@@ -73,6 +73,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('delete')->isRequired()->end()
                         ->scalarNode('bulk_delete')->isRequired()->end()
                         ->scalarNode('form')->defaultNull()->end()
+                        ->scalarNode('action')->defaultValue('NoursRestAdminBundle::action.html.twig')->end()
                     ->end()
                 ->end()
                 ->arrayNode('controllers')

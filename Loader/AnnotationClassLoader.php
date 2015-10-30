@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Loader;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Inflector\Inflector;
 use Nours\RestAdminBundle\Annotation\Resource;
 use Nours\RestAdminBundle\Annotation\Route;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
@@ -266,12 +267,16 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * Guess the action name from a controller method (just strip 'Action' from the end of the method name).
      *
+     * The CamelCase notation is converted to camel_case.
+     *
      * @param \ReflectionMethod $method
      * @return string
      */
     private function guessActionName(\ReflectionMethod $method)
     {
-        return preg_replace('/(\w+)Action/i', '$1', $method->getName());
+        $name = preg_replace('/(\w+)Action/i', '$1', $method->getName());
+
+        return Inflector::tableize($name);
     }
 
     /**

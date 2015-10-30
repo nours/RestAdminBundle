@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class ControllerBuildersPass
+ * Class LoaderResolverPass
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */

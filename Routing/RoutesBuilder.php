@@ -40,7 +40,6 @@ class RoutesBuilder
     }
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @param Action $action
      * @param $routeName
      * @param $method
@@ -50,16 +49,20 @@ class RoutesBuilder
      * @param array $options
      */
     public function addRoute(
-        Resource $resource, Action $action, $routeName, $method, $path,
+        Action $action, $routeName, $method, $path,
         array $defaults = array(), array $requirements = array(),
         array $options = array()
     ) {
+        $resource = $action->getResource();
+
         $defaults = array_merge(array(
             '_resource'   => $resource->getFullName(),
             '_action'     => $action->getName(),
             '_controller' => $action->getController(),
             '_format'     => null
         ), $defaults);
+
+//        $path = $action->get
 
         // Dispatch the route event
         $event = new RouteEvent(

@@ -30,9 +30,8 @@ class BulkDeleteActionBuilder extends AbstractBuilder
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $resource = $action->getResource();
-        $builder->addRoute($resource, $action, 'bulk_delete', 'GET', $resource->getUriPath('delete'));
-        $builder->addRoute($resource, $action, 'bulk_remove', 'DELETE', $resource->getUriPath());
+        $builder->addRoute($action, 'bulk_delete', 'GET', $action->getUriPath('delete'));
+        $builder->addRoute($action, 'bulk_remove', 'DELETE', $action->getUriPath(''));
     }
 
     /**
@@ -41,12 +40,12 @@ class BulkDeleteActionBuilder extends AbstractBuilder
     public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
         if (!$builder->getAction()) {
-            $resource = $action->getResource();
-            $routeName = $resource->getRouteName('bulk_remove');
-
             $builder
                 ->setMethod('DELETE')
-                ->setAction($generator->generate($routeName, $resource->getCollectionRouteParams($data)));
+                ->setAction($generator->generate(
+                    $action->getRouteName('bulk_remove'),
+                    $action->getRouteParams($data)
+                ));
             ;
         }
     }
@@ -56,6 +55,7 @@ class BulkDeleteActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefault('bulk', true);
     }
 
     /**

@@ -1,0 +1,7 @@
+
+{# Table actions field #}
+{% block field_admin_actions %}
+{% for action in actions %}
+    {{ rest_action_link_prototype(action)|raw }}
+{% endfor %}
+{% endblock %}

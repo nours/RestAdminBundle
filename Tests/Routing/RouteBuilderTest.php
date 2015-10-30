@@ -43,7 +43,7 @@ class RouteBuilderTest extends AdminTestCase
         $routeName = 'test';
         $path      = 'path/to/test';
 
-        $builder->addRoute($resource, $resource->getAction('get'), $routeName, 'GET', $path);
+        $builder->addRoute($resource->getAction('get'), $routeName, 'GET', $path);
 
         $this->assertCount(1, $routes);
 
@@ -55,6 +55,7 @@ class RouteBuilderTest extends AdminTestCase
         $this->assertEquals('ok', $options['test']);
 
         // Method changed
+        $this->assertEquals('/path/to/test.{_format}', $route->getPath());
         $this->assertEquals(array('POST'), $route->getMethods());
     }
 

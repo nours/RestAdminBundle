@@ -9,6 +9,7 @@
  */
 
 namespace Nours\RestAdminBundle\Domain;
+use Doctrine\Common\Inflector\Inflector;
 
 /**
  * Resource action description.
@@ -53,6 +54,22 @@ class Action
     public function getFullName()
     {
         return $this->getResource()->getFullName() . ':' . $this->getName();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasInstance()
+    {
+        return $this->getConfig('instance');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBulk()
+    {
+        return $this->getConfig('bulk');
     }
 
     /**
@@ -142,37 +159,57 @@ class Action
     }
 
     /**
+     * @param string $name
      * @return string
      */
-    public function getRouteName()
+    public function getRouteName($name = null)
     {
-        return $this->resource->getRouteName($this->getName());
+        return $this->resource->getRouteName($name ?: $this->getName());
     }
 
     /**
      * @param mixed $data
      * @return array
      */
-    public function getRouteParams($data)
+    public function getRouteParams($data = null)
     {
-        if (empty($data)) {
-            return array();
-        }
-
         $resource = $this->resource;
 
-        if ($resource->isResourceInstance($data)) {
+        if ($this->isBulk()) {
+            if (!is_array($data)) {
+                throw new \InvalidArgumentException(sprintf(
+                    "Bulk action %s needs an array of %s",
+                    $this->getFullName(), $resource->getName()
+                ));
+            }
+            return $resource->getCollectionRouteParams($data);
+        } elseif ($this->hasInstance()) {
+            // An instance is needed
+            if (empty($data)) {
+                throw new \InvalidArgumentException(sprintf(
+                    "Missing %s instance to generate route params for action %s",
+                    $resource->getName(), $this->getFullName()
+                ));
+            }
+
             return $resource->getResourceRouteParams($data);
         } elseif ($parent = $resource->getParent()) {
-            if ($parent->isResourceInstance($data)) {
+            if (empty($data)) {
+                throw new \InvalidArgumentException(sprintf(
+                    "Missing %s parent to generate route params for action %s",
+                    $resource->getName(), $this->getFullName()
+                ));
+            }
+
+            // $data can be an instance of either the resource itself or its parent
+            if ($resource->isResourceInstance($data)) {
+                return $resource->getRouteParamsFromData($data);
+            } elseif ($parent->isResourceInstance($data)) {
                 return $parent->getResourceRouteParams($data);
             }
+        } else {
+            return array();
         }
-
-        throw new \InvalidArgumentException(sprintf(
-            "Cannot find action %s route parameters for object of class %s",
-            $this->getFullName(), get_class($data)
-        ));
     }
 
     /**
@@ -186,5 +223,40 @@ class Action
         $clone = clone $this;
         $clone->resource = $resource;
         return $clone;
+    }
+
+    /**
+     * Get URI path to this action.
+     *
+     * Suffix defaults to action slug (leave null). To hide it, pass ''.
+     *
+     * @param null $suffix
+     * @return string
+     */
+    public function getUriPath($suffix = null)
+    {
+        if (is_null($suffix)) {
+            // Default suffix is action param name
+            $suffix = str_replace('_', '-', Inflector::tableize($this->getName()));
+        }
+        return $this->getResource()->getUriPath($suffix, $this->hasInstance());
+    }
+
+    /**
+     * Default route parameters for action prototypes
+     *
+     * @return array
+     */
+    public function getPrototypeRouteParams()
+    {
+        return $this->getResource()->getPrototypeRouteParams($this->hasInstance());
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrototypeParamsMapping()
+    {
+        return $this->getResource()->getPrototypeParamsMapping($this->hasInstance());
     }
 }

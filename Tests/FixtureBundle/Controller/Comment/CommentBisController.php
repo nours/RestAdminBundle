@@ -86,4 +86,20 @@ class CommentBisController
     {
 
     }
+
+    /**
+     * @Rest\Action()
+     */
+    public function testDefaultRouteAction()
+    {
+
+    }
+
+    /**
+     * @Rest\Action(instance=false)
+     */
+    public function testDefaultRouteGlobalAction()
+    {
+
+    }
 }

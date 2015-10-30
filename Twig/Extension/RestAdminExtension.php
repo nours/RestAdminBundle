@@ -27,12 +27,27 @@ class RestAdminExtension extends \Twig_Extension
     private $requestStack;
     private $adminManager;
     private $helper;
+    private $actionTemplate;
 
-    public function __construct(RequestStack $requestStack, AdminManager $adminManager, AdminHelper $helper)
+    /**
+     * @var \Twig_Environment
+     */
+    private $environment;
+
+    public function __construct(RequestStack $requestStack, AdminManager $adminManager, AdminHelper $helper, $actionTemplate)
     {
-        $this->requestStack = $requestStack;
-        $this->adminManager = $adminManager;
-        $this->helper       = $helper;
+        $this->requestStack   = $requestStack;
+        $this->adminManager   = $adminManager;
+        $this->helper         = $helper;
+        $this->actionTemplate = $actionTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initRuntime(\Twig_Environment $environment)
+    {
+        $this->environment = $environment;
     }
 
     /**
@@ -41,7 +56,10 @@ class RestAdminExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference'))
+            new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference')),
+            new \Twig_SimpleFunction('rest_action_controller', array($this, 'createControllerReference')),
+            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink')),
+            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'))
         );
     }
 
@@ -56,27 +74,59 @@ class RestAdminExtension extends \Twig_Extension
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @param string|Action $action
+     * @param $data
+     * @param array $options
+     * @return string
      */
-    private function getCurrentResource()
+    public function renderActionLink($action, $data = null, array $options = array())
     {
-        $request = $this->getRequest();
+        $action = $this->helper->getAction($action);
 
-        if (empty($request)) {
-            throw new \RuntimeException("Cannot access current request from request stack");
+        if ($data) {
+            $options['routeParams'] = $action->getRouteParams($data);
+        } else {
+            $options['routeParams'] = $this->helper->getCurrentRouteParams();
         }
 
-        return $request->attributes->get('resource');
+        $context = $this->makeActionContext($action, $options);
+
+        return $this->environment->render($this->actionTemplate, $context);
     }
 
     /**
-     * @return Request
+     * @param string|Action $action
+     * @param array $options
+     * @return string
      */
-    private function getRequest()
+    public function renderActionPrototype($action, array $options = array())
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $action = $this->helper->getAction($action);
 
-        return $request;
+        $options['routeParams'] = $action->getPrototypeRouteParams();
+
+        $context = $this->makeActionContext($action, $options);
+
+        return $this->environment->render($this->actionTemplate, $context);
+    }
+
+    /**
+     * @param Action $action
+     * @param $routeParams
+     * @param array $options
+     * @return array
+     */
+    private function makeActionContext(Action $action, array $options)
+    {
+        return array_merge(array(
+            'icon'        => $action->getConfig('icon'),
+            'label'       => $action->getConfig('label', $action->getName()),
+            'route'       => $action->getRouteName(),
+            'routeParams' => array(),
+            'attr'        => array(),
+            'resource'    => $action->getResource(),
+            'action'      => $action
+        ), $options);
     }
 
     /**

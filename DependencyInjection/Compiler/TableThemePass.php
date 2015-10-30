@@ -15,19 +15,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class ActionManagerPass
+ * Class TableThemePass
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ActionManagerPass implements CompilerPassInterface
+class TableThemePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('rest_admin.action_manager');
-
-        $ids = $container->findTaggedServiceIds('rest_admin.action_builder');
-        foreach ($ids as $id => $tags) {
-            $definition->addMethodCall('addActionBuilder', array(new Reference($id)));
+        if ($templates = $container->getParameter('nours_table.themes')) {
+            array_unshift($templates, 'NoursRestAdminBundle::table.html.twig');
+            $container->setParameter('nours_table.themes', $templates);
         }
     }
 }

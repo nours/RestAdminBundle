@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle;
 
 use Nours\RestAdminBundle\DependencyInjection\Compiler\ParamFetcherPass;
+use Nours\RestAdminBundle\DependencyInjection\Compiler\TableThemePass;
 use Nours\RestAdminBundle\DependencyInjection\Compiler\ViewHandlerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,5 +34,6 @@ class NoursRestAdminBundle extends Bundle
         $container->addCompilerPass(new LoaderResolverPass());
         $container->addCompilerPass(new ViewHandlerPass());
         $container->addCompilerPass(new ParamFetcherPass());
+        $container->addCompilerPass(new TableThemePass());
     }
 }

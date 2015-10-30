@@ -21,3 +21,8 @@ services:
   tests.param_fetcher.test:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\ParamFetcher\FooParamFetcher
     tags: [ { name: rest_admin.param_fetcher, alias: foo } ]
+
+#    Table
+  tests.table.post:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType
+    tags: [ { name: nours_table.table_type } ]

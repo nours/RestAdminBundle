@@ -27,8 +27,7 @@ class IndexActionBuilder extends AbstractBuilder
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $resource = $action->getResource();
-        $builder->addRoute($resource, $action, 'index', 'GET', $resource->getUriPath());
+        $builder->addRoute($action, 'index', 'GET', $action->getUriPath(''));
     }
 
     /**
@@ -37,6 +36,7 @@ class IndexActionBuilder extends AbstractBuilder
     public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('read_only', true);
+        $resolver->setDefault('instance', false);
     }
 
     /**

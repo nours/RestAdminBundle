@@ -31,16 +31,22 @@ class CustomActionBuilder extends AbstractBuilder
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
         $resource = $action->getResource();
-        foreach ($action->getConfig('routes') as $route) {
-            $builder->addRoute(
-                $resource, $action,
-                $route['name'],
-                $route['methods'],
-                $resource->getUriPath($route['path']),
-                $route['defaults'],
-                $route['requirements'],
-                $route['options']
-            );
+        if ($routes = $action->getConfig('routes')) {
+            // Use custom routes
+            foreach ($routes as $route) {
+                $builder->addRoute(
+                    $action,
+                    $route['name'],
+                    $route['methods'],
+                    $resource->getUriPath($route['path']),
+                    $route['defaults'],
+                    $route['requirements'],
+                    $route['options']
+                );
+            }
+        } else {
+            // Default route
+            $builder->addRoute($action, $action->getName(), array('GET', 'POST'), $action->getUriPath());
         }
     }
 
@@ -56,6 +62,11 @@ class CustomActionBuilder extends AbstractBuilder
             'template' => '',
             'routes'   => array(),
             'read_only' => function(Options $options) {
+                // If routes are empty, default ones are used
+                if (!$options['routes']) {
+                    return false;
+                }
+
                 // Read Only can be determined automatically from routes
                 $readOnly = true;
                 foreach ($options['routes'] as $route) {

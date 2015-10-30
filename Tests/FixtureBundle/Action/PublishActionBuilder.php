@@ -32,9 +32,9 @@ class PublishActionBuilder extends AbstractBuilder
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
         $resource = $action->getResource();
-        $builder->addRoute($resource, $action, 'publish_form', 'GET', $resource->getResourceUriPath('publish'));
-        $builder->addRoute($resource, $action, 'publish', 'PUT', $resource->getResourceUriPath('publish'));
-        $builder->addRoute($resource, $action, 'unpublish', 'DELETE', $resource->getResourceUriPath('publish'));
+        $builder->addRoute($action, 'publish_form', 'GET', $resource->getResourceUriPath('publish'));
+        $builder->addRoute($action, 'publish', 'PUT', $resource->getResourceUriPath('publish'));
+        $builder->addRoute($action, 'unpublish', 'DELETE', $resource->getResourceUriPath('publish'));
     }
 
     /**
