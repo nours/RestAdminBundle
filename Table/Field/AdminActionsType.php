@@ -41,7 +41,18 @@ class AdminActionsType extends AbstractFieldType
      */
     public function buildView(View $view, FieldInterface $field, array $options)
     {
-        $view->vars['actions']  = $options['actions'];
+        /** @var Action[] $actions */
+        $actions = $options['actions'];
+        $view->vars['actions'] = $actions;
+
+        $labels = $attrs = array();
+        foreach ($actions as $index => $action) {
+            $labels[$index] = $options['action_label']($action);
+            $attrs[$index] = $options['action_attr']($action);
+        }
+
+        $view->vars['action_labels'] = $labels;
+        $view->vars['action_attrs']  = $attrs;
     }
 
     /**
@@ -57,6 +68,12 @@ class AdminActionsType extends AbstractFieldType
             'label'    => 'actions',
             'width'    => function(Options $options) {
                 return count($options['actions']) * 50 + 16;
+            },
+            'action_label' => function(Action $action) {
+                return $action->getName();
+            },
+            'action_attr' => function(Action $action) {
+                return array();
             }
         ));
 

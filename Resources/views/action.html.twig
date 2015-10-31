@@ -1,4 +1,3 @@
 <a {% if route %}href="{{ path(route, routeParams) }}"{% endif %}{% for name, value in attr %} {{ name }}="{{ value }}"{% endfor %}>
-    {%- if icon %}<i class="fa fa-fw fa-{{ icon }}"></i>{% endif -%}
-    {%- if label %}{{ label|trans() }}{% endif -%}
+    {%- if label %}{{ label|raw }}{% endif -%}
 </a>

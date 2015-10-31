@@ -32,7 +32,9 @@ class AdminActionsTypeTest extends AdminTestCase
 
 //        echo $html;
 
-        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/edit">'));
-        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments">'));
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/edit" class="btn">'));
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments" class="btn">'));
+        $this->assertNotFalse(strpos($html, '<i class="fa fa-pencil"></i>edit</a>'));
+        $this->assertNotFalse(strpos($html, '<i class="fa fa-list"></i>index</a>'));
     }
 }

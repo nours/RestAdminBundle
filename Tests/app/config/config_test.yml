@@ -60,6 +60,10 @@ nours_rest_admin:
             icon: list
         create:
             icon: plus
+        edit:
+            icon: pencil
+        delete:
+            icon: trash
 
 doctrine:
     dbal:

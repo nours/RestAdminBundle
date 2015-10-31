@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type;
 
+use Nours\RestAdminBundle\Domain\Action;
 use Nours\TableBundle\Builder\TableBuilder;
 use Nours\TableBundle\Table\AbstractType;
 
@@ -32,7 +33,13 @@ class PostType extends AbstractType
                 'actions' => array(
                     'edit',
                     'post.comment:index'
-                )
+                ),
+                'action_attr' => function(Action $action) {
+                    return array('class' => 'btn');
+                },
+                'action_label' => function(Action $action) {
+                    return '<i class="fa fa-' . $action->getConfig('icon', 'question') . '"></i>' . $action->getName();
+                }
             ))
         ;
     }

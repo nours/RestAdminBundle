@@ -58,8 +58,8 @@ class RestAdminExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference')),
             new \Twig_SimpleFunction('rest_action_controller', array($this, 'createControllerReference')),
-            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink')),
-            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'))
+            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'), array('is_safe' => array('html')))
         );
     }
 
@@ -119,7 +119,6 @@ class RestAdminExtension extends \Twig_Extension
     private function makeActionContext(Action $action, array $options)
     {
         return array_merge(array(
-            'icon'        => $action->getConfig('icon'),
             'label'       => $action->getConfig('label', $action->getName()),
             'route'       => $action->getRouteName(),
             'routeParams' => array(),

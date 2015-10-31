@@ -1,9 +1,12 @@
 
-{%- block field_prototype_formatter -%}
-    function (value, row, index) {
+{%- block field_admin_actions_formatter -%}
+function (value, row, index) {
     var html = ''
-    {% for action in actions -%}
-    var prototype = '{{ rest_action_link_prototype(action)|raw }}',
+    {% for index, action in actions -%}
+    var prototype = '{{ rest_action_link_prototype(action, {
+        label: action_labels[index],
+        attr: action_attrs[index]
+    })|raw }}',
         mappings = {{ action.prototypeParamsMapping()|json_encode|raw }}
     $.each(mappings, function(placeholder, property_path) {
         prototype = prototype.replace(placeholder, objectPath.get(row, property_path))
@@ -11,7 +14,7 @@
     html += prototype
     {% endfor %}
     return html
-    }
+}
 {%- endblock -%}
 
 {#&#123;&#35; Table actions field &#35;&#125;#}
