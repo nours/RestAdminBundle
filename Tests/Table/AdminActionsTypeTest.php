@@ -28,9 +28,11 @@ class AdminActionsTypeTest extends AdminTestCase
 
         $fieldView = $table->createView()->fields['actions'];
 
-        $html = $this->get('nours_table.table_renderer.twig')->renderField($fieldView);
+        $html = $this->get('nours_table.table_renderer.twig')->renderField($fieldView, 'formatter');
 
-        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/edit">'));
-        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments">'));
+        echo $html;
+
+        $this->assertNotFalse(strpos($html, htmlentities('<a href="/posts/__post__/edit">')));
+        $this->assertNotFalse(strpos($html, htmlentities('<a href="/posts/__post__/comments">')));
     }
 }
