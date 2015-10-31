@@ -3,7 +3,7 @@
     function (value, row, index) {
     var html = ''
     {% for action in actions -%}
-    var prototype = '{{ rest_action_link_prototype(action) }}',
+    var prototype = '{{ rest_action_link_prototype(action)|raw }}',
         mappings = {{ action.prototypeParamsMapping()|json_encode|raw }}
     $.each(mappings, function(placeholder, property_path) {
         prototype = prototype.replace(placeholder, objectPath.get(row, property_path))

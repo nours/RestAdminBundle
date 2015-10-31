@@ -30,9 +30,9 @@ class AdminActionsTypeTest extends AdminTestCase
 
         $html = $this->get('nours_table.table_renderer.twig')->renderField($fieldView, 'formatter');
 
-        echo $html;
+//        echo $html;
 
-        $this->assertNotFalse(strpos($html, htmlentities('<a href="/posts/__post__/edit">')));
-        $this->assertNotFalse(strpos($html, htmlentities('<a href="/posts/__post__/comments">')));
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/edit">'));
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments">'));
     }
 }
