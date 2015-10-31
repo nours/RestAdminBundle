@@ -50,7 +50,9 @@ class AdminActionsType extends AbstractFieldType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'resource' => null,
+            'resource' => function(Options $options) {
+                return $this->helper->getCurrentResource();
+            },
             'actions'  => array(),
             'label'    => 'actions',
             'width'    => function(Options $options) {

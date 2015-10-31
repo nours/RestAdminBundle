@@ -1,7 +1,22 @@
 
-{# Table actions field #}
-{% block field_admin_actions %}
-{% for action in actions %}
-    {{ rest_action_link_prototype(action)|raw }}
-{% endfor %}
-{% endblock %}
+{%- block field_prototype_formatter -%}
+    function (value, row, index) {
+    var html = '{{ render_table_field(field)|raw }}'
+    {%- for action in actions %}
+    var prototype = '{{ rest_action_link_prototype(action) }}',
+        mappings = {{ action.prototypeParamsMapping()|json_encode|raw }}
+    $.each(mappings, function(placeholder, property_path) {
+        prototype = prototype.replace(placeholder, objectPath.get(row, property_path))
+    })
+    html += prototype
+    {% endfor %}
+    return html
+    }
+{%- endblock -%}
+
+{#&#123;&#35; Table actions field &#35;&#125;#}
+{#{% block field_admin_actions %}#}
+{#{% for action in actions %}#}
+    {#{{ rest_action_link_prototype(action)|raw }}#}
+{#{% endfor %}#}
+{#{% endblock %}#}
