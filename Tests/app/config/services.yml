@@ -26,3 +26,7 @@ services:
   tests.table.post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType
     tags: [ { name: nours_table.table_type } ]
+
+  tests.table.comment:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType
+    tags: [ { name: nours_table.table_type } ]

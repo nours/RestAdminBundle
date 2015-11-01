@@ -16,7 +16,8 @@
         "jms/serializer-bundle": "~0.13",
         "symfony/finder": "~2.6",
         "symfony/validator": "~2.6",
-        "symfony/twig-bundle": "~2.6"
+        "symfony/twig-bundle": "~2.6",
+        "nours/table-bundle": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-bundle" : "~1.4",
@@ -26,8 +27,7 @@
         "symfony/monolog-bundle" : "~2.7",
         "doctrine/data-fixtures": "~1.1",
         "knplabs/knp-menu-bundle": ">=2.0",
-        "symfony/css-selector": ">2.6",
-        "nours/table-bundle": "dev-master"
+        "symfony/css-selector": ">2.6"
     },
     "repositories": [
       {

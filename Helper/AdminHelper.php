@@ -99,7 +99,7 @@ class AdminHelper
 
         // Action relative to current resource
         if (!($resource = $this->getCurrentResource())) {
-            throw new \RuntimeException("No current resource to get action $name");
+            throw new \RuntimeException("No current resource to get action '$name' from");
         }
 
         return $resource->getAction($name);

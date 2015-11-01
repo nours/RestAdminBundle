@@ -25,13 +25,20 @@ class DefaultController extends Controller
     /**
      * Index action
      *
+     * @param Request $request
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
      * @return ArrayCollection
      */
-    public function indexAction(Resource $resource)
+    public function indexAction(Request $request, Resource $resource)
     {
-        $data = $this->getDoctrine()->getRepository($resource->getClass())->findAll();
+        if ($tableName = $resource->getConfig('table')) {
+            $table = $this->get('nours_table.factory')->createTable($tableName, array(
+                'resource' => $resource
+            ));
+            return $table->handle($request)->createView();
+        }
 
+        $data = $this->getDoctrine()->getRepository($resource->getClass())->findAll();
         return new ArrayCollection($data);
     }
 

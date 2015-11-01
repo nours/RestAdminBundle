@@ -196,8 +196,8 @@ class Action
         } elseif ($parent = $resource->getParent()) {
             if (empty($data)) {
                 throw new \InvalidArgumentException(sprintf(
-                    "Missing %s parent to generate route params for action %s",
-                    $resource->getName(), $this->getFullName()
+                    "Missing parent %s to generate route params for action %s",
+                    $parent->getName(), $this->getFullName()
                 ));
             }
 
