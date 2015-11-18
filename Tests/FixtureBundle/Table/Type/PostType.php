@@ -32,7 +32,7 @@ class PostType extends AbstractType
                 'resource' => 'post',
                 'actions' => array(
                     'edit',
-                    'post.comment:index'
+                    'comment:index'
                 ),
                 'action_attr' => function(Action $action) {
                     return array('class' => 'btn');

@@ -549,7 +549,7 @@ class Resource
     }
 
     /**
-     * Default route parameters for action prototypes : placeholders are generated
+     * Route parameters for action prototypes : placeholders are generated.
      *
      * @param bool $includeSelf
      * @return array
@@ -583,10 +583,6 @@ class Resource
         if ($includeSelf) {
             $mapping['__' . $this->getName() . '__'] = $this->getIdentifier();
         }
-
-//        if ($parent = $this->getParent()) {
-//            $params = array_merge($params, $parent->getPrototypeParamsMapping(true));
-//        }
 
         $parent = $this->getParent();
         $suffix = '';

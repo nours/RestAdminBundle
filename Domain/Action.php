@@ -253,10 +253,23 @@ class Action
     }
 
     /**
+     * Returns an array containing the param mapping for this action, ex :
+     *
+     * The mapping is relative to this action's instance is it has one. Otherwise, it is relative to it's parent
+     * resource instance.
+     *
      * @return array
      */
     public function getPrototypeParamsMapping()
     {
-        return $this->getResource()->getPrototypeParamsMapping($this->hasInstance());
+        $resource = $this->getResource();
+
+        if ($this->hasInstance()) {
+            return $resource->getPrototypeParamsMapping(true);
+        } elseif ($parentResource = $resource->getParent()) {
+            return $parentResource->getPrototypeParamsMapping(true);
+        }
+
+        return array();
     }
 }

@@ -90,17 +90,26 @@ class AdminActionsType extends AbstractFieldType
         });
 
         $resolver->setNormalizer('actions', function(Options $options, $actions) {
+            /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+            $resource = $options['resource'];
+
             foreach ($actions as &$action) {
                 if (!$action instanceof Action) {
-                    if (strpos($action, ':') !== false) {
-                        $action = $this->helper->getAction($action);
-                    } elseif ($resource = $options['resource']) {
-                        $action = $resource->getAction($action);
-                    } else {
+                    if (empty($resource)) {
                         throw new \DomainException(sprintf(
-                            "Please provide resource option to get %s action",
+                            "Please provide resource option to get %s action for admin_action field",
                             $action
                         ));
+                    }
+
+                    if (false === strpos($action, ':')) {
+                        // Look for action in current resource
+                        $action = $resource->getAction($action);
+                    } else {
+                        // Look for action in child resource
+                        $exploded = explode(':', $action);
+                        $childResource = $resource->getChild($exploded[0]);
+                        $action = $childResource->getAction($exploded[1]);
                     }
                 }
             }

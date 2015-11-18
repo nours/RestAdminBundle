@@ -139,6 +139,46 @@ class ActionTest extends AdminTestCase
     /**
      * Prototype route parameters mappings
      */
+    public function testGetPrototypeParamsMappingForPostIndex()
+    {
+        $action = $this->getAdminManager()->getAction('post:index');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeParamsMappingForPostEdit()
+    {
+        $action = $this->getAdminManager()->getAction('post:edit');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__post__' => 'id'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeParamsMappingForPostCommentIndex()
+    {
+        $action = $this->getAdminManager()->getAction('post.comment:index');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__post__' => 'id'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
     public function testGetPrototypeParamsMapping()
     {
         $action = $this->getAdminManager()->getAction('post.comment_bis:edit');
@@ -148,6 +188,61 @@ class ActionTest extends AdminTestCase
         $this->assertEquals(array(
             '__post__' => 'post.id',
             '__comment_bis__' => 'id'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsForPostIndex()
+    {
+        $action = $this->getAdminManager()->getAction('post:index');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsForPostEdit()
+    {
+        $action = $this->getAdminManager()->getAction('post:edit');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'post' => '__post__'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsForPostCommentIndex()
+    {
+        $action = $this->getAdminManager()->getAction('post.comment:index');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'post' => '__post__'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParams()
+    {
+        $action = $this->getAdminManager()->getAction('post.comment_bis:edit');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'post' => '__post__',
+            'comment_bis' => '__comment_bis__'
         ), $mappings);
     }
 }

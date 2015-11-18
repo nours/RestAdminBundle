@@ -37,4 +37,22 @@ class AdminActionsTypeTest extends AdminTestCase
         $this->assertNotFalse(strpos($html, '<i class="fa fa-pencil"></i>edit</a>'));
         $this->assertNotFalse(strpos($html, '<i class="fa fa-list"></i>index</a>'));
     }
+
+    public function testRenderSubResourcePrototype()
+    {
+        /** @var TableInterface $table */
+        $table = $this->get('nours_table.factory')->createTable('comment', array(
+        ));
+
+        $fieldView = $table->createView()->fields['actions'];
+
+        $html = $this->get('nours_table.table_renderer.twig')->renderField($fieldView, 'formatter');
+
+//        echo $html;die;
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments/__comment__/edit" class="btn">'));
+        $this->assertNotFalse(strpos($html, '<a href="/posts/__post__/comments/__comment__/publish" class="btn">'));
+        $this->assertNotFalse(strpos($html, '<i class="fa fa-pencil"></i>edit</a>'));
+        $this->assertNotFalse(strpos($html, '<i class="fa fa-question"></i>publish</a>'));
+    }
 }

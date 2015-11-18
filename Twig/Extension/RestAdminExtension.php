@@ -112,7 +112,6 @@ class RestAdminExtension extends \Twig_Extension
 
     /**
      * @param Action $action
-     * @param $routeParams
      * @param array $options
      * @return array
      */
