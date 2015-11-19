@@ -27,13 +27,15 @@ class DefaultController extends Controller
      *
      * @param Request $request
      * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param $parent
      * @return ArrayCollection
      */
-    public function indexAction(Request $request, Resource $resource)
+    public function indexAction(Request $request, Resource $resource, $parent = null)
     {
         if ($tableName = $resource->getConfig('table')) {
             $table = $this->get('nours_table.factory')->createTable($tableName, array(
-                'resource' => $resource
+                'resource'   => $resource,
+                'route_data' => $parent
             ));
             return $table->handle($request)->createView();
         }
