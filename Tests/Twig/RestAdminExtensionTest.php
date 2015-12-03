@@ -156,6 +156,19 @@ class RestAdminExtensionTest extends AdminTestCase
     }
 
     /**
+     * getActionPath
+     */
+    public function testGetActionPath()
+    {
+        $this->loadFixtures();
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+
+        $url = $this->extension->getActionPath('post:edit', $post);
+
+        $this->assertEquals('/posts/1/edit', $url);
+    }
+
+    /**
      * Asserts the controller reference is well formed for a resource action.
      *
      * @param ControllerReference $reference
