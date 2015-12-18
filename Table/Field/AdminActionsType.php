@@ -47,8 +47,14 @@ class AdminActionsType extends AbstractFieldType
 
         $labels = $attrs = array();
         foreach ($actions as $index => $action) {
-            $labels[$index] = $options['action_label']($action);
-            $attrs[$index] = $options['action_attr']($action);
+            $label = $options['action_label']($action);
+            $labels[$index] = $label;
+
+            $attr = $options['action_attr']($action);
+            if (isset($options['attr_by_actions'][$action->getName()])) {
+                $attr = array_merge($attr, $options['attr_by_actions'][$action->getName()]($action));
+            }
+            $attrs[$index] = $attr;
         }
 
         $view->vars['action_labels'] = $labels;
@@ -74,7 +80,8 @@ class AdminActionsType extends AbstractFieldType
             },
             'action_attr' => function(Action $action) {
                 return array();
-            }
+            },
+            'attr_by_actions' => array()
         ));
 
         $resolver->setAllowedTypes('actions', array('array'));
