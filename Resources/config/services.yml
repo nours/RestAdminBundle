@@ -82,7 +82,7 @@ services:
 ##############################
   rest_admin.helper:
     class: Nours\RestAdminBundle\Helper\AdminHelper
-    arguments: [ @request_stack, @rest_admin.manager, @router ]
+    arguments: [ '@request_stack', '@rest_admin.manager', '@router' ]
 
 
 ##############################

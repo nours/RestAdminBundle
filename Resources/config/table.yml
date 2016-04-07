@@ -1,10 +1,10 @@
 services:
   rest_admin.table.extension:
     class: Nours\RestAdminBundle\Table\Extension\AdminExtension
-    arguments: [ @rest_admin.helper ]
+    arguments: [ '@rest_admin.helper' ]
     tags: [ { name: nours_table.extension } ]
 
   rest_admin.table.field.admin_actions:
     class: Nours\RestAdminBundle\Table\Field\AdminActionsType
-    arguments: [ @rest_admin.helper ]
-    tags: [ { name: nours_table.field_type } ]
+    arguments: [ '@rest_admin.helper' ]
+    tags: [ { name: nours_table.field_type, alias: 'admin_actions' } ]

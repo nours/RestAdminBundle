@@ -29,8 +29,9 @@ class AdminTestCase extends WebTestCase
 
     public function setUp()
     {
-        parent::setUp();
 
+
+        parent::setUp();
     }
 
     /**

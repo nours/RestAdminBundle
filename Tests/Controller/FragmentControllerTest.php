@@ -60,6 +60,7 @@ class FragmentControllerTest extends AdminTestCase
      */
     public function testRenderPostCommentCreateFragmentAction()
     {
+        $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => 'FixtureBundle:Fragment:createPostComment',
             'parent' => $this->getEntityManager()->find('FixtureBundle:Post', 1)
@@ -98,6 +99,7 @@ class FragmentControllerTest extends AdminTestCase
      */
     public function testRenderCreateFragmentActionWithPostCommentResource()
     {
+        $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => 'FixtureBundle:Fragment:create',
             'resource'    => $this->getAdminManager()->getResource('post.comment'),
@@ -119,6 +121,7 @@ class FragmentControllerTest extends AdminTestCase
      */
     public function testRenderPostCommentEditFragmentAction()
     {
+        $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => 'FixtureBundle:Fragment:editPostComment',
             'data'        => $this->getEntityManager()->find('FixtureBundle:Comment', 1)
@@ -139,6 +142,7 @@ class FragmentControllerTest extends AdminTestCase
      */
     public function testRenderEditFragmentActionWithPostResource()
     {
+        $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => 'FixtureBundle:Fragment:edit',
             'resource'    => $this->getAdminManager()->getResource('post'),
@@ -160,6 +164,7 @@ class FragmentControllerTest extends AdminTestCase
      */
     public function testRenderEditFragmentActionWithPostCommentResource()
     {
+        $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => 'FixtureBundle:Fragment:edit',
             'resource'    => $this->getAdminManager()->getResource('post.comment'),

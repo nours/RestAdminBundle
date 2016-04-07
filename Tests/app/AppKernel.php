@@ -29,6 +29,7 @@ class AppKernel extends Kernel
             new Nours\RestAdminBundle\NoursRestAdminBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
             new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle(),
             new Nours\TableBundle\NoursTableBundle()
         );

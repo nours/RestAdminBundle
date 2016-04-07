@@ -67,6 +67,14 @@ class AdminExtension extends AbstractExtension
             return null;
         });
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDependency()
+    {
+        return 'orm';
+    }
     
     /**
      * {@inheritdoc}

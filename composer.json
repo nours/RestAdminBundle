@@ -9,10 +9,10 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": ">2.6",
+        "symfony/framework-bundle": "~2.6",
         "doctrine/orm" : "~2.5",
-        "symfony/yaml": ">2.6",
-        "symfony/form": ">2.6",
+        "symfony/yaml": "~2.6",
+        "symfony/form": "~2.6",
         "jms/serializer-bundle": "~0.13",
         "symfony/finder": "~2.6",
         "symfony/validator": "~2.6",
@@ -21,13 +21,13 @@
     },
     "require-dev": {
         "doctrine/doctrine-bundle" : "~1.4",
-        "symfony/security-bundle": ">2.6",
+        "symfony/security-bundle": "~2.6",
         "phpunit/phpunit": "4.*",
         "symfony/browser-kit": "~2.6",
         "symfony/monolog-bundle" : "~2.7",
         "doctrine/data-fixtures": "~1.1",
         "knplabs/knp-menu-bundle": ">=2.0",
-        "symfony/css-selector": ">2.6"
+        "symfony/css-selector": "~2.6"
     },
     "repositories": [
       {
