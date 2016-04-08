@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
+use Nours\RestAdminBundle\Domain\ResourceCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
@@ -40,14 +41,17 @@ class AdminManager implements CacheWarmerInterface
      * @var LoaderInterface
      */
     private $loader;
+
     private $cacheDir;
     private $debug;
+
+    private $dumper;
 
     /**
      * @param LoaderInterface $loader
      * @param mixed $resource
-     * @param $cacheDir
-     * @param $debug
+     * @param string $cacheDir
+     * @param string $debug
      */
     public function __construct(LoaderInterface $loader, $resource, $cacheDir, $debug)
     {
@@ -55,6 +59,8 @@ class AdminManager implements CacheWarmerInterface
         $this->resource = $resource;
         $this->cacheDir = $cacheDir;
         $this->debug    = $debug;
+
+        $this->dumper = new ResourceCollectionDumper();
     }
 
     /**
@@ -62,20 +68,29 @@ class AdminManager implements CacheWarmerInterface
      */
     public function getResourceCollection()
     {
+        $classCacheName = 'appRestResourceCollection';
+
         if (empty($this->resources)) {
-            $filePath = $this->cacheDir.'/RestResourceCollection.php';
+            $filePath = $this->cacheDir. DIRECTORY_SEPARATOR . $classCacheName . '.php';
             $cache = new ConfigCache($filePath, $this->debug);
 
             if (!$cache->isFresh()) {
                 /** @var ResourceCollection $collection */
                 $collection = $this->loader->load($this->resource);
 
-                $export = var_export(serialize($collection), true);
-                $cache->write('<?php return unserialize('.$export.');', $collection->getConfigResources());
+//                var_dump($collection);die;
+
+//                $export = var_export($collection, true);
+//                $cache->write('<?php return '.$export.';', $collection->getConfigResources());
+
+                $cache->write($this->dumper->dump($collection, $classCacheName), $collection->getConfigResources());
 
                 $this->resources = $collection;
             } else {
-                $this->resources = require $filePath;
+
+                require_once $filePath;
+
+                $this->resources = new $classCacheName;
             }
 
             $this->resources->resolveParents();

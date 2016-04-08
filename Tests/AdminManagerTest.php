@@ -48,16 +48,22 @@ class AdminManagerTest extends AdminTestCase
     }
 
     /**
-     * The resource collection in cache can be deserialized.
+     * The resource collection has been dumped in cache file.
+     *
+     * todo : Caching is WIP
      */
-    public function testResourceDeserialization()
+    public function testResourceCache()
     {
         $this->manager->getResourceCollection();
 
-        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/RestResourceCollection.php';
+        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/appRestResourceCollection.php';
 
         $this->assertFileExists($path);
-        $collection = require $path;
+        $this->assertTrue(class_exists('appRestResourceCollection'));
+
+//        $collection = require_on $path;
+
+        $collection = new \appRestResourceCollection;
 
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\ResourceCollection', $collection);
         $this->assertTrue($collection->has('post'));

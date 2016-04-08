@@ -59,7 +59,7 @@ class Resource
     private $parent = false;
 
     /**
-     * false means that the parent resource has not been resolved yet.
+     * Children resources (resolved after loading).
      *
      * @var Resource[]
      */
@@ -103,6 +103,11 @@ class Resource
 
         $this->basePrefix = $this->getConfig('route_prefix', $this->name) . '_';
         $this->routePrefix = $this->basePrefix;
+    }
+
+    public static function loadFromCache($name, $class, $slug, $configs)
+    {
+
     }
 
     /**
@@ -366,11 +371,6 @@ class Resource
     public function getChildren()
     {
         return $this->children;
-    }
-
-    public function getUriPart()
-    {
-
     }
 
     /**
