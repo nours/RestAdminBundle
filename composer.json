@@ -9,22 +9,22 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "~2.6",
+        "symfony/framework-bundle": "~2.8",
         "doctrine/orm" : "~2.5",
-        "symfony/yaml": "~2.6",
-        "symfony/form": "~2.6",
+        "symfony/yaml": "~2.8",
+        "symfony/form": "~2.8",
         "jms/serializer-bundle": "~0.13",
-        "symfony/finder": "~2.6",
-        "symfony/validator": "~2.6",
-        "symfony/twig-bundle": "~2.6",
-        "nours/table-bundle": "dev-master"
+        "symfony/finder": "~2.8",
+        "symfony/validator": "~2.8",
+        "symfony/twig-bundle": "~2.8",
+        "nours/table-bundle": "~0.3"
     },
     "require-dev": {
         "doctrine/doctrine-bundle" : "~1.4",
-        "symfony/security-bundle": "~2.6",
+        "symfony/security-bundle": "~2.8",
         "phpunit/phpunit": "4.*",
-        "symfony/browser-kit": "~2.6",
-        "symfony/monolog-bundle" : "~2.7",
+        "symfony/browser-kit": "~2.8",
+        "symfony/monolog-bundle" : "~2.8",
         "doctrine/data-fixtures": "~1.1",
         "knplabs/knp-menu-bundle": ">=2.0",
         "symfony/css-selector": "~2.6"
@@ -38,8 +38,7 @@
     "suggest": {
       "doctrine/doctrine-bundle" : "Support for Doctrine ORM persistence and loading",
       "symfony/security-bundle": "Integrate security checks based on security bundle",
-      "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)",
-      "nours/table-bundle": "Table implementation"
+      "knplabs/knp-menu-bundle": "KnpMenu integration (menu voter)"
     },
     "autoload": {
         "psr-0": { "Nours\\RestAdminBundle": "" }
