@@ -64,7 +64,7 @@ class MenuFunctionalTest extends AdminTestCase
     public function testPostIndexIsCurrentAndNotAncestor()
     {
         $item = $this->makeMenuItem('post');
-        $stub = reset($item->getChildren());
+        $stub = $item->getFirstChild();
 
         $this->initRequest('/posts', array(
             '_route' => 'post_index',
@@ -88,7 +88,7 @@ class MenuFunctionalTest extends AdminTestCase
     public function testPostCreateIsAncestor()
     {
         $item = $this->helper->createResourceMenuItem($this->menu, 'post', 'label.posts');
-        $stub = reset($item->getChildren());
+        $stub = $item->getFirstChild();
 
         $this->initRequest('/posts/create', array(
             '_route' => 'post_create',
@@ -110,7 +110,7 @@ class MenuFunctionalTest extends AdminTestCase
         $item = $this->helper->createResourceMenuItem($this->menu, 'post.comment', 'label.post.comments', array(
             'routeParameters' => array('post' => 1)
         ));
-        $stub = reset($item->getChildren());
+        $stub = $item->getFirstChild();
 
         $this->initRequest('/posts/1/comments', array(
             '_route' => 'post_comment_index',
@@ -137,7 +137,7 @@ class MenuFunctionalTest extends AdminTestCase
         $item = $this->helper->createResourceMenuItem($this->menu, 'post.comment', 'label.post.comments', array(
             'routeParameters' => array('post' => 1)
         ));
-        $stub = reset($item->getChildren());
+        $stub = $item->getFirstChild();
 
         $this->initRequest('/posts/1/comments/create', array(
             '_route' => 'post_comment_create',
@@ -162,7 +162,7 @@ class MenuFunctionalTest extends AdminTestCase
     public function testParentItemIsAncestor()
     {
         $postItem = $this->helper->createResourceMenuItem($this->menu, 'post', 'label.post');
-        $postStub = reset($postItem->getChildren());
+        $postStub = $postItem->getFirstChild();
 
         $commentItem = $this->helper->createResourceMenuItem($postItem, 'post.comment', 'label.post.comments', array(
             'routeParameters' => array('post' => 1)
