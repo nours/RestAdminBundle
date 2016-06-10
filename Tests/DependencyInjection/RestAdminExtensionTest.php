@@ -76,7 +76,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertEquals(array(
             'template'   => 'delete.html.twig',
             'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => 'rest_admin_delete',
+            'form'       => 'Nours\RestAdminBundle\Form\Type\DeleteType',
             'icon'       => 'trash'        // See Tests/app/config/config_test.yml
         ), $params);
     }
@@ -89,7 +89,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertEquals(array(
             'template'   => 'bulk_delete.html.twig',
             'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => 'rest_admin_bulk_delete'
+            'form'       => 'Nours\RestAdminBundle\Form\Type\BulkDeleteType'
         ), $params);
     }
 }

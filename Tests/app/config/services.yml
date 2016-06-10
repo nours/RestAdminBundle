@@ -4,15 +4,15 @@ services:
 
   tests.form.post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
-    tags: [ { name: form.type, alias: post } ]
+    tags: [ { name: form.type } ]
 
   tests.form.comment:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\CommentType
-    tags: [ { name: form.type, alias: comment } ]
+    tags: [ { name: form.type } ]
 
   tests.form.foo:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType
-    tags: [ { name: form.type, alias: foo } ]
+    tags: [ { name: form.type } ]
 
   tests.action.publish:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Action\PublishActionBuilder

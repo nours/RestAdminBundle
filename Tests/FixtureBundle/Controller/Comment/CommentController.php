@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment;
 
 use Nours\RestAdminBundle\Annotation as Rest;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Form\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,10 +30,10 @@ use Symfony\Component\HttpFoundation\Response;
  * )
  *
  * @Rest\Action(
- *  "create", form = "comment"
+ *  "create", form = CommentType::class
  * )
  * @Rest\Action(
- *  "edit", form = "comment"
+ *  "edit", form = CommentType::class
  * )
  */
 class CommentController

@@ -6,7 +6,7 @@ imports:
 resources:
   post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
-    form: post
+    form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
     actions:
       get: {}
       create: {}
@@ -15,12 +15,12 @@ resources:
       bulk_delete: {}
       custom_form:
         type: form
-        form: post
+        form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
         template: edit.html.twig
 
   post_prefixed:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post
-    form: post
+    form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
     actions: [ create, edit, delete ]
     route_prefix: prf_post
     base_path: prefixed
@@ -30,7 +30,7 @@ resources:
   secured:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo
     actions:
-      create: { form: foo }
+      create: { form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType }
       edit: {}
       delete: {}
       index: { controller: 'FixtureBundle:Secured:index' }

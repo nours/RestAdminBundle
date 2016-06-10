@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -25,11 +26,6 @@ class FooType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('submit', 'submit');
-    }
-
-    public function getName()
-    {
-        return 'foo';
+        $builder->add('submit', SubmitType::class);
     }
 }

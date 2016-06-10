@@ -41,7 +41,7 @@ monolog:
         file:
             type:   stream
             path:   "%kernel.logs_dir%/%kernel.environment%.log"
-            level:  debug
+            level:  info
 
 nours_rest_admin:
     resource: "%kernel.root_dir%/config/resources.yml"

@@ -11,7 +11,10 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Tests\Extension\Core\Type\SubmitTypeTest;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -26,14 +29,9 @@ class CommentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('comment', 'text', array(
+        $builder->add('comment', TextType::class, array(
             'constraints' => new NotBlank()
         ));
-        $builder->add('submit', 'submit');
-    }
-
-    public function getName()
-    {
-        return 'comment';
+        $builder->add('submit', SubmitType::class);
     }
 }

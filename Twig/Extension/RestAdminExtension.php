@@ -30,11 +30,6 @@ class RestAdminExtension extends \Twig_Extension
     private $helper;
     private $actionTemplate;
 
-    /**
-     * @var \Twig_Environment
-     */
-    private $environment;
-
     public function __construct(RequestStack $requestStack, AdminManager $adminManager, AdminHelper $helper, $actionTemplate)
     {
         $this->requestStack   = $requestStack;
@@ -46,22 +41,20 @@ class RestAdminExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return array(
             new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference')),
             new \Twig_SimpleFunction('rest_action_path', array($this, 'getActionPath')),
             new \Twig_SimpleFunction('rest_action_controller', array($this, 'createControllerReference')),
-            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink'), array(
+                'is_safe' => array('html'),
+                'needs_environment' => true
+            )),
+            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'), array(
+                'is_safe' => array('html'),
+                'needs_environment' => true
+            ))
         );
     }
 
@@ -89,12 +82,13 @@ class RestAdminExtension extends \Twig_Extension
     }
 
     /**
+     * @param \Twig_Environment $environment
      * @param string|Action $action
      * @param $data
      * @param array $options
      * @return string
      */
-    public function renderActionLink($action, $data = null, array $options = array())
+    public function renderActionLink(\Twig_Environment $environment, $action, $data = null, array $options = array())
     {
         $action = $this->helper->getAction($action);
 
@@ -106,15 +100,16 @@ class RestAdminExtension extends \Twig_Extension
 
         $context = $this->makeActionContext($action, $options);
 
-        return $this->environment->render($this->actionTemplate, $context);
+        return $environment->render($this->actionTemplate, $context);
     }
 
     /**
+     * @param \Twig_Environment $environment
      * @param string|Action $action
      * @param array $options
      * @return string
      */
-    public function renderActionPrototype($action, array $options = array())
+    public function renderActionPrototype(\Twig_Environment $environment, $action, array $options = array())
     {
         $action = $this->helper->getAction($action);
 
@@ -122,7 +117,7 @@ class RestAdminExtension extends \Twig_Extension
 
         $context = $this->makeActionContext($action, $options);
 
-        return $this->environment->render($this->actionTemplate, $context);
+        return $environment->render($this->actionTemplate, $context);
     }
 
     /**

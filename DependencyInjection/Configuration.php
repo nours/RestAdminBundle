@@ -10,6 +10,8 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
+use Nours\RestAdminBundle\Form\Type\BulkDeleteType;
+use Nours\RestAdminBundle\Form\Type\DeleteType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -93,8 +95,8 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('create')->defaultNull()->end()
                         ->scalarNode('edit')->defaultNull()->end()
-                        ->scalarNode('delete')->defaultValue('rest_admin_delete')->end()
-                        ->scalarNode('bulk_delete')->defaultValue('rest_admin_bulk_delete')->end()
+                        ->scalarNode('delete')->defaultValue(DeleteType::class)->end()
+                        ->scalarNode('bulk_delete')->defaultValue(BulkDeleteType::class)->end()
                     ->end()
                 ->end()
                 ->arrayNode('services')

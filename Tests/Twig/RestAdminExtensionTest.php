@@ -30,6 +30,11 @@ class RestAdminExtensionTest extends AdminTestCase
     private $extension;
 
     /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -38,9 +43,10 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         parent::setUp();
 
+        $this->twig = $this->get('twig');
         $this->requestStack = $this->get('request_stack');
-        $this->get('twig')->initRuntime();
-        $this->extension    = $this->get('twig')->getExtension('rest_admin');
+//        $this->get('twig')->initRuntime();
+        $this->extension    = $this->twig->getExtension('rest_admin');
     }
 
     /**
@@ -97,7 +103,7 @@ class RestAdminExtensionTest extends AdminTestCase
      */
     public function testRenderActionLink()
     {
-        $html = $this->extension->renderActionLink('post:create');
+        $html = $this->extension->renderActionLink($this->twig, 'post:create');
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/create">'));
     }
@@ -110,7 +116,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->loadFixtures();
 
         $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
-        $html = $this->extension->renderActionLink('post:edit', $post);
+        $html = $this->extension->renderActionLink($this->twig, 'post:edit', $post);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/edit">'));
     }
@@ -123,7 +129,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->loadFixtures();
 
         $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
-        $html = $this->extension->renderActionLink('post.comment:index', $post);
+        $html = $this->extension->renderActionLink($this->twig, 'post.comment:index', $post);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments">'));
     }
@@ -136,7 +142,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->loadFixtures();
 
         $comment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->find(1);
-        $html = $this->extension->renderActionLink('post.comment:get', $comment);
+        $html = $this->extension->renderActionLink($this->twig, 'post.comment:get', $comment);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments/1">'));
     }
@@ -148,7 +154,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->loadFixtures();
 
-        $html = $this->extension->renderActionPrototype('post.comment:get', array(
+        $html = $this->extension->renderActionPrototype($this->twig, 'post.comment:get', array(
             'attr' => array('class' => 'btn')
         ));
 
