@@ -184,7 +184,7 @@ class Resource
      *
      * @return bool
      */
-    public function isCompositeIdentifier()
+    public function isIdentifierComposite()
     {
         return is_array($this->getIdentifier());
     }
@@ -480,7 +480,7 @@ class Resource
         $paramName = $this->getParamName();
         $names = array();
 
-        if ($this->isCompositeIdentifier()) {
+        if ($this->isIdentifierComposite()) {
             foreach ($this->getIdentifier() as $identifier) {
                 $names[$identifier] = $paramName . '_' . $identifier;
             }
@@ -590,7 +590,7 @@ class Resource
         $paramName = $this->getParamName();
         $values = array();
 
-        if ($this->isCompositeIdentifier()) {
+        if ($this->isIdentifierComposite()) {
             foreach ((array)$this->getIdentifier() as $identifier) {
                 $values[$paramName . '_' . $identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);
             }
@@ -641,7 +641,13 @@ class Resource
         $params = array();
 
         if ($includeSelf) {
-            $params[$this->getParamName()] = '__' . $this->getName() . '__';
+            if ($this->isIdentifierComposite()) {
+                foreach ($this->getIdentifierNames() as $identifier => $paramName) {
+                    $params[$paramName] = '__' . $this->getName() . '_' . $identifier . '__';
+                }
+            } else {
+                $params[$this->getParamName()] = '__' . $this->getName() . '__';
+            }
         }
 
         if ($parent = $this->getParent()) {
@@ -663,16 +669,32 @@ class Resource
         $mapping = array();
 
         if ($includeSelf) {
-            $mapping['__' . $this->getName() . '__'] = $this->getIdentifier();
+            $mapping = $this->makeParamsMapping();
         }
 
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $parent->getParamName() . '.';
-            $mapping['__' . $parent->getName() . '__'] = $suffix . $parent->getIdentifier();
+            $suffix = $suffix . $this->getParentAssociation() . '.';
+
+            $mapping = array_merge($mapping, $parent->makeParamsMapping($suffix));
 
             $parent = $parent->getParent();
+        }
+
+        return $mapping;
+    }
+
+    private function makeParamsMapping($suffix = '')
+    {
+        $mapping = array();
+
+        if ($this->isIdentifierComposite()) {
+            foreach ($this->getIdentifierNames() as $identifier => $paramName) {
+                $mapping['__' . $this->getName() . '_' . $identifier . '__'] = $suffix . $identifier;
+            }
+        } else {
+            $mapping['__' . $this->getName() . '__'] = $suffix . $this->getIdentifier();
         }
 
         return $mapping;

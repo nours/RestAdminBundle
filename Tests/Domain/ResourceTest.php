@@ -207,7 +207,7 @@ class ResourceTest extends AdminTestCase
         $compositeResource = $this->getAdminManager()->getResource('composite');
 
         $this->assertEquals(array('id', 'name'), $compositeResource->getIdentifier());
-        $this->assertEquals(true, $compositeResource->isCompositeIdentifier());
+        $this->assertEquals(true, $compositeResource->isIdentifierComposite());
         $this->assertEquals('composite', $compositeResource->getParamName());
         $this->assertEquals(array(
             'id'   => 'composite_id',

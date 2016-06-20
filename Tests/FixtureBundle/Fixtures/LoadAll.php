@@ -58,6 +58,8 @@ class LoadAll extends AbstractFixture
         // Composite child
         $compositeChild = new CompositeChild();
         $compositeChild->setParent($composite1);
+        $compositeChild->setId(1);
+        $compositeChild->setName('child');
         $manager->persist($compositeChild);
 
         $manager->flush();

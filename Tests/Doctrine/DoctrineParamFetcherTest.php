@@ -283,7 +283,8 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'action' => $resource->getAction('get'),
             'composite_id' => 1,
             'composite_name' => 'first',
-            'composite_child' => 1
+            'composite_child_id' => 1,
+            'composite_child_name' => 'child'
         ));
 
         $this->fetcher->fetch($request);

@@ -162,6 +162,35 @@ class RestAdminExtensionTest extends AdminTestCase
     }
 
     /**
+     * Link prototype
+     */
+    public function testRenderActionPrototypeComposite()
+    {
+        $this->loadFixtures();
+
+        $html = $this->extension->renderActionPrototype($this->twig, 'composite:get', array(
+            'attr' => array('class' => 'btn')
+        ));
+
+        $this->assertNotFalse(strpos($html, '<a href="/composites/__composite_id__/__composite_name__" class="btn">'));
+    }
+
+    /**
+     * Link prototype
+     */
+    public function testRenderActionPrototypeCompositeChild()
+    {
+        $this->loadFixtures();
+
+        $html = $this->extension->renderActionPrototype($this->twig, 'composite.composite_child:get', array(
+            'attr' => array('class' => 'btn')
+        ));
+
+        $url = '/composites/__composite_id__/__composite_name__/children/__composite_child_id__/__composite_child_name__';
+        $this->assertNotFalse(strpos($html, '<a href="' . $url . '" class="btn">'));
+    }
+
+    /**
      * getActionPath
      */
     public function testGetActionPath()

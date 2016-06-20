@@ -120,7 +120,7 @@ class AdminHelperTest extends AdminTestCase
 
         $url = $this->helper->generateUrl('composite.composite_child:get', $child);
 
-        $this->assertEquals('/composites/1/first/children/1', $url);
+        $this->assertEquals('/composites/1/first/children/1/child', $url);
     }
 
     /**

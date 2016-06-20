@@ -38,9 +38,16 @@ class CompositeChild
      *
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue()
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Id()
+     * @ORM\Column(type="string")
+     */
+    private $name;
 
     /**
      * @return int
@@ -56,6 +63,22 @@ class CompositeChild
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**

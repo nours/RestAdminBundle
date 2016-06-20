@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild",
+ *  identifier = { "id", "name" },
  *  parent = "composite",
  *  parent_association = "parent",
  *  slug = "children"

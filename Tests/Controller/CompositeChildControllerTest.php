@@ -36,7 +36,7 @@ class CompositeChildControllerTest extends AdminTestCase
             $client->getResponse()->getContent()
         );
         $this->assertContains(
-            '1 - first - 1',
+            '1 - first - 1 - child',
             $client->getResponse()->getContent()
         );
     }
@@ -49,14 +49,14 @@ class CompositeChildControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $client->request('GET', '/composites/1/first/children/1');
+        $client->request('GET', '/composites/1/first/children/1/child');
 
         $response = $client->getResponse();
 
 //        echo $response->getContent();die;
         $this->assertTrue($response->isSuccessful());
         $this->assertContains(
-            '<h1>composite.composite_child 1 - first - 1</h1>',
+            '<h1>composite.composite_child 1 - first - 1 - child</h1>',
             $response->getContent()
         );
     }

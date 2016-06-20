@@ -245,4 +245,68 @@ class ActionTest extends AdminTestCase
             'comment_bis' => '__comment_bis__'
         ), $mappings);
     }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeParamsMappingComposite()
+    {
+        $action = $this->getAdminManager()->getAction('composite:edit');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__composite_id__' => 'id',
+            '__composite_name__' => 'name',
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeParamsMappingCompositeChild()
+    {
+        $action = $this->getAdminManager()->getAction('composite.composite_child:get');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__composite_id__'         => 'parent.id',
+            '__composite_name__'       => 'parent.name',
+            '__composite_child_id__'   => 'id',
+            '__composite_child_name__' => 'name',
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsComposite()
+    {
+        $action = $this->getAdminManager()->getAction('composite:edit');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'composite_id' => '__composite_id__',
+            'composite_name' => '__composite_name__',
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsCompositeChild()
+    {
+        $action = $this->getAdminManager()->getAction('composite.composite_child:get');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'composite_id' => '__composite_id__',
+            'composite_name' => '__composite_name__',
+            'composite_child_id' => '__composite_child_id__',
+            'composite_child_name' => '__composite_child_name__',
+        ), $mappings);
+    }
 }

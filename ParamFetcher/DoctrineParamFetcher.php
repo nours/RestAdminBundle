@@ -130,7 +130,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     private function findSingle(Request $request, Resource $resource, $finderMethod)
     {
         // Composite identifier case
-        if ($resource->isCompositeIdentifier()) {
+        if ($resource->isIdentifierComposite()) {
             $criteria = array();
 
             foreach ($resource->getIdentifierNames() as $identifier => $paramName) {
@@ -165,11 +165,12 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     {
         /** @var QueryBuilder $builder */
         $builder = $this->manager->getRepository($resource->getClass())
-            ->createQueryBuilder('r')
-            ->where('r.'.$resource->getIdentifier().' = :'.$resource->getName());
+            ->createQueryBuilder('r');
 
-        // Sets the resource parameter
-        $builder->setParameter($resource->getName(), $request->attributes->get($resource->getParamName()));
+        foreach ($resource->getIdentifierNames() as $identifier => $paramName) {
+            $builder->andWhere('r.'.$identifier.' = :'.$paramName);
+            $builder->setParameter($paramName, $request->attributes->get($paramName));
+        }
 
         $this->buildQueryForParent($builder, $request, $resource);
 
