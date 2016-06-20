@@ -669,7 +669,7 @@ class Resource
         $mapping = array();
 
         if ($includeSelf) {
-            $mapping = $this->makeParamsMapping();
+            $mapping = $this->makePrototypeParamsMapping();
         }
 
         $parent = $this->getParent();
@@ -677,7 +677,7 @@ class Resource
         while ($parent) {
             $suffix = $suffix . $this->getParentAssociation() . '.';
 
-            $mapping = array_merge($mapping, $parent->makeParamsMapping($suffix));
+            $mapping = array_merge($mapping, $parent->makePrototypeParamsMapping($suffix));
 
             $parent = $parent->getParent();
         }
@@ -685,7 +685,7 @@ class Resource
         return $mapping;
     }
 
-    private function makeParamsMapping($suffix = '')
+    private function makePrototypeParamsMapping($suffix = '')
     {
         $mapping = array();
 
@@ -701,25 +701,36 @@ class Resource
     }
 
     /**
-     * Gets the route params mapping.
-     *
-     * Currently used for generating reorder urls front side.
+     * Returns a map associating property paths to route params for routing.
      *
      * @return array
      */
     public function getRouteParamsMapping()
     {
-        $mapping = array(
-            $this->getParamName() => $this->getIdentifier()
-        );
+        $mapping = $this->makeRouteParamsMapping();
 
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $parent->getParamName() . '.';
-            $mapping[$parent->getParamName()] = $suffix . $parent->getIdentifier();
+            $suffix = $suffix . $this->getParentAssociation() . '.';
+            $mapping = array_merge($mapping, $parent->makeRouteParamsMapping($suffix));
 
             $parent = $parent->getParent();
+        }
+
+        return $mapping;
+    }
+
+    private function makeRouteParamsMapping($suffix = '')
+    {
+        $mapping = array();
+
+        if ($this->isIdentifierComposite()) {
+            foreach ($this->getIdentifierNames() as $identifier => $paramName) {
+                $mapping[$paramName] = $suffix . $identifier;
+            }
+        } else {
+            $mapping[$this->getParamName()] = $suffix . $this->getIdentifier();
         }
 
         return $mapping;

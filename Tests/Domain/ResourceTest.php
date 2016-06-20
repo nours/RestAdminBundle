@@ -240,4 +240,36 @@ class ResourceTest extends AdminTestCase
             'name' => array('first', 'second')
         ), $compositeResource->getCollectionRouteParams(array($composite, $composite2)));
     }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetRouteParamsMappingComposite()
+    {
+        $resource = $this->getAdminManager()->getResource('composite');
+
+        $mappings = $resource->getRouteParamsMapping();
+
+        $this->assertEquals(array(
+            'composite_id'   => 'id',
+            'composite_name' => 'name',
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetRouteParamsMappingCompositeChild()
+    {
+        $resource = $this->getAdminManager()->getResource('composite.composite_child');
+
+        $mappings = $resource->getRouteParamsMapping();
+
+        $this->assertEquals(array(
+            'composite_id' => 'parent.id',
+            'composite_name' => 'parent.name',
+            'composite_child_id' => 'id',
+            'composite_child_name' => 'name',
+        ), $mappings);
+    }
 }
