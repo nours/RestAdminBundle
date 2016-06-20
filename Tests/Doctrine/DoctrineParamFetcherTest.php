@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Tests\Doctrine;
 use Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -245,7 +246,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     }
 
     /**
-     * If the parent entity is not the parent of the resources fetched, it throws
+     * Check fetching of an entity having a composite identifier
      */
     public function testFindCompositeIdentifier()
     {
@@ -268,5 +269,33 @@ class DoctrineParamFetcherTest extends AdminTestCase
         $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite', $composite);
         $this->assertEquals(1, $composite->getId());
         $this->assertEquals('first', $composite->getName());
+    }
+
+    /**
+     * Check fetching of an entity having a composite identifier
+     */
+    public function testFindCompositeIdentifierChild()
+    {
+        $resource = $this->getAdminManager()->getResource('composite.composite_child');
+
+        $request = new Request(array(), array(), array(
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
+            'composite_id' => 1,
+            'composite_name' => 'first',
+            'composite_child' => 1
+        ));
+
+        $this->fetcher->fetch($request);
+
+        $this->assertTrue($request->attributes->has('data'));
+
+        /** @var CompositeChild $child */
+        $child = $request->attributes->get('data');
+
+        $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild', $child);
+        $this->assertEquals(1, $child->getId());
+        $this->assertEquals(1, $child->getParent()->getId());
+        $this->assertEquals('first', $child->getParent()->getName());
     }
 }

@@ -704,4 +704,12 @@ class Resource
 
         return $mapping;
     }
+
+    /**
+     * @return string
+     */
+    public function getParentAssociation()
+    {
+        return $this->getConfig('parent_association', $this->getParentName());
+    }
 }

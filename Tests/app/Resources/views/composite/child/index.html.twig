@@ -1,0 +1,7 @@
+<h1>{{ resource.fullname }} {{ action.name }}</h1>
+
+<ul>
+{% for child in data %}
+    <li>{{ child.parent.id }} - {{ child.parent.name }} - {{ child.id }}</li>
+{% endfor %}
+</ul>
