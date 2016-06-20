@@ -56,7 +56,7 @@ class AdminHelperTest extends AdminTestCase
     /**
      * Generate post get url
      */
-    public function testGenerateUrlWithDate()
+    public function testGenerateUrlWithData()
     {
         $this->loadFixtures();
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
@@ -90,6 +90,37 @@ class AdminHelperTest extends AdminTestCase
         $url = $this->helper->generateUrl('post.comment:edit', $comment);
 
         $this->assertEquals('/posts/1/comments/1/edit', $url);
+    }
+
+    /**
+     * Generate comment edit url
+     */
+    public function testGenerateUrlForCompositeEntity()
+    {
+        $this->loadFixtures();
+        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+            'id' => 1,
+            'name' => 'first'
+        ));
+
+        $url = $this->helper->generateUrl('composite:edit', $composite);
+
+        $this->assertEquals('/composites/1/first/edit', $url);
+    }
+
+    /**
+     * Generate comment edit url
+     */
+    public function testGenerateUrlForCompositeEntityChild()
+    {
+        $this->loadFixtures();
+        $child = $this->getEntityManager()->getRepository('FixtureBundle:CompositeChild')->findOneBy(array(
+            'id' => 1
+        ));
+
+        $url = $this->helper->generateUrl('composite.composite_child:get', $child);
+
+        $this->assertEquals('/composites/1/first/children/1', $url);
     }
 
     /**

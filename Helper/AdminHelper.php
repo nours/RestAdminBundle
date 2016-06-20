@@ -67,7 +67,7 @@ class AdminHelper
      *
      * @param $action
      * @param null $data
-     * @param bool $referenceType
+     * @param integer $referenceType
      * @return string
      */
     public function generateUrl($action, $data = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)

@@ -554,15 +554,13 @@ class Resource
     /**
      * Retrieve parent object from data.
      *
-     * todo : use a property path different of param name (for underscores in resource name)
-     *
      * @param $data
      * @return null|mixed
      */
     public function getParentObject($data)
     {
         if ($parent = $this->getParent()) {
-            return $this->getPropertyAccessor()->getValue($data, $parent->getParamName());
+            return $this->getPropertyAccessor()->getValue($data, $this->getParentAssociation());
         }
 
         return null;
