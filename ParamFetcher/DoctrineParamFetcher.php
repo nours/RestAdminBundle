@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Doctrine param fetcher implementation
+ * Doctrine ORM param fetcher implementation
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
@@ -34,6 +34,26 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     }
 
     /**
+     * A resource is single if request has attributes for it's parameters.
+     *
+     * @param Request $request
+     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @return bool
+     */
+    private function isSingleResource(Request $request, Resource $resource)
+    {
+        $isSingle = true;
+
+        foreach ($resource->getIdentifierNames() as $paramName) {
+            if (!$request->attributes->has($paramName)) {
+                $isSingle = false;
+            }
+        }
+
+        return $isSingle;
+    }
+
+    /**
      * @param Request $request
      */
     public function fetch(Request $request)
@@ -42,9 +62,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
-        $param = $resource->getParamName();
-
-        if ($request->attributes->has($param)) {
+        if ($this->isSingleResource($request, $resource)) {
             // Request has a resource parameter : it should be fetched
             $finder = $action->getConfig('finder', 'find');
 
@@ -53,7 +71,14 @@ class DoctrineParamFetcher implements ParamFetcherInterface
             $request->attributes->set('data', $data);
         } else {
             // Load collection if request has id parameter in query string
-            if ($request->query->has($resource->getIdentifier())) {
+            $identifiers = $resource->getIdentifier();
+            $isCollection = true;
+            foreach ((array)$identifiers as $identifier) {
+                if (!$request->query->has($identifier)) {
+                    $isCollection = false;
+                }
+            }
+            if ($isCollection) {
                 $data = $this->fetchCollection($request, $resource);
 
                 $request->attributes->set('data', $data);
@@ -104,6 +129,18 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      */
     private function findSingle(Request $request, Resource $resource, $finderMethod)
     {
+        // Composite identifier case
+        if ($resource->isCompositeIdentifier()) {
+            $criteria = array();
+
+            foreach ($resource->getIdentifierNames() as $identifier => $paramName) {
+                $criteria[$identifier] = $request->attributes->get($paramName);
+            }
+
+            return $this->manager->getRepository($resource->getClass())->findOneBy($criteria);
+        }
+
+        // Single id
         $resourceId = $request->attributes->get($resource->getParamName());
 
         if ($resourceId) {

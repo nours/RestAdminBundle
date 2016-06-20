@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Fixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
@@ -41,6 +42,17 @@ class LoadAll extends AbstractFixture
         $post->setContent('second post');
 
         $manager->persist($post);
+
+        // Composite objects
+        $composite1 = new Composite();
+        $composite1->setId(1);
+        $composite1->setName('first');
+        $manager->persist($composite1);
+
+        $composite2 = new Composite();
+        $composite2->setId(1);
+        $composite2->setName('second');
+        $manager->persist($composite2);
 
         $manager->flush();
     }

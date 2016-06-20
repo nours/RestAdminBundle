@@ -1,0 +1,7 @@
+<h1>{{ resource.fullname }} {{ action.name }}</h1>
+
+<ul>
+{% for composite in data %}
+    <li>{{ composite.id }} - {{ composite.name }}</li>
+{% endfor %}
+</ul>

@@ -76,6 +76,21 @@ class ResourceTest extends AdminTestCase
     /**
      * The global route params for a simple resource should always be empty
      */
+    public function testGetCollectionRouteParams()
+    {
+        $post1 = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post2 = $this->getEntityManager()->find('FixtureBundle:Post', 2);
+
+        $params = $this->postResource->getCollectionRouteParams(array($post1, $post2));
+
+        $this->assertEquals(array(
+            'id' => array(1, 2)
+        ), $params);
+    }
+
+    /**
+     * The global route params for a simple resource should always be empty
+     */
     public function testGetRouteParamsForTopLevelResource()
     {
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
@@ -183,5 +198,46 @@ class ResourceTest extends AdminTestCase
         $controllerClass = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FooController';
         $this->assertEquals($controllerClass . '::fetchParamsDefault', $fooResource->getConfig('fetcher_callback'));
         $this->assertEquals($controllerClass . '::fetchParamsIndex', $index->getConfig('fetcher_callback'));
+    }
+
+    /**
+     */
+    public function testCompositeIdentifierEntity()
+    {
+        $compositeResource = $this->getAdminManager()->getResource('composite');
+
+        $this->assertEquals(array('id', 'name'), $compositeResource->getIdentifier());
+        $this->assertEquals(true, $compositeResource->isCompositeIdentifier());
+        $this->assertEquals('composite', $compositeResource->getParamName());
+        $this->assertEquals(array(
+            'id'   => 'composite_id',
+            'name' => 'composite_name'
+        ), $compositeResource->getIdentifierNames());
+    }
+
+    /**
+     */
+    public function testCompositeRouteParams()
+    {
+        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+            'id' => 1,
+            'name' => 'first',
+        ));
+        $composite2 = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+            'id' => 1,
+            'name' => 'second',
+        ));
+
+        $compositeResource = $this->getAdminManager()->getResource('composite');
+
+        $this->assertEquals(array(
+            'composite_id' => 1,
+            'composite_name' => 'first',
+        ), $compositeResource->getResourceRouteParams($composite));
+
+        $this->assertEquals(array(
+            'id' => array(1, 1),
+            'name' => array('first', 'second')
+        ), $compositeResource->getCollectionRouteParams(array($composite, $composite2)));
     }
 }

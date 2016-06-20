@@ -172,11 +172,21 @@ class Resource
     }
 
     /**
-     * @return string
+     * @return string|array
      */
     public function getIdentifier()
     {
         return $this->getConfig('identifier', 'id');
+    }
+
+    /**
+     * If this resource's entity has a composite identifier (represented as an array).
+     *
+     * @return bool
+     */
+    public function isCompositeIdentifier()
+    {
+        return is_array($this->getIdentifier());
     }
 
     /**
@@ -395,7 +405,9 @@ class Resource
         $parts[] = $this->getSlug();
 
         if ($objectPart) {
-            $parts[] = '{' . $this->getParamName() . '}';
+            foreach ($this->getIdentifierNames() as $name) {
+                $parts[] = '{' . $name . '}';
+            }
         }
 
         if ($suffix) {
@@ -406,7 +418,7 @@ class Resource
     }
 
     /**
-     * Get the relative uri path including the identifier param
+     * Get the relative uri path including identification parameters
      *
      * @param null $suffix
      * @return string
@@ -459,6 +471,27 @@ class Resource
     }
 
     /**
+     * Returns the param name used in routing
+     *
+     * @return array
+     */
+    public function getIdentifierNames()
+    {
+        $paramName = $this->getParamName();
+        $names = array();
+
+        if ($this->isCompositeIdentifier()) {
+            foreach ($this->getIdentifier() as $identifier) {
+                $names[$identifier] = $paramName . '_' . $identifier;
+            }
+        } else {
+            $names[$this->getIdentifier()] = $paramName;
+        }
+
+        return $names;
+    }
+
+    /**
      * @param $data
      * @return bool
      */
@@ -475,9 +508,11 @@ class Resource
      */
     public function getResourceRouteParams($data)
     {
-        $params = array(
-            $this->getParamName() => $this->getObjectIdentifier($data)
-        );
+        $params = array();
+
+        foreach ($this->getIdentifierValues($data) as $paramName => $value) {
+            $params[$paramName] = $value;
+        }
 
         if ($parent = $this->getParent()) {
             $params = array_merge($params, $parent->getResourceRouteParams($this->getParentObject($data)));
@@ -494,9 +529,17 @@ class Resource
      */
     public function getCollectionRouteParams(array $data)
     {
-        $params = array(
-            $this->getIdentifier() => array_map(array($this, 'getObjectIdentifier'), $data)
-        );
+        $params = array();
+
+        foreach ((array)$this->getIdentifier() as $identifier) {
+            $params[$identifier] = array();
+        }
+
+        foreach ($data as $entity) {
+            foreach ($this->extractIdentifiers($entity) as $identifier => $value) {
+                $params[$identifier][] = $value;
+            }
+        }
 
         if ($parent = $this->getParent()) {
             // Use first item of collection
@@ -528,12 +571,53 @@ class Resource
     /**
      * Returns an object id value
      *
+     * @deprecated Do not support composite id
+     *
      * @param $data
      * @return mixed
      */
     public function getObjectIdentifier($data)
     {
         return $this->getPropertyAccessor()->getValue($data, $this->getIdentifier());
+    }
+
+    /**
+     * Returns the param => value used in routing
+     *
+     * @param mixed $data
+     * @return array
+     */
+    private function getIdentifierValues($data)
+    {
+        $paramName = $this->getParamName();
+        $values = array();
+
+        if ($this->isCompositeIdentifier()) {
+            foreach ((array)$this->getIdentifier() as $identifier) {
+                $values[$paramName . '_' . $identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);
+            }
+        } else {
+            $values[$paramName] = $this->getPropertyAccessor()->getValue($data, $this->getIdentifier());
+        }
+
+        return $values;
+    }
+
+    /**
+     * Extract identifiers from object as an array
+     *
+     * @param $data
+     * @return array
+     */
+    private function extractIdentifiers($data)
+    {
+        $values = array();
+
+        foreach ((array)$this->getIdentifier() as $identifier) {
+            $values[$identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);
+        }
+
+        return $values;
     }
 
     /**
