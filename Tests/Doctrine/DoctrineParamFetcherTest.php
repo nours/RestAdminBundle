@@ -130,6 +130,31 @@ class DoctrineParamFetcherTest extends AdminTestCase
     }
 
     /**
+     * Parent .
+     */
+    public function testFindGrandChildEntity()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment.comment_response');
+
+        $request = new Request();
+        $request->attributes->add(array(
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
+            'post' => 1,
+            'comment' => 1,
+            'comment_response' => 1,
+        ));
+
+        $this->fetcher->fetch($request);
+
+        $data   = $request->attributes->get('data');
+
+        $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CommentResponse', $data);
+
+        $this->assertEquals(1, $data->getId());
+    }
+
+    /**
      * Searches a collection of posts (ids 1 and 2)
      */
     public function testFindCollection()

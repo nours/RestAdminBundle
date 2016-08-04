@@ -234,7 +234,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
         $parent = $resource->getParent();
         while ($parent) {
             $alias = 'p'.$index;
-            $builder->addSelect($alias)->innerJoin($parentAlias.'.'.$resource->getParentAssociation(), $alias);
+            $builder->addSelect($alias)->innerJoin($parentAlias.'.'.$resource->getParentPath(), $alias);
 
             foreach ($parent->getIdentifierNames() as $identifier => $paramName) {
                 $builder->andWhere($alias.'.'.$identifier.' = :'.$paramName);

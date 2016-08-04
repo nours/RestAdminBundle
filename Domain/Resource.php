@@ -560,7 +560,7 @@ class Resource
     public function getParentObject($data)
     {
         if ($parent = $this->getParent()) {
-            return $this->getPropertyAccessor()->getValue($data, $this->getParentAssociation());
+            return $this->getPropertyAccessor()->getValue($data, $this->getParentPath());
         }
 
         return null;
@@ -742,5 +742,17 @@ class Resource
     public function getParentAssociation()
     {
         return $this->getConfig('parent_association', $this->getParentName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentPath()
+    {
+        if ($parent = $this->getParent()) {
+            return $this->getConfig('parent_path', $parent->getName());
+        }
+
+        return null;
     }
 }

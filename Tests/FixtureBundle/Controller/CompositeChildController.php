@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild",
  *  identifier = { "id", "name" },
  *  parent = "composite",
+ *  parent_path = "parent",
  *  parent_association = "parent",
  *  slug = "children"
  * )

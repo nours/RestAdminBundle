@@ -10,18 +10,16 @@
 
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A sample Comment class.
+ * CommentResponse class.
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  *
  * @ORM\Entity()
  */
-class Comment
+class CommentResponse
 {
     /**
      * @var integer
@@ -33,34 +31,25 @@ class Comment
     private $id;
 
     /**
-     * @var Post
+     * @var Comment
      *
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="Comment", inversedBy="responses")
      */
-    private $post;
+    private $comment;
 
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $comment;
+    private $response;
 
     /**
-     * @var Collection|CommentResponse[]
-     *
-     * @ORM\OneToMany(targetEntity="CommentResponse", mappedBy="comment")
+     * @param Comment $comment
      */
-    private $responses;
-
-    /**
-     * @param Post $post
-     */
-    public function __construct(Post $post)
+    public function __construct(Comment $comment)
     {
-        $this->post = $post;
-        $post->getComments()->add($this);
-
-        $this->responses = new ArrayCollection();
+        $this->comment = $comment;
+        $comment->getResponses()->add($this);
     }
 
     /**
@@ -72,19 +61,19 @@ class Comment
     }
 
     /**
-     * @return Collection|CommentResponse[]
+     * @return mixed
      */
-    public function getResponses()
+    public function getResponse()
     {
-        return $this->responses;
+        return $this->response;
     }
 
     /**
-     * @return Post
+     * @param mixed $response
      */
-    public function getPost()
+    public function setResponse($response)
     {
-        return $this->post;
+        $this->response = $response;
     }
 
     /**

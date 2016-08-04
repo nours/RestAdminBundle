@@ -272,4 +272,31 @@ class ResourceTest extends AdminTestCase
             'composite_child_name' => 'name',
         ), $mappings);
     }
+
+    /**
+     * Parent path
+     */
+    public function testGetParentPath()
+    {
+        $comment  = $this->getAdminManager()->getResource('post.comment');
+        $response = $this->getAdminManager()->getResource('post.comment.comment_response');
+
+        $this->assertEquals('post', $comment->getParentPath());
+        $this->assertEquals('comment', $response->getParentPath());
+    }
+
+    /**
+     * Parent object from data
+     */
+    public function testGetParentObject()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment.comment_response');
+
+        $data = $this->getEntityManager()->getRepository('FixtureBundle:CommentResponse')->find(1);
+
+        $parent = $resource->getParentObject($data);
+
+        $this->assertSame($data->getComment(), $parent);
+        $this->assertEquals(1, $parent->getId());
+    }
 }
