@@ -45,6 +45,7 @@ monolog:
 
 nours_rest_admin:
     resource: "%kernel.root_dir%/config/resources.yml"
+    templating_formats: ['html', 'ajax']
     listeners:
         orm: true
         security: true

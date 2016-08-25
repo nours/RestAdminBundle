@@ -55,6 +55,7 @@ class NoursRestAdminExtension extends Extension
             $loader->load('menu.yml');
         }
 
+        $container->setParameter('rest_admin.listeners.templating.formats', $config['templating_formats']);
         $container->setParameter('rest_admin.resource', $config['resource']);
         $container->setParameter('rest_admin.default_param_fetcher', $config['default_param_fetcher']);
 

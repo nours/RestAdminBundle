@@ -25,16 +25,18 @@ class TemplatingHandler implements ViewHandler
 {
 
     private $container;
+    private $formats;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, array $formats)
     {
         $this->container = $container;
+        $this->formats   = $formats;
     }
 
 
     public function supports(Request $request)
     {
-        return $request->getRequestFormat() == 'html';
+        return in_array($request->getRequestFormat(), $this->formats);
     }
 
 

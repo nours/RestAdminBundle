@@ -4,7 +4,7 @@ services:
 
   rest_admin.view_handler.templating:
     class: Nours\RestAdminBundle\View\TemplatingHandler
-    arguments: [ '@service_container' ]
+    arguments: [ '@service_container', '%rest_admin.listeners.templating.formats%' ]
     tags: [ { name: 'rest_admin.view_handler' } ]
 
   rest_admin.view_handler.json:
