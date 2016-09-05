@@ -6,7 +6,7 @@ function (value, row, index) {
     var prototype = '{{ rest_action_link_prototype(action, {
         label: action_labels[index],
         attr: action_attrs[index]
-    })|raw }}',
+    })|e('js') }}',
         mappings = {{ action.prototypeParamsMapping()|json_encode|raw }}
     $.each(mappings, function(placeholder, property_path) {
         prototype = prototype.replace(placeholder, objectPath.get(row, property_path))
