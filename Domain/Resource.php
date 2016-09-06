@@ -755,4 +755,19 @@ class Resource
 
         return null;
     }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function getObjectIdentifiers($data)
+    {
+        $values = array();
+
+        foreach ((array)$this->getIdentifier() as $identifier) {
+            $values[$identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);
+        }
+
+        return $values;
+    }
 }

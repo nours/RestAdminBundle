@@ -299,4 +299,56 @@ class ResourceTest extends AdminTestCase
         $this->assertSame($data->getComment(), $parent);
         $this->assertEquals(1, $parent->getId());
     }
+
+    /**
+     */
+    public function testGetObjectIdentifiers()
+    {
+        $resource = $this->getAdminManager()->getResource('post.comment.comment_response');
+
+        $data = $this->getEntityManager()->getRepository('FixtureBundle:CommentResponse')->find(1);
+
+        $identifiers = $resource->getObjectIdentifiers($data);
+
+        $this->assertEquals(array(
+            'id' => 1
+        ), $identifiers);
+    }
+
+    /**
+     */
+    public function testGetCompositeObjectIdentifiers()
+    {
+        $resource = $this->getAdminManager()->getResource('composite');
+
+        $data = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+            'id' => 1,
+            'name' => 'second'
+        ));
+
+        $identifiers = $resource->getObjectIdentifiers($data);
+
+        $this->assertEquals(array(
+            'id' => 1,
+            'name' => 'second'
+        ), $identifiers);
+    }
+
+    /**
+     */
+    public function testGetCompositeChildObjectIdentifiers()
+    {
+        $resource = $this->getAdminManager()->getResource('composite.composite_child');
+
+        $data = $this->getEntityManager()->getRepository('FixtureBundle:CompositeChild')->findOneBy(array(
+            'id' => 1
+        ));
+
+        $identifiers = $resource->getObjectIdentifiers($data);
+
+        $this->assertEquals(array(
+            'id' => 1,
+            'name' => 'child'
+        ), $identifiers);
+    }
 }
