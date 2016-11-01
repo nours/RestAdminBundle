@@ -50,7 +50,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertEquals(array(
             'template'   => 'create.html.twig',
             'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => null,
+//            'form'       => null,
             'icon'       => 'plus'        // See Tests/app/config/config_test.yml
         ), $params);
     }
@@ -63,7 +63,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertEquals(array(
             'template'   => 'edit.html.twig',
             'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => null,
+//            'form'       => null,
             'icon'       => 'pencil'        // See Tests/app/config/config_test.yml
         ), $params);
     }

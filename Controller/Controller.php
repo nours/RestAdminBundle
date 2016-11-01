@@ -23,15 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 class Controller extends BaseController
 {
     /**
-     * @param Request $request
-     * @return mixed
-     */
-    protected function createData(Request $request)
-    {
-        return $this->get('rest_admin.data_factory')->create($request);
-    }
-
-    /**
      * @param $data
      * @param Action $action
      * @return \Symfony\Component\Form\Form

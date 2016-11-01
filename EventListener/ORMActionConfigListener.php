@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class DoctrineORMHandlerListener
+ *
+ * todo : Refactor the handler concept for clearer ORM integration.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
@@ -49,10 +51,12 @@ class ORMActionConfigListener implements EventSubscriberInterface
 
         switch ($event->getActionName()) {
             case 'create' :
+            case 'copy' :
                 $event->addHandler('rest_admin.handler.orm:handleCreate', $priority);
                 break;
             case 'edit' :
                 $event->addHandler('rest_admin.handler.orm:handleUpdate', $priority);
+                break;
                 break;
             case 'delete' :
                 $event->addHandler('rest_admin.handler.orm:handleDelete', $priority);

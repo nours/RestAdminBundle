@@ -54,6 +54,7 @@ nours_rest_admin:
         get: get.html.twig
         create: create.html.twig
         edit: edit.html.twig
+        copy: copy.html.twig
         delete: delete.html.twig
         bulk_delete: bulk_delete.html.twig
     extras:

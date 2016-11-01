@@ -224,6 +224,45 @@ class PostControllerTest extends AdminTestCase
     }
 
     /**
+     * Copy action form
+     */
+    public function testCopyAction()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $crawler = $client->request('GET', '/posts/1/copy');
+
+        $this->assertSuccessful($client->getResponse());
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>copy post 1</h1>',
+            $client->getResponse()->getContent()
+        );
+
+        $button = $crawler->selectButton('post[submit]');
+        $form = $button->form(array(
+            'post[content]' => 'copied'
+        ));
+
+        $client->submit($form);
+
+        $response = $client->getResponse();
+        $this->assertRedirect($response, '/posts');
+
+        $this->getEntityManager()->clear();
+        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findOneBy(array(
+            'content' => 'copied'
+        ));
+
+        // Object has been created
+        $this->assertNotNull($newPost);
+        $this->assertEquals('copied', $newPost->getContent());
+        $this->assertNotNull($newPost->getId());
+        $this->assertNotEquals(1, $newPost->getId());
+    }
+
+    /**
      * Form action
      */
     public function testCustomFormAction()

@@ -11,6 +11,7 @@ resources:
       get: {}
       create: {}
       edit: {}
+      copy: {}
       delete: {}
       bulk_delete: {}
       custom_form:

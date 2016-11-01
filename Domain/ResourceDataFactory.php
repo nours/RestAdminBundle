@@ -37,6 +37,32 @@ class ResourceDataFactory
         $this->resolver = $resolver;
     }
 
+
+    public function handle(Request $request)
+    {
+        /** @var \Nours\RestAdminBundle\Domain\Action $action */
+        $action = $request->attributes->get('action');
+
+        // Use action factory if defined (mandatory if present)
+        if ($factory = $action->getFactory()) {
+            return $this->makeData($request, $action, $factory);
+        }
+
+        // Use current data
+        if ($data = $request->attributes->get('data')) {
+            return $data;
+        }
+
+        // Use resource factory
+        if ($factory = $action->getResource()->getFactory()) {
+            return $this->makeData($request, $action, $factory);
+        }
+
+        // Use default constructor
+        $class = $action->getResource()->getClass();
+        return new $class();
+    }
+
     /**
      * Creates a new resource.
      *
@@ -45,33 +71,25 @@ class ResourceDataFactory
      * @param Request $request
      * @return mixed
      */
-    public function create(Request $request)
+    private function makeData(Request $request, Action $action, $factory)
     {
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
-        $resource = $request->attributes->get('resource');
+        // Clone request to use it's _controller attribute for resolver
+        $subRequest = $request->duplicate();
+        $subRequest->attributes->set('_controller', $factory);
 
-        if ($factory = $resource->getFactory()) {
-            // Clone request to use it's _controller attribute for resolver
-            $subRequest = $request->duplicate();
-            $subRequest->attributes->set('_controller', $factory);
+        // Find controller
+        $controller = $this->resolver->getController($subRequest);
 
-            // Find controller
-            $controller = $this->resolver->getController($subRequest);
-
-            if ($controller === false) {
-                throw new \DomainException(sprintf(
-                    "Factory method %s for resource %s could not be resolved",
-                    $factory, $resource->getFullName()
-                ));
-            }
-
-            $arguments = $this->resolver->getArguments($request, $controller);
-
-            return call_user_func_array($controller, $arguments);
+        if ($controller === false) {
+            throw new \DomainException(sprintf(
+                "Factory method %s for action %s could not be resolved",
+                $factory, $action->getFullName()
+            ));
         }
 
-        $class = $resource->getClass();
-        return new $class();
+        $arguments = $this->resolver->getArguments($request, $controller);
+
+        return call_user_func_array($controller, $arguments);
     }
 
 }

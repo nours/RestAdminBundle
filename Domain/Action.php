@@ -115,6 +115,14 @@ class Action
     }
 
     /**
+     * @return string|null
+     */
+    public function getFactory()
+    {
+        return $this->getConfig('factory');
+    }
+
+    /**
      * @return string
      */
     public function getRole()

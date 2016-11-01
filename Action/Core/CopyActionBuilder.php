@@ -18,19 +18,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class DeleteActionBuilder
+ * Class CopyActionBuilder
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class DeleteActionBuilder extends AbstractBuilder
+class CopyActionBuilder extends AbstractBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $builder->addRoute($action, 'delete', 'GET', $action->getUriPath());
-        $builder->addRoute($action, 'remove', 'DELETE', $action->getUriPath(''));
+        $builder->addRoute($action, 'copy', array('GET', 'POST'), $action->getUriPath('copy'));
     }
 
     /**
@@ -40,11 +39,11 @@ class DeleteActionBuilder extends AbstractBuilder
     {
         if (!$builder->getAction()) {
             $builder
-                ->setMethod('DELETE')
+                ->setMethod('POST')
                 ->setAction($generator->generate(
-                    $action->getRouteName('remove'),
+                    $action->getRouteName('copy'),
                     $action->getRouteParams($data)
-                ));
+                ))
             ;
         }
     }
@@ -54,7 +53,10 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('form', null);
+        $resolver->setDefaults(array(
+            'form' => null,
+            'factory' => 'rest_admin.factory.copy:factory'
+        ));
     }
 
     /**
@@ -62,6 +64,6 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function getName()
     {
-        return 'delete';
+        return 'copy';
     }
 }

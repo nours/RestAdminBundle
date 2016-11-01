@@ -11,7 +11,6 @@
 namespace Nours\RestAdminBundle\Tests\Domain;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
-use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
  * Class ActionTest
@@ -79,6 +78,7 @@ class ActionTest extends AdminTestCase
         return array(
             array('create'),
             array('edit'),
+            array('copy'),
             array('delete'),
             array('bulk_delete'),
             array('custom_form'),
@@ -165,6 +165,20 @@ class ActionTest extends AdminTestCase
     /**
      * Prototype route parameters mappings
      */
+    public function testGetPrototypeParamsMappingForPostCopy()
+    {
+        $action = $this->getAdminManager()->getAction('post:copy');
+
+        $mappings = $action->getPrototypeParamsMapping();
+
+        $this->assertEquals(array(
+            '__post__' => 'id'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
     public function testGetPrototypeParamsMappingForPostCommentIndex()
     {
         $action = $this->getAdminManager()->getAction('post.comment:index');
@@ -209,6 +223,20 @@ class ActionTest extends AdminTestCase
     public function testGetPrototypeRouteParamsForPostEdit()
     {
         $action = $this->getAdminManager()->getAction('post:edit');
+
+        $mappings = $action->getPrototypeRouteParams();
+
+        $this->assertEquals(array(
+            'post' => '__post__'
+        ), $mappings);
+    }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetPrototypeRouteParamsForPostCopy()
+    {
+        $action = $this->getAdminManager()->getAction('post:copy');
 
         $mappings = $action->getPrototypeRouteParams();
 

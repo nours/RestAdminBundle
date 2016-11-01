@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\Resource;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -60,13 +61,12 @@ class DefaultController extends Controller
      *
      * @param Request $request
      * @param Action $action
-     * @param mixed $data
-     * @return ArrayCollection
+     * @return FormInterface
      */
-    public function formAction(Request $request, Action $action, $data = null)
+    public function formAction(Request $request, Action $action)
     {
         // Initialize data if not found from routing
-        $data = $data ?: $this->createData($request);
+        $data = $this->get('rest_admin.data_factory')->handle($request);
 
         // Create form
         $form = $this->createResourceForm($data, $action);

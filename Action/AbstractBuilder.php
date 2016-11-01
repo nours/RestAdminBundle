@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Action;
 
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Nours\RestAdminBundle\Domain\Resource;
@@ -53,7 +54,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * Builds the option resolver and returns resolved options.
      *
-     * @see Nours\RestAdminBundle\Loader\ResourceFactory::configureActions
+     * @see \Nours\RestAdminBundle\Loader\ResourceFactory::configureActions
      *
      * @param array $options
      * @return array
@@ -84,9 +85,9 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'fetcher'   => null,
             'fetcher_callback' => null
         ));
-        $resolver->setDefaults($this->defaultOptions);
 
         $this->setDefaultOptions($resolver);
+        $resolver->setDefaults($this->defaultOptions);
 
         // Handlers are inserted as arrays like [ handler, priority ]
         // normalization will sort them based on the priority
@@ -99,6 +100,13 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             return iterator_to_array($priorityQueue);
         });
 
-        return $resolver->resolve($options);
+        try {
+            return $resolver->resolve($options);
+        } catch (UndefinedOptionsException $e) {
+            throw new \DomainException(sprintf(
+                "Error while resolving options for action builder %s",
+                $this->getName()
+            ), 0, $e);
+        }
     }
 }

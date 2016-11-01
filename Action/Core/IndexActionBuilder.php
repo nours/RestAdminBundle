@@ -35,8 +35,10 @@ class IndexActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('read_only', true);
-        $resolver->setDefault('instance', false);
+        $resolver->setDefaults(array(
+            'read_only' => true,
+            'instance'  => false
+        ));
     }
 
     /**

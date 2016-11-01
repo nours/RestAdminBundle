@@ -82,7 +82,7 @@ class NoursRestAdminExtension extends Extension
      */
     private function configureActionParams(array $config, ContainerBuilder $container)
     {
-        $actions = array('index', 'get', 'create', 'edit', 'delete', 'bulk_delete', 'form', 'custom');
+        $actions = array('index', 'get', 'create', 'edit', 'copy', 'delete', 'bulk_delete', 'form', 'custom');
         foreach ($actions as $action) {
             $params = array();
 
@@ -93,8 +93,6 @@ class NoursRestAdminExtension extends Extension
             if (array_key_exists($action, $config['templates'])) {
                 $params['template'] = $config['templates'][$action];
             }
-//            $params['controller'] = isset($config['controllers'][$action]) ? $config['controllers'][$action] : null;
-//            $params['template']   = isset($config['templates'][$action]) ? $config['templates'][$action] : null;
 
             // Form (optional)
             if (array_key_exists($action, $config['forms'])) {

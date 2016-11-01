@@ -77,6 +77,9 @@ services:
     class: Nours\RestAdminBundle\Handler\RedirectHandler
     arguments: [ '@router' ]
 
+  rest_admin.factory.copy:
+    class: Nours\RestAdminBundle\Handler\CopyFactory
+
 ##############################
 # Helper
 ##############################
@@ -111,6 +114,11 @@ services:
   rest_admin.action_builder.edit:
     class: Nours\RestAdminBundle\Action\Core\EditActionBuilder
     arguments: [ '%rest_admin.actions.edit%' ]
+    tags: [ { name: 'rest_admin.action_builder' } ]
+
+  rest_admin.action_builder.copy:
+    class: Nours\RestAdminBundle\Action\Core\CopyActionBuilder
+    arguments: [ '%rest_admin.actions.copy%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
   rest_admin.action_builder.delete:
