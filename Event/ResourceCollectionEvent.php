@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\Event;
 
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 
 /**
@@ -25,7 +25,7 @@ class ResourceCollectionEvent extends ResourceEvent
      */
     private $collection;
 
-    public function __construct(Resource $resource, ResourceCollection $collection)
+    public function __construct(DomainResource $resource, ResourceCollection $collection)
     {
         parent::__construct($resource);
 

@@ -13,7 +13,6 @@ namespace Nours\RestAdminBundle\Routing;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Nours\RestAdminBundle\Event\RouteEvent;
-use Nours\RestAdminBundle\Domain\Resource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

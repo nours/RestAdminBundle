@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\Loader;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Inflector\Inflector;
-use Nours\RestAdminBundle\Annotation\Resource;
+use Nours\RestAdminBundle\Annotation\DomainResource;
 use Nours\RestAdminBundle\Annotation\Route;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -99,7 +99,7 @@ class AnnotationClassLoader implements LoaderInterface
         $collection->addConfigResource(new FileResource($class->getFileName()));
 
         if ($annotation = $this->reader->getClassAnnotation($class, $this->resourceAnnotationClass)) {
-
+            /** @var DomainResource $annotation */
             $resource = $this->processResource($class, $annotation);
 
             $collection->add($resource);
@@ -112,13 +112,11 @@ class AnnotationClassLoader implements LoaderInterface
 
     /**
      *
-     * @see Nours\RestAdminBundle\Annotation\Resource
-     *
      * @param \ReflectionClass $class
-     * @param \Nours\RestAdminBundle\Annotation\Resource $annotation
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @param DomainResource $annotation
+     * @return \Nours\RestAdminBundle\Domain\DomainResource
      */
-    private function processResource(\ReflectionClass $class, Resource $annotation)
+    private function processResource(\ReflectionClass $class, DomainResource $annotation)
     {
         $factory = null;
         $fetcher = null;

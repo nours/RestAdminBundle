@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -72,7 +73,7 @@ class ParamFetcherListener implements EventSubscriberInterface
      */
     private function getParamFetcher(Request $request)
     {
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+        /** @var DomainResource $resource */
         /** @var Action $action */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');

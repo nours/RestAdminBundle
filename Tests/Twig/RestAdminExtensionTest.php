@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Twig;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Twig\Extension\RestAdminExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -216,9 +217,9 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->assertArrayHasKey('resource', $reference->attributes);
         $this->assertArrayHasKey('action', $reference->attributes);
 
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+        /** @var DomainResource $resource */
         $resource = $reference->attributes['resource'];
-        $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Resource', $resource);
+        $this->assertInstanceOf('Nours\RestAdminBundle\Domain\DomainResource', $resource);
         $this->assertEquals($resourceName, $resource->getFullName());
 
         /** @var Action $action */

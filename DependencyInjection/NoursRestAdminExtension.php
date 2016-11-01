@@ -122,7 +122,7 @@ class NoursRestAdminExtension extends Extension
     private function configureDomainClasses(array $config, ContainerBuilder $container)
     {
         $resourceClass = $config['resource_class'];
-        $subClass = 'Nours\\RestAdminBundle\\Domain\\Resource';
+        $subClass = 'Nours\\RestAdminBundle\\Domain\\DomainResource';
         $reflection = new \ReflectionClass($resourceClass);
         if ($resourceClass !== $subClass && !$reflection->isSubclassOf($subClass)) {
             throw new \DomainException("Resource class $resourceClass must extend base class $subClass");

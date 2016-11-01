@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Domain\ResourceCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
@@ -101,7 +101,7 @@ class AdminManager implements CacheWarmerInterface
 
     /**
      * @param string $name
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function getResource($name)
     {
@@ -134,10 +134,10 @@ class AdminManager implements CacheWarmerInterface
     /**
      * Returns the final resource name, including parent namespaces.
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @return string
      */
-    protected function getResourceName(Resource $resource)
+    protected function getResourceName(DomainResource $resource)
     {
         foreach ($this->getParentsIterator($resource) as $parent) {
             $parts[] = $parent->getName();
@@ -151,10 +151,10 @@ class AdminManager implements CacheWarmerInterface
     /**
      * Returns an iterator throughout resource parents from ancestor to immediate parent.
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @return \Nours\RestAdminBundle\Domain\Resource[]
+     * @param DomainResource $resource
+     * @return \ArrayIterator|DomainResource[]
      */
-    protected function getParentsIterator(Resource $resource)
+    protected function getParentsIterator(DomainResource $resource)
     {
         $parents = array();
         $current = $resource;

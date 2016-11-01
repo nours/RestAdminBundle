@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Event;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\Event;
 class ResourceEvent extends Event
 {
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $resource;
 
@@ -32,17 +32,17 @@ class ResourceEvent extends Event
     private $action;
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param Action $action
      */
-    public function __construct(Resource $resource, Action $action = null)
+    public function __construct(DomainResource $resource, Action $action = null)
     {
         $this->resource = $resource;
         $this->action   = $action;
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function getResource()
     {

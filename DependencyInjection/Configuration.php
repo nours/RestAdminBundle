@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('resource')->isRequired()->end()
                 ->scalarNode('default_param_fetcher')->defaultValue('orm')->end()
                 ->scalarNode('resource_class')
-                    ->defaultValue('Nours\RestAdminBundle\Domain\Resource')
+                    ->defaultValue('Nours\RestAdminBundle\Domain\DomainResource')
                     ->info('Main resource definition class, redefine to use your own implementation')
                 ->end()
                 ->arrayNode('listeners')

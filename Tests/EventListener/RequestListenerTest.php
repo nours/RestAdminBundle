@@ -37,7 +37,7 @@ class RequestListenerTest extends AdminTestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Resource', $request->attributes->get('resource'));
+        $this->assertInstanceOf('Nours\RestAdminBundle\Domain\DomainResource', $request->attributes->get('resource'));
         $this->assertInstanceOf('Nours\RestAdminBundle\Domain\Action', $request->attributes->get('action'));
         $this->assertEquals('json', $request->getRequestFormat());
     }

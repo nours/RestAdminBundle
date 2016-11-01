@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Command;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,12 +66,12 @@ EOF
         }
     }
 
-    private function dumpResourceLight(OutputInterface $output, Resource $resource)
+    private function dumpResourceLight(OutputInterface $output, DomainResource $resource)
     {
         $output->writeln("\t<info>".$resource->getFullName().'</info> : ' . $resource->getClass());
     }
 
-    private function dumpResource(InputInterface $input, OutputInterface $output, Resource $resource)
+    private function dumpResource(InputInterface $input, OutputInterface $output, DomainResource $resource)
     {
         $this->dumpResourceLight($output, $resource);
         foreach ($resource->getConfigs() as $name => $value) {

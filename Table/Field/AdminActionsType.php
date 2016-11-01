@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Table\Field;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Helper\AdminHelper;
 use Nours\TableBundle\Field\AbstractFieldType;
 use Nours\TableBundle\Field\FieldInterface;
@@ -90,14 +90,14 @@ class AdminActionsType extends AbstractFieldType
             if (null === $resource) {
                 return null;
             }
-            if (!$resource instanceof Resource) {
+            if (!$resource instanceof DomainResource) {
                 $resource = $this->helper->getResource($resource);
             }
             return $resource;
         });
 
         $resolver->setNormalizer('actions', function(Options $options, $actions) {
-            /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+            /** @var DomainResource $resource */
             $resource = $options['resource'];
 
             foreach ($actions as &$action) {

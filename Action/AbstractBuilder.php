@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -38,7 +38,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createAction(Resource $resource, array $options = array())
+    public function createAction(DomainResource $resource, array $options = array())
     {
         return new Action($resource, $this->resolveOptions($options));
     }

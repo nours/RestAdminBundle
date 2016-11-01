@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\Loader;
 
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Loader\ResourceFactory;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 
@@ -81,7 +82,7 @@ class ResourceFactoryTest extends AdminTestCase
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function makeFooResource()
     {

@@ -56,27 +56,27 @@ EOS;
         return $content;
     }
 
-    private function dumpResource(Resource $resource)
-    {
-
-    }
-
-    private function dumpCollection(ResourceCollection $collection)
-    {
-        return <<<'EOS'
-
-use Nours\RestAdminBundle\Domain\ResourceCollection
-
-class RestResourceCollection extends ResourceCollection
-{
-    private $serialized = array();
-
-    public function __construct()
-    {
-        $this->add
-    }
-
-EOS;
-
-    }
+//    private function dumpResource(DomainResource $resource)
+//    {
+//
+//    }
+//
+//    private function dumpCollection(ResourceCollection $collection)
+//    {
+//        return <<<'EOS'
+//
+//use Nours\RestAdminBundle\Domain\ResourceCollection
+//
+//class RestResourceCollection extends ResourceCollection
+//{
+//    private $serialized = array();
+//
+//    public function __construct()
+//    {
+//        $this->add
+//    }
+//
+//EOS;
+//
+//    }
 }

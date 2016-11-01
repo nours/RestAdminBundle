@@ -10,14 +10,14 @@
 
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Stub;
 
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 
 /**
  * Sample Resource for test fixtures
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class TestResource extends Resource
+class TestResource extends DomainResource
 {
     public function __construct()
     {

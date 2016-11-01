@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Menu\Voter;
 
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\Voter\VoterInterface;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -51,7 +52,7 @@ class ResourceRouteVoter implements VoterInterface
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     private function getRequestResource()
     {

@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\ParamFetcher;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -32,8 +33,8 @@ class CustomParamFetcher implements ParamFetcherInterface
 
     public function fetch(Request $request)
     {
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
-        /** @var \Nours\RestAdminBundle\Domain\Action $action */
+        /** @var DomainResource $resource */
+        /** @var Action $action */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 

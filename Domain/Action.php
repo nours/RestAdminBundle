@@ -19,7 +19,7 @@ use Doctrine\Common\Inflector\Inflector;
 class Action
 {
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $resource;
 
@@ -29,10 +29,10 @@ class Action
     private $config = array();
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param array $config
      */
-    public function __construct(Resource $resource, array $config)
+    public function __construct(DomainResource $resource, array $config)
     {
         $this->resource = $resource;
         $this->config   = $config;
@@ -73,7 +73,7 @@ class Action
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function getResource()
     {
@@ -223,10 +223,10 @@ class Action
     /**
      * Duplicate this action for another resource.
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @return Action
      */
-    public function duplicate(Resource $resource)
+    public function duplicate(DomainResource $resource)
     {
         $clone = clone $this;
         $clone->resource = $resource;

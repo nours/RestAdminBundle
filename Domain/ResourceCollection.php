@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation as Serializer;
 class ResourceCollection implements \Countable, \IteratorAggregate, \Serializable
 {
     /**
-     * @var Resource[]
+     * @var DomainResource[]
      */
     private $resources = array();
 
@@ -35,9 +35,9 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     /**
      * Adds a resource, after resolving it's parent.
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      */
-    public function add(Resource $resource)
+    public function add(DomainResource $resource)
     {
         $name = $resource->getFullName();
         $this->resources[$name] = $resource;
@@ -52,7 +52,7 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function get($name)
     {
@@ -73,7 +73,7 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
         }
     }
 
-    private function resolveResourceParent(Resource $resource)
+    private function resolveResourceParent(DomainResource $resource)
     {
         $parentName = $resource->getParentName();
 
@@ -98,7 +98,7 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource[]
+     * @return \ArrayIterator
      */
     public function getIterator()
     {

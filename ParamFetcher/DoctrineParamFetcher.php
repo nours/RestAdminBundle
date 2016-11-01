@@ -10,9 +10,9 @@
 
 namespace Nours\RestAdminBundle\ParamFetcher;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,11 +24,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class DoctrineParamFetcher implements ParamFetcherInterface
 {
     /**
-     * @var EntityManagerInterface
+     * @var EntityManager
      */
     protected $manager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->manager = $entityManager;
     }
@@ -37,10 +37,10 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * A resource is single if request has attributes for it's parameters.
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @return bool
      */
-    private function isSingleResource(Request $request, Resource $resource)
+    private function isSingleResource(Request $request, DomainResource $resource)
     {
         $isSingle = true;
 
@@ -58,7 +58,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      */
     public function fetch(Request $request)
     {
-        /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+        /** @var DomainResource $resource */
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
@@ -99,11 +99,11 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * Fetches data for a resource.
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param string $finderMethod
      * @return mixed
      */
-    protected function fetchSingle(Request $request, Resource $resource, $finderMethod = 'find')
+    protected function fetchSingle(Request $request, DomainResource $resource, $finderMethod = 'find')
     {
         if ($resource->getParent()) {
             $data = $this->findHierarchy($request, $resource);
@@ -123,11 +123,11 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * Finds a single resource (without parent) from request, eventually using action finder.
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param string $finderMethod
      * @return mixed
      */
-    private function findSingle(Request $request, Resource $resource, $finderMethod)
+    private function findSingle(Request $request, DomainResource $resource, $finderMethod)
     {
         // Composite identifier case
         if ($resource->isIdentifierComposite()) {
@@ -156,14 +156,13 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * Builds a query in order to ensure parent ownership (it's children may have duplicated ids).
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function findHierarchy(Request $request, Resource $resource)
+    private function findHierarchy(Request $request, DomainResource $resource)
     {
-        /** @var QueryBuilder $builder */
         $builder = $this->manager->getRepository($resource->getClass())
             ->createQueryBuilder('r');
 
@@ -181,10 +180,10 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * Fetches a collection for the resource.
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @return array
      */
-    protected function fetchCollection(Request $request, Resource $resource)
+    protected function fetchCollection(Request $request, DomainResource $resource)
     {
         /** @var QueryBuilder $builder */
         $builder = $this->manager->getRepository($resource->getClass())
@@ -225,9 +224,9 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      *
      * @param QueryBuilder $builder
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      */
-    private function buildQueryForParent(QueryBuilder $builder, Request $request, Resource $resource)
+    private function buildQueryForParent(QueryBuilder $builder, Request $request, DomainResource $resource)
     {
         $parentAlias = 'r';
         $index = 1;

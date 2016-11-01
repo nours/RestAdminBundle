@@ -10,8 +10,7 @@
 
 namespace Nours\RestAdminBundle\Event;
 
-use Nours\RestAdminBundle\Domain\Resource;
-use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 
 /**
  * Class ActionConfigEvent
@@ -32,13 +31,13 @@ class ActionConfigEvent extends ResourceEvent
     public $config;
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param string $actionName
      * @param string $actionType
      * @param array $config
      */
     public function __construct(
-        Resource $resource,
+        DomainResource $resource,
         $actionName,
         $actionType,
         array $config

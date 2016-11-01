@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Loader;
 
 use Nours\RestAdminBundle\ActionManager;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Event\ActionConfigEvent;
 use Nours\RestAdminBundle\Event\ResourceCollectionEvent;
@@ -54,7 +54,7 @@ class ResourceFactory
      *
      * @param $class
      * @param array $configs
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function createResource($class, array $configs)
     {
@@ -64,10 +64,10 @@ class ResourceFactory
     /**
      * Configure the actions for a resource from a configuration array.
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param array $configs
      */
-    public function configureActions(Resource $resource, array $configs)
+    public function configureActions(DomainResource $resource, array $configs)
     {
         $actions = $this->normalizeActionsConfig($configs);
 
@@ -97,10 +97,10 @@ class ResourceFactory
     /**
      * To called when a resource loading is done, to dispatch an event
      *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param ResourceCollection $collection
      */
-    public function finishResource(Resource $resource, ResourceCollection $collection)
+    public function finishResource(DomainResource $resource, ResourceCollection $collection)
     {
         // Dispatch resource config event
         $event = new ResourceCollectionEvent($resource, $collection);

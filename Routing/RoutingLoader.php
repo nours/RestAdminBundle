@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Routing;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -66,7 +67,7 @@ class RoutingLoader extends Loader
 
         // Iterate on resources
         foreach ($resources as $resource) {
-            /** @var \Nours\RestAdminBundle\Domain\Resource $resource */
+            /** @var DomainResource $resource */
 
             // The get action routes must be appended after others
             // (otherwise it will conflicts with global resource routes)

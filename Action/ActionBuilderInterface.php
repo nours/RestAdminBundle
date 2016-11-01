@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Action;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,11 +25,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 interface ActionBuilderInterface
 {
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param array $options
      * @return Action
      */
-    public function createAction(Resource $resource, array $options = array());
+    public function createAction(DomainResource $resource, array $options = array());
 
     /**
      * Override to provide default options for
@@ -61,12 +61,4 @@ interface ActionBuilderInterface
      * @return string
      */
     public function getName();
-
-    /**
-     * Must return event triggered by this action
-     *
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
-     * @return array
-     */
-//    public function registerTriggeredEvent(Resource $resource);
 }

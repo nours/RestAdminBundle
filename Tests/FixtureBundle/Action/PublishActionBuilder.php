@@ -12,7 +12,6 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Action;
 
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Symfony\Component\Form\FormBuilderInterface;

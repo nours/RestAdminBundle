@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Helper;
 
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -106,7 +107,7 @@ class AdminHelper
     }
 
     /**
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function getCurrentResource()
     {
@@ -247,7 +248,7 @@ class AdminHelper
 
     /**
      * @param $name
-     * @return \Nours\RestAdminBundle\Domain\Resource
+     * @return DomainResource
      */
     public function getResource($name)
     {

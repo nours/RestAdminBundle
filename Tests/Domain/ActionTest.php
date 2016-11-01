@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\Domain;
 
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 /**
@@ -20,7 +21,7 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 class ActionTest extends AdminTestCase
 {
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $resource;
 

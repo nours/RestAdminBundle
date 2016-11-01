@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\Event;
 
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\Action;
 
 /**
@@ -56,7 +56,7 @@ class RouteEvent extends ResourceEvent
     public $schemes = array();
 
     /**
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param Action $action
      * @param $path
      * @param array $defaults
@@ -65,7 +65,7 @@ class RouteEvent extends ResourceEvent
      * @param string $method
      */
     public function __construct(
-        Resource $resource,
+        DomainResource $resource,
         Action $action,
         $path,
         array $defaults,

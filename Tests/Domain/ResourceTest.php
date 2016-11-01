@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\Domain;
 
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 /**
@@ -20,17 +21,17 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 class ResourceTest extends AdminTestCase
 {
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $postResource;
 
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $commentResource;
 
     /**
-     * @var \Nours\RestAdminBundle\Domain\Resource
+     * @var DomainResource
      */
     private $commentBisResource;
 

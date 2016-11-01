@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Nours\RestAdminBundle\Domain\Action;
-use Nours\RestAdminBundle\Domain\Resource;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,11 +27,11 @@ class DefaultController extends Controller
      * Index action
      *
      * @param Request $request
-     * @param \Nours\RestAdminBundle\Domain\Resource $resource
+     * @param DomainResource $resource
      * @param $parent
      * @return ArrayCollection
      */
-    public function indexAction(Request $request, Resource $resource, $parent = null)
+    public function indexAction(Request $request, DomainResource $resource, $parent = null)
     {
         if ($tableName = $resource->getConfig('table')) {
             $table = $this->get('nours_table.factory')->createTable($tableName, array(
