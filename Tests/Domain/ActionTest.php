@@ -43,6 +43,17 @@ class ActionTest extends AdminTestCase
         $this->assertTrue($action->isReadOnly());
     }
 
+    public function testCopyAction()
+    {
+        $action = $this->getAdminManager()->getAction('post.comment:copy');
+
+        // Factory
+        $this->assertSame('tests.controller.comment:copyComment', $action->getFactory());
+
+        // Copy action is read only
+        $this->assertTrue($action->isReadOnly());
+    }
+
     public function testGetRouteName()
     {
         $action = $this->resource->getAction('index');
@@ -79,7 +90,6 @@ class ActionTest extends AdminTestCase
         return array(
             array('create'),
             array('edit'),
-            array('copy'),
             array('delete'),
             array('bulk_delete'),
             array('custom_form'),

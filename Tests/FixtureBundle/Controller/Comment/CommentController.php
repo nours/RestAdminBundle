@@ -35,6 +35,9 @@ use Symfony\Component\HttpFoundation\Response;
  * @Rest\Action(
  *  "edit", form = CommentType::class
  * )
+ * @Rest\Action(
+ *  "copy", form = CommentType::class
+ * )
  */
 class CommentController
 {
@@ -49,6 +52,19 @@ class CommentController
         $post = $request->attributes->get('parent');
 
         return new Comment($post);
+    }
+
+    /**
+     * @Rest\Factory("copy")
+     *
+     * @param Comment $data
+     * @return Comment
+     */
+    public function copyComment(Comment $data)
+    {
+        $clone = clone $data;
+
+        return $clone;
     }
 
     /**

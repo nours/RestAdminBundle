@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
  *
  * The fragment controller is used as proxy to render fragments from Twig templates.
  *
- * The test subject is the Twig RestAdminExtension (@see Nours\RestAdminBundle\Twig\Extension\RestAdminExtension).
+ * The test subject is the Twig RestAdminExtension (@see \Nours\RestAdminBundle\Twig\Extension\RestAdminExtension).
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
@@ -68,7 +68,7 @@ class FragmentControllerTest extends AdminTestCase
 
         $response = $this->httpKernel->handle($request);
 
-        $this->assertTrue($response->isSuccessful());
+        $this->assertSuccessful($response);
         $this->assertContains(
             '<h1>create post.comment</h1>',
             $response->getContent()

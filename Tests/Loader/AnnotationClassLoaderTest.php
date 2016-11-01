@@ -36,7 +36,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
 
         $this->assertEquals('post', $resource->getParentName());
 
-        $this->assertCount(5, $resource->getActions());
+        $this->assertCount(6, $resource->getActions());
 
         $publish = $resource->getAction('publish');
 

@@ -25,11 +25,6 @@ class Factory
      */
     public $action;
 
-    /**
-     * @var int
-     */
-    public $priority;
-
     public function __construct(array $values)
     {
         $this->action = isset($values['value']) ? $values['value'] : null;

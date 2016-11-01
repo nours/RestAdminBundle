@@ -118,13 +118,13 @@ class AnnotationClassLoader implements LoaderInterface
      */
     private function processResource(\ReflectionClass $class, DomainResource $annotation)
     {
-        $factory = null;
+        $resourceFactory = null;
         $fetcher = null;
         foreach ($class->getMethods() as $method) {
             // Look for @Factory annotation
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->factoryAnnotationClass) {
-                    $factory = $this->getControllerName($class, $annotation, $method);
+                if ($annot instanceof $this->factoryAnnotationClass && (null === $annot->action)) {
+                    $resourceFactory = $this->getControllerName($class, $annotation, $method);
                 }
             }
 
@@ -139,8 +139,8 @@ class AnnotationClassLoader implements LoaderInterface
         // Get resource config from annotation
         $config = $annotation->config;
 
-        if ($factory) {
-            $config['factory'] = $factory;
+        if ($resourceFactory) {
+            $config['factory'] = $resourceFactory;
         }
         if ($fetcher) {
             $config['fetcher'] = 'custom';
@@ -258,6 +258,24 @@ class AnnotationClassLoader implements LoaderInterface
             }
         }
 
+        // Other method annotations
+        foreach ($class->getMethods() as $method) {
+            // @Factory method annotation
+            foreach ($this->getMethodAnnotations($method, $this->factoryAnnotationClass) as $annotation) {
+                if ($annotation->action) {
+                    $actionName = $annotation->action;
+
+                    if (!isset($configs[$actionName])) {
+                        throw new \DomainException(sprintf(
+                            "Factory method %s::%s is configured for action %s, which is not found for resource (%s are)",
+                            $class->getName(), $method->getName(), $actionName, implode(', ', array_keys($configs))
+                        ));
+                    }
+
+                    $configs[$actionName]['factory'] = $this->getControllerName($class, $resourceAnnotation, $method);
+                }
+            }
+        }
 
         return $configs;
     }

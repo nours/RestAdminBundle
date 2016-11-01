@@ -55,6 +55,7 @@ class CopyActionBuilder extends AbstractBuilder
     {
         $resolver->setDefaults(array(
             'form' => null,
+            'read_only' => true,
             'factory' => 'rest_admin.factory.copy:factory'
         ));
     }

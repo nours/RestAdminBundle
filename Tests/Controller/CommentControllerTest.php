@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 
 
 /**
@@ -141,5 +142,43 @@ class CommentControllerTest extends AdminTestCase
 
         // Object has been created
         $this->assertEquals('updated!', $newComment->getComment());
+    }
+
+    /**
+     * Copy action
+     */
+    public function testCopyAction()
+    {
+        $this->loadFixtures();
+        $client = $this->getClient();
+
+        $crawler = $client->request('GET', '/posts/1/comments/1/copy');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertContains(
+            '<h1>copy post.comment 1</h1>',
+            $client->getResponse()->getContent()
+        );
+
+        $button = $crawler->selectButton('comment[submit]');
+        $form = $button->form(array(
+            'comment[comment]' => 'copied!'
+        ));
+
+        $client->submit($form);
+
+        $response = $client->getResponse();
+        $this->assertRedirect($response, '/posts/1/comments');
+
+        $this->getEntityManager()->clear();
+        /** @var Comment $newComment */
+        $newComment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->findOneBy(array(
+            'comment' => 'copied!'
+        ));
+
+        // Object has been created
+        $this->assertNotNull($newComment);
+        $this->assertEquals(1, $newComment->getPost()->getId());
+        $this->assertEquals('copied!', $newComment->getComment());
     }
 }
