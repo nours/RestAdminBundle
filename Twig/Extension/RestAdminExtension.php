@@ -13,7 +13,6 @@ namespace Nours\RestAdminBundle\Twig\Extension;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Helper\AdminHelper;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -100,7 +99,7 @@ class RestAdminExtension extends \Twig_Extension
 
         $context = $this->makeActionContext($action, $options);
 
-        return $environment->render($this->actionTemplate, $context);
+        return $environment->render($this->getTemplate($action), $context);
     }
 
     /**
@@ -117,7 +116,13 @@ class RestAdminExtension extends \Twig_Extension
 
         $context = $this->makeActionContext($action, $options);
 
-        return $environment->render($this->actionTemplate, $context);
+        return $environment->render($this->getTemplate($action), $context);
+    }
+
+
+    private function getTemplate(Action $action)
+    {
+        return $action->getConfig('action_template', $this->actionTemplate);
     }
 
     /**

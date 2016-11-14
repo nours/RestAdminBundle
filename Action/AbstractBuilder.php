@@ -83,6 +83,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'template'  => null,
             'handlers'  => array(),
             'fetcher'   => null,
+            'action_template'  => null,
             'fetcher_callback' => null
         ));
 

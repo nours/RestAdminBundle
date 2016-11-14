@@ -110,6 +110,16 @@ class RestAdminExtensionTest extends AdminTestCase
     }
 
     /**
+     * Custom action template
+     */
+    public function testRenderCustomActionLink()
+    {
+        $html = $this->extension->renderActionLink($this->twig, 'foo:get');
+
+        $this->assertEquals('action/custom.html.twig', $html);
+    }
+
+    /**
      * Action link rendering for one resource
      */
     public function testRenderResourceActionLink()
