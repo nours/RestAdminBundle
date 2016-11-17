@@ -54,6 +54,20 @@ class AdminHelperTest extends AdminTestCase
     }
 
     /**
+     * Generate post index url
+     */
+    public function testGenerateUrlWithParams()
+    {
+        $this->loadFixtures();
+
+        $url = $this->helper->generateUrl('post:index', null, array(
+            'foo' => 'bar'
+        ));
+
+        $this->assertEquals('/posts?foo=bar', $url);
+    }
+
+    /**
      * Generate post get url
      */
     public function testGenerateUrlWithData()

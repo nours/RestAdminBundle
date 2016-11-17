@@ -15,7 +15,6 @@ use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Helper\AdminHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class RestAdminExtension
@@ -60,14 +59,14 @@ class RestAdminExtension extends \Twig_Extension
     /**
      * @param Action|string $action
      * @param mixed $data
-     * @param $referenceType
+     * @param array $params
      * @return ControllerReference
      */
-    public function getActionPath($action, $data = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function getActionPath($action, $data = null, $params = array())
     {
         $action = $this->helper->getAction($action);
 
-        return $this->helper->generateUrl($action, $data, $referenceType);
+        return $this->helper->generateUrl($action, $data, $params);
     }
 
     /**

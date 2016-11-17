@@ -64,21 +64,25 @@ class AdminHelper
     }
 
     /**
-     * Generates url for an action, and possibly some data
+     * Generates url for an action.
      *
      * @param $action
      * @param null $data
-     * @param integer $referenceType
+     * @param array $routeParams
      * @return string
      */
-    public function generateUrl($action, $data = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($action, $data = null, $routeParams = array())
     {
         $action = $this->getAction($action);
 
-        // The action guesses it's route params from data
-        $params = $action->getRouteParams($data);
+        if (!is_array($routeParams)) {
+            trigger_error("Using reference type parameter is deprecated, and is replaced by route params");
+        }
 
-        return $this->urlGenerator->generate($action->getRouteName(), $params, $referenceType);
+        // The action guesses it's route params from data
+        $routeParams = array_merge($routeParams, $action->getRouteParams($data));
+
+        return $this->urlGenerator->generate($action->getRouteName(), $routeParams, UrlGeneratorInterface::ABSOLUTE_PATH);
     }
 
     /**

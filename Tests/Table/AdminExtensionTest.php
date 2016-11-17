@@ -45,4 +45,19 @@ class AdminExtensionTest extends AdminTestCase
         $this->assertEquals('/posts/1/comments', $table->getOption('url'));
         $this->assertEquals('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment', $table->getOption('class'));
     }
+
+    public function testTableUrlUsingCustomParams()
+    {
+        $this->loadFixtures();
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        /** @var TableInterface $table */
+        $table = $this->get('nours_table.factory')->createTable('comment', array(
+            'resource'   => 'post.comment',
+            'route_data' => $post,
+            'route_params' => array('foo' => 'bar')
+        ));
+
+        $this->assertEquals('/posts/1/comments?foo=bar', $table->getOption('url'));
+    }
 }

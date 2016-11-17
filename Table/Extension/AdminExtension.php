@@ -45,11 +45,12 @@ class AdminExtension extends AbstractExtension
             'action' => 'index',
             'url'    => function(Options $options) {
                 if ($action = $options['action']) {
-                    return $this->helper->generateUrl($action, $options['route_data']);
+                    return $this->helper->generateUrl($action, $options['route_data'], $options['route_params']);
                 }
                 return null;
             },
-            'route_data' => null
+            'route_data' => null,
+            'route_params' => array()
         ));
 
         $resolver->setNormalizer('resource', function(Options $options, $value) {
