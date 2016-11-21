@@ -140,12 +140,4 @@ class RestAdminExtension extends \Twig_Extension
             'action'      => $action
         ), $options);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'rest_admin';
-    }
 }

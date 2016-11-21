@@ -47,7 +47,7 @@ class RestAdminExtensionTest extends AdminTestCase
         $this->twig = $this->get('twig');
         $this->requestStack = $this->get('request_stack');
 //        $this->get('twig')->initRuntime();
-        $this->extension    = $this->twig->getExtension('rest_admin');
+        $this->extension    = $this->twig->getExtension(RestAdminExtension::class);
     }
 
     /**
