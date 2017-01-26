@@ -36,6 +36,14 @@ class ORMHandler
         $this->entityManager->flush();
     }
 
+    public function handleBulkCreate($data)
+    {
+        foreach ($data as $object) {
+            $this->entityManager->persist($object);
+        }
+        $this->entityManager->flush();
+    }
+
     public function handleUpdate()
     {
         $this->entityManager->flush();

@@ -56,6 +56,7 @@ class BulkDeleteActionBuilder extends AbstractBuilder
     {
         $resolver->setDefaults(array(
             'bulk' => true,
+            'handler_action' => 'delete',
             'form' => null
         ));
     }

@@ -99,6 +99,16 @@ class Action
     }
 
     /**
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
+     */
+    public function setConfig($key, $value)
+    {
+        return $this->config[$key] = $value;
+    }
+
+    /**
      * @return array
      */
     public function getConfigs()
@@ -163,7 +173,14 @@ class Action
      */
     public function getHandlers()
     {
-        return $this->getConfig('handlers', array());
+        $handlers = $this->getConfig('handlers', array());
+
+        $priorityQueue = new \SplPriorityQueue();
+        foreach ($handlers as $handler) {
+            $priorityQueue->insert($handler[0], $handler[1]);
+        }
+
+        return iterator_to_array($priorityQueue);
     }
 
     /**
@@ -215,9 +232,9 @@ class Action
             } elseif ($parent->isResourceInstance($data)) {
                 return $parent->getResourceRouteParams($data);
             }
-        } else {
-            return array();
         }
+
+        return array();
     }
 
     /**

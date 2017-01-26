@@ -31,9 +31,18 @@ class RestAdminEvents
      *
      * The main use of this event is to append handlers for actions.
      *
+     * @deprecated use ACTION_CONFIG
+     *
      * @see ActionConfigEvent
      */
     const ACTION = 'rest_admin.action';
+
+    /**
+     * Replacement for rest_admin.action event.
+     *
+     * Has access to the whole action object, all of it's configuration is therefore available.
+     */
+    const ACTION_CONFIG = 'rest_admin.action_config';
 
     /**
      * Triggered on resource creation, able to update the resource's configuration.

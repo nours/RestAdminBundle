@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Nours\RestAdminBundle\Event\ActionConfigEvent;
+use Nours\RestAdminBundle\Event\ActionConfigurationEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,44 +38,40 @@ class ORMActionConfigListener implements EventSubscriberInterface
     }
 
     /**
-     * @param ActionConfigEvent $event
+     * @param ActionConfigurationEvent $event
      */
-    public function onActionConfig(ActionConfigEvent $event)
+    public function onActionConfig(ActionConfigurationEvent $event)
     {
         $priority = 20;
 
-        // The listener should not apply on non Doctrine based resources
-//        if (!$this->manager->getMetadataFactory()->isTransient($event->getResource()->getClass())) {
-//            return;
-//        }
+        $action = $event->getAction();
+        $ormAction = $action->getConfig('handler_action');
 
-        switch ($event->getActionName()) {
+        switch ($ormAction) {
             case 'create' :
-            case 'copy' :
-                $event->addHandler('rest_admin.handler.orm:handleCreate', $priority);
+                if ($action->isBulk()) {
+                    $event->addHandler('rest_admin.handler.orm:handleBulkCreate', $priority);
+                } else {
+                    $event->addHandler('rest_admin.handler.orm:handleCreate', $priority);
+                }
                 break;
-            case 'edit' :
+            case 'update' :
                 $event->addHandler('rest_admin.handler.orm:handleUpdate', $priority);
                 break;
-                break;
             case 'delete' :
-                $event->addHandler('rest_admin.handler.orm:handleDelete', $priority);
-                break;
-            case 'bulk_delete' :
-                $event->addHandler('rest_admin.handler.orm:handleBulkDelete', $priority);
-                break;
-            default :
-                // todo : refactor
-                if ($event->getActionType() == 'form') {
-                    $event->addHandler('rest_admin.handler.orm:handleUpdate', $priority);
+                if ($action->isBulk()) {
+                    $event->addHandler('rest_admin.handler.orm:handleBulkDelete', $priority);
+                } else {
+                    $event->addHandler('rest_admin.handler.orm:handleDelete', $priority);
                 }
+                break;
         }
     }
 
     public static function getSubscribedEvents()
     {
         return array(
-            RestAdminEvents::ACTION => 'onActionConfig'
+            RestAdminEvents::ACTION_CONFIG => 'onActionConfig',
         );
     }
 }

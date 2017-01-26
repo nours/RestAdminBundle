@@ -56,6 +56,7 @@ class CreateActionBuilder extends AbstractBuilder
     {
         $resolver->setDefaults(array(
             'instance' => false,
+            'handler_action' => 'create',
             'form'     => null
         ));
     }

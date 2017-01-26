@@ -55,6 +55,7 @@ class DeleteActionBuilder extends AbstractBuilder
     public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('form', null);
+        $resolver->setDefault('handler_action', 'delete');
     }
 
     /**

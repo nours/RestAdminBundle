@@ -14,6 +14,8 @@ use Nours\RestAdminBundle\Domain\DomainResource;
 
 /**
  * Class ActionConfigEvent
+ *
+ * @deprecated use ActionConfigurationEvent instead
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

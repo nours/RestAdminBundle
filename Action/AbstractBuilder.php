@@ -84,22 +84,24 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'handlers'  => array(),
             'fetcher'   => null,
             'action_template'  => null,
-            'fetcher_callback' => null
+            'fetcher_callback' => null,
+            'handler_action' => null
         ));
+        $resolver->setAllowedValues('handler_action', array(null, 'create', 'update', 'delete'));
 
         $this->setDefaultOptions($resolver);
         $resolver->setDefaults($this->defaultOptions);
 
         // Handlers are inserted as arrays like [ handler, priority ]
         // normalization will sort them based on the priority
-        $resolver->setNormalizer('handlers', function(Options $options, array $value) {
-            $priorityQueue = new \SplPriorityQueue();
-            foreach ($value as $handler) {
-                $priorityQueue->insert($handler[0], $handler[1]);
-            }
-
-            return iterator_to_array($priorityQueue);
-        });
+//        $resolver->setNormalizer('handlers', function(Options $options, array $value) {
+//            $priorityQueue = new \SplPriorityQueue();
+//            foreach ($value as $handler) {
+//                $priorityQueue->insert($handler[0], $handler[1]);
+//            }
+//
+//            return iterator_to_array($priorityQueue);
+//        });
 
         try {
             return $resolver->resolve($options);

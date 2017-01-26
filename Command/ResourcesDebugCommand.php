@@ -99,24 +99,20 @@ EOF
                 if ($value) {
                     $output->write('Handlers : ');
                     $first = true;
-                    foreach ($value as $handler) {
+                    foreach ($this->sortHandlers($value) as $handler) {
                         if ($first) {
                             $first = false;
                         } else {
                             $output->write('           ');
                         }
-                        $output->writeln("<info>" . (is_array($handler) ?
-                                ((is_object($handler[0]) ? get_class($handler[0]) : $handler[0]). ':' . $handler[1]) :
-                                $handler) . '</info>');
+                        $function = $handler[0];
+                        $priority = $handler[1];
+                        $output->writeln("<info>[" . $priority . "] - " . (is_array($function) ?
+                                ((is_object($function[0]) ? get_class($function[0]) : $function[0]). ':' . $function[1]) :
+                                $function) . '</info>');
                     }
                 }
             } else {
-//                //
-//                $method = 'get' . ucfirst($name);
-//                if (method_exists($action, $method)) {
-//                    $value = $action->$method;
-//                }
-
                 $this->writeVal($output, $name, $value);
             }
         }
@@ -125,6 +121,15 @@ EOF
     private function writeVal(OutputInterface $output, $label, $value)
     {
         $output->writeln($label . ' : <info>'.$this->escape($value).'</info>');
+    }
+
+    private function sortHandlers($handlers)
+    {
+        usort($handlers, function($h1, $h2) {
+            return $h1[1] - $h2[1];
+        });
+
+        return $handlers;
     }
 
     private function escape($value)

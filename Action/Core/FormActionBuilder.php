@@ -56,7 +56,8 @@ class FormActionBuilder extends AbstractBuilder
     public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'form' => null
+            'form' => null,
+            'handler_action' => 'update'
         ));
     }
 

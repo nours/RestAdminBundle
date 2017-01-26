@@ -205,6 +205,6 @@ class PostPrefixedControllerTest extends AdminTestCase
         $this->getEntityManager()->clear();
         $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
 
-        $this->assertNull($post);
+        $this->assertTrue(null === $post);
     }
 }

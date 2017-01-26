@@ -348,4 +348,20 @@ class ActionTest extends AdminTestCase
             'composite_child_name' => '__composite_child_name__',
         ), $mappings);
     }
+
+    /**
+     * Prototype route parameters mappings
+     */
+    public function testGetOrmAction()
+    {
+        $resource = $this->getAdminManager()->getResource('post');
+
+        $this->assertNull($resource->getAction('index')->getConfig('handler_action'));
+        $this->assertNull($resource->getAction('get')->getConfig('handler_action'));
+        $this->assertEquals('create', $resource->getAction('create')->getConfig('handler_action'));
+        $this->assertEquals('update', $resource->getAction('edit')->getConfig('handler_action'));
+        $this->assertEquals('delete', $resource->getAction('delete')->getConfig('handler_action'));
+        $this->assertEquals('delete', $resource->getAction('bulk_delete')->getConfig('handler_action'));
+        $this->assertEquals('update', $resource->getAction('custom_form')->getConfig('handler_action'));
+    }
 }
