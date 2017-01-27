@@ -12,3 +12,6 @@ env:
 
 before_script:
   - composer require "symfony/symfony:${SYMFONY_VERSION}" --dev
+  - vendor/bin/phpunit --version
+
+script: vendor/bin/phpunit
