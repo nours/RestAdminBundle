@@ -147,6 +147,25 @@ class ActionTest extends AdminTestCase
         $this->assertEquals(1, $params['comment_bis']);
     }
 
+    public function testGetRouteParamsForBulk()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post:bulk_delete');
+        $post1 = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post2 = $this->getEntityManager()->find('FixtureBundle:Post', 2);
+
+        // Using some instances
+        $params = $action->getRouteParams(array($post1, $post2));
+        $this->assertEquals([
+            'id' => array(1, 2)
+        ], $params);
+
+        // Without instances
+        $params = $action->getRouteParams();
+        $this->assertCount(0, $params);
+    }
+
     /**
      * Prototype route parameters mappings
      */

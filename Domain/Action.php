@@ -201,13 +201,13 @@ class Action
         $resource = $this->resource;
 
         if ($this->isBulk()) {
-            if (!is_array($data)) {
+            if (!is_array($data) && !is_null($data)) {
                 throw new \InvalidArgumentException(sprintf(
-                    "Bulk action %s needs an array of %s",
-                    $this->getFullName(), $resource->getName()
+                    "Bulk action %s needs an array of %s (%s given)",
+                    $this->getFullName(), $resource->getClass(), gettype($data)
                 ));
             }
-            return $resource->getCollectionRouteParams($data);
+            return $data ? $resource->getCollectionRouteParams($data) : array();
         } elseif ($this->hasInstance()) {
             // An instance is needed
             if (empty($data)) {
