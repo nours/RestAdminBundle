@@ -5,6 +5,8 @@ imports:
 parameters:
   locale: 'fr'
   secret: 'SecretPhrase'
+  router.request_context.host: tests.org
+  router.request_context.scheme: http
 
 framework:
     translator:      { fallback: "%locale%" }

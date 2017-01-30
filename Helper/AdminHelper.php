@@ -69,20 +69,21 @@ class AdminHelper
      * @param $action
      * @param null $data
      * @param array $routeParams
+     * @param $referenceType
      * @return string
      */
-    public function generateUrl($action, $data = null, $routeParams = array())
+    public function generateUrl($action, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $action = $this->getAction($action);
 
         if (!is_array($routeParams)) {
-            trigger_error("Using reference type parameter is deprecated, and is replaced by route params");
+            trigger_error("Using reference type parameter is deprecated, and is replaced by route params", E_USER_DEPRECATED);
         }
 
         // The action guesses it's route params from data
         $routeParams = array_merge($routeParams, $action->getRouteParams($data));
 
-        return $this->urlGenerator->generate($action->getRouteName(), $routeParams, UrlGeneratorInterface::ABSOLUTE_PATH);
+        return $this->urlGenerator->generate($action->getRouteName(), $routeParams, $referenceType);
     }
 
     /**

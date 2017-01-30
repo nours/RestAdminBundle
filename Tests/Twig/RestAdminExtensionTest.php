@@ -202,7 +202,7 @@ class RestAdminExtensionTest extends AdminTestCase
     }
 
     /**
-     * getActionPath
+     * Relative URLS
      */
     public function testGetActionPath()
     {
@@ -212,6 +212,19 @@ class RestAdminExtensionTest extends AdminTestCase
         $url = $this->extension->getActionPath('post:edit', $post);
 
         $this->assertEquals('/posts/1/edit', $url);
+    }
+
+    /**
+     * Absolute URLS
+     */
+    public function testGetActionUrl()
+    {
+        $this->loadFixtures();
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+
+        $url = $this->extension->getActionUrl('post:edit', $post);
+
+        $this->assertEquals('http://tests.org/posts/1/edit', $url);
     }
 
     /**
