@@ -45,6 +45,7 @@ class RestAdminExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference')),
             new \Twig_SimpleFunction('rest_action_path', array($this, 'getActionPath')),
+            new \Twig_SimpleFunction('rest_action_url', array($this, 'getActionUrl')),
             new \Twig_SimpleFunction('rest_action_controller', array($this, 'createControllerReference')),
             new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink'), array(
                 'is_safe' => array('html'),
