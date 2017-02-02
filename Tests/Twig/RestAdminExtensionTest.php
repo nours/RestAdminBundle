@@ -110,6 +110,18 @@ class RestAdminExtensionTest extends AdminTestCase
     }
 
     /**
+     * Action link rendering (with get parameters)
+     */
+    public function testRenderActionLinkWithParams()
+    {
+        $html = $this->extension->renderActionLink($this->twig, 'post:create', null, array(
+            'routeParams' => array( 'foo' => 'bar' )
+        ));
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/create?foo=bar">'));
+    }
+
+    /**
      * Custom action template
      */
     public function testRenderCustomActionLink()
@@ -130,6 +142,23 @@ class RestAdminExtensionTest extends AdminTestCase
         $html = $this->extension->renderActionLink($this->twig, 'post:edit', $post);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/edit">'));
+    }
+
+    /**
+     * Action link rendering for one resource with custom params
+     */
+    public function testRenderResourceActionLinkWithParams()
+    {
+        $this->loadFixtures();
+
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $html = $this->extension->renderActionLink($this->twig, 'post:edit', $post, array(
+            'routeParams' => array(
+                'bar' => 'baz'
+            )
+        ));
+
+        $this->assertNotFalse(strpos($html, '<a href="/posts/1/edit?bar=baz">'));
     }
 
     /**

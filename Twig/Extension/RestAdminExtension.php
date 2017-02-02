@@ -105,11 +105,14 @@ class RestAdminExtension extends \Twig_Extension
     {
         $action = $this->helper->getAction($action);
 
+        $routeParams = isset($options['routeParams']) ? $options['routeParams'] : array();
+
         if ($data) {
-            $options['routeParams'] = $action->getRouteParams($data);
-        } else {
-            $options['routeParams'] = $this->helper->getCurrentRouteParams();
+            $routeParams = array_merge($action->getRouteParams($data), $routeParams);
+        } elseif (!$routeParams) {
+            $routeParams = $this->helper->getCurrentRouteParams();
         }
+        $options['routeParams'] = $routeParams;
 
         $context = $this->makeActionContext($action, $options);
 
