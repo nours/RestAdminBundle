@@ -383,4 +383,23 @@ class ActionTest extends AdminTestCase
         $this->assertEquals('delete', $resource->getAction('bulk_delete')->getConfig('handler_action'));
         $this->assertEquals('update', $resource->getAction('custom_form')->getConfig('handler_action'));
     }
+
+    /**
+     * Actions options defaults can be set using extras:defaults on main application config files.
+     *
+     * @see Tests/app/config/config_test.yml
+     */
+    public function testActionDefaultConfiguration()
+    {
+        $this->assertEquals('baz', $this->getAdminManager()->getAction('post:index')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post:get')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post:create')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post:edit')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post:delete')->getConfig('default_option'));
+
+        $this->assertEquals('baz', $this->getAdminManager()->getAction('post.comment:index')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:get')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:create')->getConfig('default_option'));
+        $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:edit')->getConfig('default_option'));
+    }
 }

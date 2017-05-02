@@ -82,28 +82,31 @@ class NoursRestAdminExtension extends Extension
      */
     private function configureActionParams(array $config, ContainerBuilder $container)
     {
-        $actions = array('index', 'get', 'create', 'edit', 'copy', 'delete', 'bulk_delete', 'form', 'custom');
-        foreach ($actions as $action) {
-            $params = array();
+        // Global defaults
+        $defaults = $config['extras']['defaults'];
+
+        $actionTypes = array('index', 'get', 'create', 'edit', 'copy', 'delete', 'bulk_delete', 'form', 'custom');
+        foreach ($actionTypes as $actionType) {
+            $params = $defaults;
 
             // Controller + template
-            if (array_key_exists($action, $config['controllers'])) {
-                $params['controller'] = $config['controllers'][$action];
+            if (array_key_exists($actionType, $config['controllers'])) {
+                $params['controller'] = $config['controllers'][$actionType];
             }
-            if (array_key_exists($action, $config['templates'])) {
-                $params['template'] = $config['templates'][$action];
+            if (array_key_exists($actionType, $config['templates'])) {
+                $params['template'] = $config['templates'][$actionType];
             }
 
             // Form (optional)
-            if (array_key_exists($action, $config['forms'])) {
-                $params['form'] = $config['forms'][$action];
+            if (array_key_exists($actionType, $config['forms'])) {
+                $params['form'] = $config['forms'][$actionType];
             }
 
             // Extras
-            if (isset($config['extras'][$action])) {
-                $extras = $config['extras'][$action];
+            if (isset($config['extras'][$actionType])) {
+                $extras = $config['extras'][$actionType];
                 if (!is_array($extras)) {
-                    throw new \DomainException("Extra params for action $action must be an array");
+                    throw new \DomainException("Extra params for action type $actionType must be an array");
                 }
 
                 foreach ($extras as $extra => $value) {
@@ -111,7 +114,7 @@ class NoursRestAdminExtension extends Extension
                 }
             }
 
-            $container->setParameter('rest_admin.actions.' . $action, $params);
+            $container->setParameter('rest_admin.actions.' . $actionType, $params);
         }
     }
 

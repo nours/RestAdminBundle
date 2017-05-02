@@ -59,6 +59,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('extras')
                     ->children()
+                        ->variableNode('defaults')->defaultValue(array())->end()
                         ->variableNode('index')->defaultValue(array())->end()
                         ->variableNode('get')->defaultValue(array())->end()
                         ->variableNode('create')->defaultValue(array())->end()

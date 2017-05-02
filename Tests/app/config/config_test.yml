@@ -60,8 +60,11 @@ nours_rest_admin:
         delete: delete.html.twig
         bulk_delete: bulk_delete.html.twig
     extras:
+        defaults:
+            default_option: foobar
         index:
             icon: list
+            default_option: baz
         create:
             icon: plus
         edit:
