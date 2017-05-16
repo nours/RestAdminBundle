@@ -115,8 +115,9 @@ class RestAdminExtension extends \Twig_Extension
         $options['routeParams'] = $routeParams;
 
         $context = $this->makeActionContext($action, $options);
+        $template = isset($options['template']) ? $options['template'] : $this->getTemplate($action);
 
-        return $environment->render($this->getTemplate($action), $context);
+        return $environment->render($template, $context);
     }
 
     /**
@@ -132,8 +133,9 @@ class RestAdminExtension extends \Twig_Extension
         $options['routeParams'] = $action->getPrototypeRouteParams();
 
         $context = $this->makeActionContext($action, $options);
+        $template = isset($options['template']) ? $options['template'] : $this->getTemplate($action);
 
-        return $environment->render($this->getTemplate($action), $context);
+        return $environment->render($template, $context);
     }
 
 
