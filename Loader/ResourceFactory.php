@@ -87,14 +87,31 @@ class ResourceFactory
 
             $builder = $this->actionManager->getActionBuilder($type);
 
-            // Dispatch action config event
+            // Dispatch deprecated action config event
+            // Adding handlers using this event did overwrite default configuration.
             $event = new ActionConfigEvent($resource, $name, $type, $config);
             $this->dispatcher->dispatch(RestAdminEvents::ACTION, $event);
 
+            // Create the action
             $action = $builder->createAction($resource, $event->config);
-
             $resource->addAction($action);
 
+            // Add handlers from deprecated event
+            if ($event->handlers) {
+                trigger_error(sprintf(
+                    "Adding handlers to action %s using RestAdminEvents::ACTION is deprecated. " .
+                    "Please use RestAdminEvents::ACTION_CONFIG instead.",
+                    $action->getFullName()
+                ));
+
+                $handlers = $action->getConfig('handlers');
+                foreach ($event->handlers as $handler) {
+                    $handlers[] = $handler;
+                }
+                $action->setConfig('handlers', $handlers);
+            }
+
+            // Dispatch action configuration after the action has been created.
             $event = new ActionConfigurationEvent($action);
             $this->dispatcher->dispatch(RestAdminEvents::ACTION_CONFIG, $event);
         }

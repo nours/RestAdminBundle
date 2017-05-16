@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
-use Nours\RestAdminBundle\Event\ActionConfigEvent;
+use Nours\RestAdminBundle\Event\ActionConfigurationEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,21 +23,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RedirectActionConfigListener implements EventSubscriberInterface
 {
-    public function onActionConfig(ActionConfigEvent $event)
+    public function onActionConfig(ActionConfigurationEvent $event)
     {
         // Skip readonly actions
-        // todo : find a way to use read_only here
-        if (in_array($event->getActionName(), array('index', 'get'))) {
+        if ($event->getAction()->isReadOnly()) {
             return;
         }
 
+        // Add default redirect handler
         $event->addHandler('rest_admin.handler.redirect:handleRedirect', -20);
     }
 
     public static function getSubscribedEvents()
     {
         return array(
-            RestAdminEvents::ACTION => 'onActionConfig'
+            RestAdminEvents::ACTION_CONFIG => 'onActionConfig'
         );
     }
 }

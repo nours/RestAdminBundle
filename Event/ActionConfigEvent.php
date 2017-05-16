@@ -33,6 +33,11 @@ class ActionConfigEvent extends ResourceEvent
     public $config;
 
     /**
+     * @var array
+     */
+    public $handlers = array();
+
+    /**
      * @param DomainResource $resource
      * @param string $actionName
      * @param string $actionType
@@ -59,7 +64,7 @@ class ActionConfigEvent extends ResourceEvent
      */
     public function addHandler($handler, $priority)
     {
-        $this->config['handlers'][] = array($handler, $priority);
+        $this->handlers[] = array($handler, $priority);
     }
 
     /**

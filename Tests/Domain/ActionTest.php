@@ -50,8 +50,8 @@ class ActionTest extends AdminTestCase
         // Factory
         $this->assertSame('tests.controller.comment:copyComment', $action->getFactory());
 
-        // Copy action is read only
-        $this->assertTrue($action->isReadOnly());
+        // Copy action is NOT read only
+        $this->assertFalse($action->isReadOnly());
     }
 
     public function testGetRouteName()
