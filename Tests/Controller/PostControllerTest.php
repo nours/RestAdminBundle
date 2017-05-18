@@ -84,7 +84,7 @@ class PostControllerTest extends AdminTestCase
 
         $data = json_decode($response->getContent());
 
-        $this->assertCount(2, $data);       // 2 posts in fixtures
+        $this->assertCount(3, $data);       // 3 posts in fixtures
         $this->assertEquals(1, $data[0]->id);
         $this->assertEquals('content', $data[0]->content);
         $this->assertEquals(2, $data[1]->id);
@@ -172,7 +172,7 @@ class PostControllerTest extends AdminTestCase
 
         $button = $crawler->selectButton('post[submit]');
         $form = $button->form(array(
-            'post[content]' => 'updated'
+            'post[content]' => 'created'
         ));
 
         $client->submit($form);
@@ -181,11 +181,11 @@ class PostControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(3);
+        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(4);
 
         // Object has been created
         $this->assertNotNull($newPost);
-        $this->assertEquals('updated', $newPost->getContent());
+        $this->assertEquals('created', $newPost->getContent());
     }
 
     /**
@@ -364,7 +364,7 @@ class PostControllerTest extends AdminTestCase
         $this->loadFixtures();
         $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/delete?id[]=1&id[]=2');
+        $crawler = $client->request('GET', '/posts/delete?id[]=1&id[]=2&id[]=3');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(

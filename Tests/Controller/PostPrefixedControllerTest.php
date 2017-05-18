@@ -53,7 +53,7 @@ class PostPrefixedControllerTest extends AdminTestCase
 
         $data = json_decode($response->getContent());
 
-        $this->assertCount(2, $data);       // 2 posts in fixtures
+        $this->assertCount(3, $data);       // 3 posts in fixtures
         $this->assertEquals(1, $data[0]->id);
         $this->assertEquals('content', $data[0]->content);
         $this->assertEquals(2, $data[1]->id);
@@ -135,7 +135,7 @@ class PostPrefixedControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/prefixed/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(3);
+        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(4);
 
         // Object has been created
         $this->assertNotNull($newPost);
