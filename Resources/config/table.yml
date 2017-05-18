@@ -1,7 +1,7 @@
 services:
   rest_admin.table.extension:
     class: Nours\RestAdminBundle\Table\Extension\AdminExtension
-    arguments: [ '@rest_admin.helper' ]
+    arguments: [ '@rest_admin.helper', '%rest_admin.table.disable_child_filter%' ]
     tags: [ { name: nours_table.extension } ]
 
   rest_admin.table.field.admin_actions:

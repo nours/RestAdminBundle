@@ -10,6 +10,8 @@
 
 namespace Nours\RestAdminBundle\Table\Extension;
 
+use Doctrine\ORM\QueryBuilder;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Helper\AdminHelper;
 use Nours\TableBundle\Extension\AbstractExtension;
 use Symfony\Component\OptionsResolver\Options;
@@ -23,10 +25,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class AdminExtension extends AbstractExtension
 {
     private $helper;
+    private $disableParentFilter;
 
-    public function __construct(AdminHelper $helper)
+    public function __construct(AdminHelper $helper, $disableParentFilter = false)
     {
         $this->helper = $helper;
+        $this->disableParentFilter = $disableParentFilter;
     }
     
     /**
@@ -67,6 +71,33 @@ class AdminExtension extends AbstractExtension
             }
             return null;
         });
+
+        /*
+         * Add to query builder a filter for resources having parents.
+         */
+        if (!$this->disableParentFilter) {
+            $resolver->setNormalizer('query_builder', function(Options $options, $queryBuilder)
+            {
+                /** @var DomainResource $resource */
+                if ($resource = $options['resource']) {
+                    $parentResource = $resource->getParent();
+
+                    $parentData = $options['route_data'];
+
+                    if ($parentResource && $parentData) {
+                        $parentName = $parentResource->getParamName();
+
+                        /** @var QueryBuilder $queryBuilder */
+                        $queryBuilder
+                            ->andWhere('_root.' . $parentName . ' = :parentData')
+                            ->setParameter('parentData', $parentData)
+                        ;
+                    }
+                }
+
+                return $queryBuilder;
+            });
+        }
     }
 
     /**

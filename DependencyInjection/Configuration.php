@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('Nours\RestAdminBundle\Domain\DomainResource')
                     ->info('Main resource definition class, redefine to use your own implementation')
                 ->end()
+                ->scalarNode('table_extension_disable_child_filter')->defaultTrue()->end()
                 ->arrayNode('listeners')
                     ->addDefaultsIfNotSet()
                     ->children()

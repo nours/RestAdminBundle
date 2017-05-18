@@ -44,10 +44,24 @@ class LoadAll extends AbstractFixture
         $manager->persist($response);
 
         // Other post (id = 2), without comment
-        $post = new Post();
-        $post->setContent('second post');
+        $post2 = new Post();
+        $post2->setContent('second post');
 
-        $manager->persist($post);
+        $manager->persist($post2);
+
+        // Third post (id = 3), with two comment (id = 2, 3)
+        $post3 = new Post();
+        $post3->setContent('content 3');
+
+        $comment2 = new Comment($post3);
+        $comment2->setComment('comment 2');
+
+        $comment3 = new Comment($post3);
+        $comment3->setComment('comment 3');
+
+        $manager->persist($post3);
+        $manager->persist($comment2);
+        $manager->persist($comment3);
 
         // Composite objects
         $composite1 = new Composite();
@@ -66,6 +80,7 @@ class LoadAll extends AbstractFixture
         $compositeChild->setId(1);
         $compositeChild->setName('child');
         $manager->persist($compositeChild);
+
 
         $manager->flush();
     }

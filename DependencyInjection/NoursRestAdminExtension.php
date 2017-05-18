@@ -35,6 +35,17 @@ class NoursRestAdminExtension extends Extension
         $loader->load('twig.yml');
         $loader->load('table.yml');
 
+        /*
+         * Table extension supports automatic filter from parent resources
+         *
+         * Disabled by default, as it might break existing code.
+         */
+        if ($config['table_extension_disable_child_filter']) {
+            trigger_error("Table extension child resources filter being disabled by default is deprecated. " .
+                          "Please activate it and check custom code.", E_USER_DEPRECATED);
+        }
+        $container->setParameter('rest_admin.table.disable_child_filter', $config['table_extension_disable_child_filter']);
+
         // ORM integration
         if ($config['listeners']['orm']) {
             $loader->load('orm.yml');

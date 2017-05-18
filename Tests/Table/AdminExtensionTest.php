@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Table;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Nours\TableBundle\Table\TableInterface;
 
 /**
@@ -59,5 +60,35 @@ class AdminExtensionTest extends AdminTestCase
         ));
 
         $this->assertEquals('/posts/1/comments?foo=bar', $table->getOption('url'));
+    }
+
+    /**
+     * Table extension filters results according to parent resource.
+     *
+     * @see LoadAll fixture : post #3 with 2 comments (#2 and #3) are used
+     *
+     * This filter is enabled in test configuration.
+     */
+    public function testTableResourceParentFiltering()
+    {
+        $this->loadFixtures();
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 3);
+
+        /** @var TableInterface $table */
+        $table = $this->get('nours_table.factory')->createTable('comment', array(
+            'resource'   => 'post.comment',
+            'route_data' => $post
+        ));
+
+        $view = $table->handle()->createView();
+
+        $data = $view->getData();
+
+        $this->assertCount(2, $data);
+        /** @var Comment $comment */
+        $comment = $data[0];
+        $this->assertEquals(2, $comment->getId());
+        $comment = $data[1];
+        $this->assertEquals(3, $comment->getId());
     }
 }

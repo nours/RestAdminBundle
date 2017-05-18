@@ -48,6 +48,7 @@ monolog:
 nours_rest_admin:
     resource: "%kernel.root_dir%/config/resources.yml"
     templating_formats: ['html', 'ajax']
+    table_extension_disable_child_filter: false
     listeners:
         orm: true
         security: true
