@@ -75,7 +75,7 @@ services:
 
   rest_admin.handler.redirect:
     class: Nours\RestAdminBundle\Handler\RedirectHandler
-    arguments: [ '@router' ]
+    arguments: [ '@rest_admin.helper' ]
 
   rest_admin.factory.copy:
     class: Nours\RestAdminBundle\Handler\CopyFactory

@@ -42,6 +42,13 @@ class Post
     private $comments;
 
     /**
+     * @var PostExtension
+     *
+     * @ORM\OneToOne(targetEntity="PostExtension", mappedBy="post")
+     */
+    private $extension;
+
+    /**
      */
     public function __construct()
     {
@@ -78,5 +85,21 @@ class Post
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return PostExtension
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param PostExtension $extension
+     */
+    public function setExtension($extension)
+    {
+        $this->extension = $extension;
     }
 }

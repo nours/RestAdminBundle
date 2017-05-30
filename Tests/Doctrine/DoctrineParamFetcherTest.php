@@ -14,6 +14,8 @@ use Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -80,9 +82,35 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $this->fetcher->fetch($request);
 
-        $found = $request->attributes->get('data');
+        $this->assertSame($comment, $request->attributes->get('data'));
+        $this->assertSame($post, $request->attributes->get('parent'));
+    }
 
-        $this->assertSame($comment, $found);
+    /**
+     * Fetch single resource instance.
+     */
+    public function testFindSingleModel()
+    {
+        /** @var Post $post */
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $extension = $post->getExtension();
+
+        $resource = $this->getAdminManager()->getResource('post.extension');
+
+        $request = new Request();
+        $request->attributes->add(array(
+            'resource' => $resource,
+            'action' => $resource->getAction('get'),
+            'post' => $post->getId()
+        ));
+
+        $this->fetcher->fetch($request);
+
+        $found  = $request->attributes->get('data');
+        $parent = $request->attributes->get('parent');
+
+        $this->assertSame($extension, $found);
+        $this->assertSame($post, $parent);
     }
 
     /**
@@ -124,9 +152,36 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'comment' => 1,
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $this->fetcher->fetch($request);
+    }
+
+    /**
+     * A single resource.
+     */
+    public function testFindParentOfSingle()
+    {
+        /** @var Post $post */
+        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
+
+        $resource = $this->getAdminManager()->getResource('post.extension');
+
+        $request = new Request();
+        $request->attributes->add(array(
+            'resource' => $resource,
+            'action' => $resource->getAction('create'),
+            'post' => $post->getId()
+        ));
+
+        $this->fetcher->fetch($request);
+
+        // Parent is post
+        $parent = $request->attributes->get('parent');
+        $this->assertSame($post, $parent);
+
+        // Data is null in that case
+        $this->assertNull($request->attributes->get('data'));
     }
 
     /**
@@ -214,7 +269,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => 1
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $this->fetcher->fetch($request);
     }
@@ -231,7 +286,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => 1
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $this->fetcher->fetch($request);
     }
@@ -248,7 +303,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => 9999
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $this->fetcher->fetch($request);
     }
@@ -265,7 +320,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'post' => 2
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $this->fetcher->fetch($request);
     }

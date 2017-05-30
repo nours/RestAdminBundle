@@ -133,10 +133,8 @@ class AdminTestCase extends WebTestCase
 
     protected function assertRedirect(Response $response, $location, $statusCode = 302)
     {
-        $content = $response->getContent();
         $this->assertEquals($statusCode, $response->getStatusCode(),
-            "Bad redirect status ($statusCode expected, {$response->getStatusCode()} found)." .
-            ($content ? ("\n" . $content) : '')
+            "Bad redirect status ($statusCode expected, {$response->getStatusCode()} found)."
         );
 
         if ($response->headers->has('Location')) {
@@ -151,7 +149,9 @@ class AdminTestCase extends WebTestCase
     protected function assertSuccessful(Response $response)
     {
         if (!$response->isSuccessful()) {
-            $this->fail(sprintf("Failed assert response successful (%s).\n%s", $response->getStatusCode(), $response->getContent()));
+//            file_put_contents('dump.html', $response->getContent());
+
+            $this->fail(sprintf("Failed assert response successful (%s).\n", $response->getStatusCode()));
         }
     }
 }

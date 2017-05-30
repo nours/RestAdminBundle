@@ -36,7 +36,7 @@ class UrlGenerator
     /**
      * @param Action $action
      * @param array $params
-     * @param bool $referenceType
+     * @param integer $referenceType
      * @return string
      */
     public function generate(Action $action, array $params = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
@@ -45,7 +45,7 @@ class UrlGenerator
         $parameters = array();
 
         if (isset($params['data'])) {
-            $parameters = $resource->getResourceRouteParams($params['data']);
+            $parameters = $resource->getRouteParamsForInstance($params['data']);
         } elseif (isset($params['parent'])) {
             $parameters = $resource->getRouteParamsFromParent($params['parent']);
         }

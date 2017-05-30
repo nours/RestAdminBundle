@@ -32,8 +32,6 @@ class FooControllerTest extends AdminTestCase
 
         $client->request('GET', '/foos');
 
-        file_put_contents('test.html', $client->getResponse()->getContent());
-
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertContains(
             'foo/index.html.twig',

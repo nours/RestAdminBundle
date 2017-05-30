@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Form;
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -52,7 +53,7 @@ class ActionFormFactory
      * @param mixed $data
      * @param Action $action
      * @param array $options
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     public function createForm($data, Action $action, array $options = array())
     {

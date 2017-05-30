@@ -166,6 +166,41 @@ class ActionTest extends AdminTestCase
         $this->assertCount(0, $params);
     }
 
+    public function testGetRouteParamsForSingleResource()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post.extension:create');
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        $params = $action->getRouteParams($post);
+
+        $this->assertCount(1, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals(1, $params['post']);
+    }
+
+    public function testGetRouteParamsForSingleResourceWithInstance()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post.extension:edit');
+        $extension = $this->getEntityManager()->find('FixtureBundle:PostExtension', 1);
+
+        $params = $action->getRouteParams($extension);
+
+        $this->assertCount(1, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals(1, $params['post']);
+
+        // Works also with parent instance
+        $params = $action->getRouteParams($extension->getPost());
+
+        $this->assertCount(1, $params);
+        $this->assertArrayHasKey('post', $params);
+        $this->assertEquals(1, $params['post']);
+    }
+
     /**
      * Prototype route parameters mappings
      */
@@ -401,5 +436,54 @@ class ActionTest extends AdminTestCase
         $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:get')->getConfig('default_option'));
         $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:create')->getConfig('default_option'));
         $this->assertEquals('foobar', $this->getAdminManager()->getAction('post.comment:edit')->getConfig('default_option'));
+    }
+
+    /**
+     * Single resource actions.
+     */
+    public function testSingleResourceActions()
+    {
+        $resource = $this->getAdminManager()->getResource('post.extension');
+
+        // 4 Actions for resource author : get, create, edit and delete
+        // Index is not added by default as resource is single
+        $this->assertCount(4, $resource->getActions());
+        $this->assertTrue($resource->hasAction('get'));
+        $this->assertTrue($resource->hasAction('create'));
+        $this->assertTrue($resource->hasAction('edit'));
+        $this->assertTrue($resource->hasAction('delete'));
+    }
+
+    public function testGetBaseUri()
+    {
+        $postResource = $this->getAdminManager()->getResource('post');
+
+        // Suffix is empty, otherwise defaults to index
+        $this->assertEquals('posts', $postResource->getAction('index')->getUriPath(''));
+
+        // Suffix is empty, otherwise defaults to get
+        $this->assertEquals('posts/{post}', $postResource->getAction('get')->getUriPath(''));
+
+        // Create has no instance : no resource param
+        $this->assertEquals('posts/create', $postResource->getAction('create')->getUriPath());
+
+        $this->assertEquals('posts/{post}/edit', $postResource->getAction('edit')->getUriPath());
+        $this->assertEquals('posts/{post}/delete', $postResource->getAction('delete')->getUriPath());
+    }
+
+    /**
+     * Single resources have no identifiers in their urls, as they are tied to their parents.
+     */
+    public function testGetBaseUriForSingleResource()
+    {
+        $extensionResource = $this->getAdminManager()->getResource('post.extension');
+
+        // Suffix is empty, otherwise defaults to get
+        $this->assertEquals('posts/{post}/extension', $extensionResource->getAction('get')->getUriPath(''));
+
+        // No id param in urls
+        $this->assertEquals('posts/{post}/extension/create', $extensionResource->getAction('create')->getUriPath());
+        $this->assertEquals('posts/{post}/extension/edit', $extensionResource->getAction('edit')->getUriPath());
+        $this->assertEquals('posts/{post}/extension/delete', $extensionResource->getAction('delete')->getUriPath());
     }
 }

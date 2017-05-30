@@ -70,7 +70,7 @@ class ResourceFactory
      */
     public function configureActions(DomainResource $resource, array $configs)
     {
-        $actions = $this->normalizeActionsConfig($configs);
+        $actions = $this->normalizeActionsConfig($resource, $configs);
 
         foreach ($actions as $name => $config) {
             // Type may be defined in config, otherwise defaults to name
@@ -135,18 +135,24 @@ class ResourceFactory
      *
      * Automatically appends index and get actions by default if they are not set.
      *
+     * @param DomainResource $resource
      * @param array $configs
+     *
      * @return array
      */
-    private function normalizeActionsConfig(array $configs)
+    private function normalizeActionsConfig(DomainResource $resource, array $configs)
     {
-        // Append default actions if not set
-        foreach (array('index', 'get') as $name) {
-            if (!array_key_exists($name, $configs)) {
-                $configs[$name] = array();
-            }
+        // Append index action if not set and resource is not single
+        if (!array_key_exists('index', $configs) && !$resource->isSingleResource()) {
+            $configs['index'] = array();
         }
 
+        // Append get action
+        if (!array_key_exists('get', $configs)) {
+            $configs['get'] = array();
+        }
+
+        // Filter disabled actions
         $result = array();
         foreach ($configs as $name => $config) {
             // Disable the action if config is false

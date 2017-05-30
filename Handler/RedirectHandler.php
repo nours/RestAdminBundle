@@ -11,8 +11,8 @@
 namespace Nours\RestAdminBundle\Handler;
 
 use Nours\RestAdminBundle\Domain\DomainResource;
+use Nours\RestAdminBundle\Helper\AdminHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -23,26 +23,30 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RedirectHandler
 {
     /**
-     * @var UrlGeneratorInterface
+     * @var AdminHelper
      */
-    private $generator;
+    private $helper;
 
     /**
-     * @param UrlGeneratorInterface $generator
+     * @param AdminHelper $helper
      */
-    public function __construct(UrlGeneratorInterface $generator)
+    public function __construct(AdminHelper $helper)
     {
-        $this->generator = $generator;
+        $this->helper = $helper;
     }
 
     /**
      * @param DomainResource $resource
-     * @param $data
+     * @param mixed $data
      * @return RedirectResponse
      */
     public function handleRedirect(DomainResource $resource, $data)
     {
-        $url = $this->generator->generate($resource->getRouteName('index'), $resource->getRouteParamsFromData($data));
+        if ($resource->isSingleResource()) {
+            $url = $this->helper->generateUrl($resource->getParent()->getAction('index'), $data);
+        } else {
+            $url = $this->helper->generateUrl($resource->getAction('index'), $data);
+        }
 
         return new RedirectResponse($url);
     }

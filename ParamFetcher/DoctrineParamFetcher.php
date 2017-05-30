@@ -40,7 +40,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * @param DomainResource $resource
      * @return bool
      */
-    private function isSingleResource(Request $request, DomainResource $resource)
+    private function isSingleInstance(Request $request, DomainResource $resource)
     {
         $isSingle = true;
 
@@ -62,13 +62,26 @@ class DoctrineParamFetcher implements ParamFetcherInterface
         $resource = $request->attributes->get('resource');
         $action   = $request->attributes->get('action');
 
-        if ($this->isSingleResource($request, $resource)) {
+        if ($resource->isSingleResource()) {
+            // Single resource instance are fetched throughout their parents
+            if (!$resource->getParent()) {
+                throw new \DomainException(sprintf(
+                    'Resource %s is single, therefore it must have a parent resource.',
+                    $resource->getFullName()
+                ));
+            }
+
+            $parent = $this->fetchInstance($request, $resource->getParent());
+            $request->attributes->set('parent', $parent);
+            $request->attributes->set('data', $resource->getSingleChildObject($parent));
+        } elseif ($this->isSingleInstance($request, $resource)) {
             // Request has a resource parameter : it should be fetched
             $finder = $action->getConfig('finder', 'find');
 
-            $data = $this->fetchSingle($request, $resource, $finder);
+            $data = $this->fetchInstance($request, $resource, $finder);
 
             $request->attributes->set('data', $data);
+            $request->attributes->set('parent', $resource->getParentObject($data));
         } else {
             // Load collection if request has id parameter in query string
             $identifiers = $resource->getIdentifier();
@@ -87,13 +100,12 @@ class DoctrineParamFetcher implements ParamFetcherInterface
             // Request may concern a collection with a parent
             if ($parentResource = $resource->getParent()) {
                 // If the resource has a parent, fetch it
-                $parent = $this->fetchSingle($request, $parentResource);
+                $parent = $this->fetchInstance($request, $parentResource);
 
                 $request->attributes->set('parent', $parent);
             }
         }
     }
-
 
     /**
      * Fetches data for a resource.
@@ -103,7 +115,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * @param string $finderMethod
      * @return mixed
      */
-    protected function fetchSingle(Request $request, DomainResource $resource, $finderMethod = 'find')
+    protected function fetchInstance(Request $request, DomainResource $resource, $finderMethod = 'find')
     {
         if ($resource->getParent()) {
             $data = $this->findHierarchy($request, $resource);

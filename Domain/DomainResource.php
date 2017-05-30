@@ -91,23 +91,28 @@ class DomainResource
             $this->name = Inflector::tableize(end($exploded));
         }
 
-        // Slug defaults to pluralized name
+        // Single flag
+        if (!isset($configs['single'])) {
+            $configs['single'] = false;
+        }
+
+        // Set default slug
         if (isset($configs['slug'])) {
             $this->slug = $configs['slug'];
             unset($configs['slug']);
         } else {
-            $this->slug = Inflector::pluralize(str_replace('_', '-', $this->name));
+            $this->slug = str_replace('_', '-', $this->name);
+
+            // Default is pluralized if resource is not single
+            if (!$configs['single']) {
+                $this->slug = Inflector::pluralize($this->slug);
+            }
         }
 
         $this->configs = $configs;
 
         $this->basePrefix = $this->getConfig('route_prefix', $this->name) . '_';
         $this->routePrefix = $this->basePrefix;
-    }
-
-    public static function loadFromCache($name, $class, $slug, $configs)
-    {
-
     }
 
     /**
@@ -268,6 +273,14 @@ class DomainResource
     }
 
     /**
+     * @return boolean
+     */
+    public function isSingleResource()
+    {
+        return $this->getConfig('single', false);
+    }
+
+    /**
      * @param string $name
      * @return bool
      */
@@ -402,7 +415,9 @@ class DomainResource
 
         $parts[] = $this->getSlug();
 
-        if ($objectPart) {
+        // Append the object parameter(s)
+        // Always skipped if resource is single
+        if ($objectPart && !$this->isSingleResource()) {
             foreach ($this->getIdentifierNames() as $name) {
                 $parts[] = '{' . $name . '}';
             }
@@ -427,20 +442,32 @@ class DomainResource
     }
 
     /**
-     * Build global route parameters (without the instance) from an instance of this resource.
+     * Build base route parameters (without the instance's identifier).
      *
-     * Eg. : pass a comment to get { post: <id> }
+     * If the resource is a child, it's parent must be taken into account.
      *
      * @param mixed $data
      * @return array
      */
-    public function getRouteParamsFromData($data)
+    public function getResourceBaseRouteParams($data)
     {
         if ($parent = $this->getParent()) {
-            return $parent->getResourceRouteParams($this->getParentObject($data));
+            return $parent->getRouteParamsForInstance($this->getParentObject($data));
         }
 
         return array();
+    }
+
+    /**
+     * @deprecated Unclear name, replace by getResourceBaseRouteParams;
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public function getRouteParamsFromData($data)
+    {
+        return $this->getResourceBaseRouteParams($data);
     }
 
     /**
@@ -452,7 +479,7 @@ class DomainResource
     public function getRouteParamsFromParent($parent)
     {
         if ($parentResource = $this->getParent()) {
-            return $parentResource->getResourceRouteParams($parent);
+            return $parentResource->getRouteParamsForInstance($parent);
         }
 
         return array();
@@ -499,12 +526,24 @@ class DomainResource
     }
 
     /**
-     * Build route parameters for an instance of this resource
+     * @deprecated Name is not clear, please use getRouteParamsForInstance
      *
      * @param $data
      * @return array
      */
     public function getResourceRouteParams($data)
+    {
+        return $this->getRouteParamsForInstance($data);
+    }
+
+    /**
+     * Build route parameters for an instance of this resource
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public function getRouteParamsForInstance($data)
     {
         $params = array();
 
@@ -513,7 +552,7 @@ class DomainResource
         }
 
         if ($parent = $this->getParent()) {
-            $params = array_merge($params, $parent->getResourceRouteParams($this->getParentObject($data)));
+            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($data)));
         }
 
         return $params;
@@ -525,7 +564,7 @@ class DomainResource
      * @param array $data
      * @return array
      */
-    public function getCollectionRouteParams(array $data)
+    public function getRouteParamsForCollection(array $data)
     {
         $params = array();
 
@@ -543,10 +582,23 @@ class DomainResource
             // Use first item of collection
             $object = reset($data);
 
-            $params = array_merge($params, $parent->getResourceRouteParams($this->getParentObject($object)));
+            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($object)));
         }
 
         return $params;
+    }
+
+    /**
+     * Build route parameters for a collection of this resource
+     *
+     * @deprecated Please use getRouteParamsForCollection
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getCollectionRouteParams(array $data)
+    {
+        return $this->getRouteParamsForCollection($data);
     }
 
     /**
@@ -562,6 +614,21 @@ class DomainResource
         }
 
         return null;
+    }
+
+    /**
+     * Retrieve child object (single resources only)
+     *
+     * @param $parent
+     * @return null|mixed
+     */
+    public function getSingleChildObject($parent)
+    {
+        if (!$this->isSingleResource()) {
+            return null;
+        }
+
+        return $this->getPropertyAccessor()->getValue($parent, $this->getSingleChildPath());
     }
 
     /**
@@ -743,6 +810,8 @@ class DomainResource
     }
 
     /**
+     * Path of the parent from this resource's instance.
+     *
      * @return string
      */
     public function getParentPath()
@@ -752,6 +821,20 @@ class DomainResource
         }
 
         return null;
+    }
+
+    /**
+     * Path for this resource's instance from it's parent.
+     *
+     * @return string
+     */
+    public function getSingleChildPath()
+    {
+        if (!$this->isSingleResource()) {
+            return null;
+        }
+
+        return $this->getConfig('single_path', $this->getName());
     }
 
     /**

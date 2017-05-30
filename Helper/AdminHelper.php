@@ -227,7 +227,7 @@ class AdminHelper
      */
     public function getDataRouteParams($data)
     {
-        return $this->getCurrentResource()->getResourceRouteParams($data);
+        return $this->getCurrentResource()->getRouteParamsForInstance($data);
     }
 
     /**
