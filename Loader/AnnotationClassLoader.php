@@ -252,7 +252,7 @@ class AnnotationClassLoader implements LoaderInterface
                     ));
                 }
 
-                $configs[$actionName]['handlers'][] = array(
+                $configs[$actionName]['extra_handlers'][] = array(
                     $this->getControllerName($class, $resourceAnnotation, $method), $annotation->priority ?: 0
                 );
             }

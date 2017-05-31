@@ -82,6 +82,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'read_only' => false,    // A read only action do not alter or update the data instance
             'template'  => null,
             'handlers'  => array(),
+            'extra_handlers' => array(),
             'fetcher'   => null,
             'factory'   => null,
             'action_template'  => null,
@@ -93,16 +94,12 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         $this->setDefaultOptions($resolver);
         $resolver->setDefaults($this->defaultOptions);
 
-        // Handlers are inserted as arrays like [ handler, priority ]
-        // normalization will sort them based on the priority
-//        $resolver->setNormalizer('handlers', function(Options $options, array $value) {
-//            $priorityQueue = new \SplPriorityQueue();
-//            foreach ($value as $handler) {
-//                $priorityQueue->insert($handler[0], $handler[1]);
-//            }
-//
-//            return iterator_to_array($priorityQueue);
-//        });
+        // Handlers normalization
+        // An extra configuration is used to inject handlers from annotations, as the OptionResolver component
+        // cannot merge array lists.
+        $resolver->setNormalizer('handlers', function(Options $options, array $value) {
+            return array_merge($value, $options['extra_handlers']);
+        });
 
         try {
             return $resolver->resolve($options);
