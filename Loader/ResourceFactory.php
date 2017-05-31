@@ -102,7 +102,7 @@ class ResourceFactory
                     "Adding handlers to action %s using RestAdminEvents::ACTION is deprecated. " .
                     "Please use RestAdminEvents::ACTION_CONFIG instead.",
                     $action->getFullName()
-                ));
+                ), E_USER_DEPRECATED);
 
                 $handlers = $action->getConfig('handlers');
                 foreach ($event->handlers as $handler) {
