@@ -173,7 +173,11 @@ class AnnotationClassLoader implements LoaderInterface
                         "Missing action name from @Action annotation on class %s", $class->getName()
                     ));
                 }
-                $configs[$annotation->name] = $annotation->options;
+                if ($annotation->disabled) {
+                    $configs[$annotation->name] = false;
+                } else {
+                    $configs[$annotation->name] = $annotation->options;
+                }
             }
         }
 
@@ -183,34 +187,38 @@ class AnnotationClassLoader implements LoaderInterface
                 // Action name can be ommitted from annotation
                 $actionName = $annotation->name ?: $this->guessActionName($method);
 
-                $config = array_merge($annotation->options, array(
-                    'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
-                ));
+                if ($annotation->disabled) {
+                    $configs[$actionName] = false;
+                } else {
+                    $config = array_merge($annotation->options, array(
+                        'controller' => $this->getControllerName($class, $resourceAnnotation, $method)
+                    ));
 
-                // Custom param fetcher ?
-                if (isset($fetchers[$actionName])) {
-                    $config['fetcher'] = 'custom';
-                    $config['fetcher_callback'] = $fetchers[$actionName];
-                }
-
-                // @Route method annotation
-                /** @var Route[] $routes */
-                $routes = $this->getMethodAnnotations($method, $this->routeAnnotationClass);
-                if ($routes) {
-                    foreach ($routes as $route) {
-                        $routeConfig = $route->toArray();
-
-                        // Name defaults to action name
-                        if (!isset($routeConfig['name'])) {
-                            $routeConfig['name'] = $actionName;
-                        }
-
-                        // Add the route config to action, assuming it's a default one
-                        $config['routes'][] = $routeConfig;
+                    // Custom param fetcher ?
+                    if (isset($fetchers[$actionName])) {
+                        $config['fetcher'] = 'custom';
+                        $config['fetcher_callback'] = $fetchers[$actionName];
                     }
-                }
 
-                $configs[$actionName] = $config;
+                    // @Route method annotation
+                    /** @var Route[] $routes */
+                    $routes = $this->getMethodAnnotations($method, $this->routeAnnotationClass);
+                    if ($routes) {
+                        foreach ($routes as $route) {
+                            $routeConfig = $route->toArray();
+
+                            // Name defaults to action name
+                            if (!isset($routeConfig['name'])) {
+                                $routeConfig['name'] = $actionName;
+                            }
+
+                            // Add the route config to action, assuming it's a default one
+                            $config['routes'][] = $routeConfig;
+                        }
+                    }
+
+                    $configs[$actionName] = $config;
+                }
             }
         }
 

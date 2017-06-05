@@ -420,4 +420,15 @@ class ResourceTest extends AdminTestCase
         $this->assertFalse($this->getAdminManager()->getResource('post')->isSingleResource());
         $this->assertTrue($this->getAdminManager()->getResource('post.extension')->isSingleResource());
     }
+
+    /**
+     * Action annotation can be used to disable default added index and get actions.
+     */
+    public function testDisableDefaultActionsUsingAnnotations()
+    {
+        $resource = $this->getAdminManager()->getResource('disabled_actions');
+
+        $this->assertFalse($resource->hasAction('index'));
+        $this->assertFalse($resource->hasAction('get'));
+    }
 }

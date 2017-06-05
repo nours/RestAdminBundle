@@ -18,7 +18,19 @@ use Doctrine\Common\Annotations\Annotation;
  */
 class Action
 {
+    /**
+     * @var string
+     */
     public $name;
+
+    /**
+     * @var bool
+     */
+    public $disabled = false;
+
+    /**
+     * @var array
+     */
     public $options = array();
 
     public function __construct(array $values)
@@ -26,6 +38,13 @@ class Action
         if (isset($values['value'])) {
             $this->name = $values['value'];
             unset($values['value']);
+        }
+
+        // Disabled flag must not pass to options array
+        // and is instead stored in disabled param in order to process it
+        if (isset($values['disabled'])) {
+            $this->disabled = $values['disabled'];
+            unset($values['disabled']);
         }
 
         $this->options = $values;
