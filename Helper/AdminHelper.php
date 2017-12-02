@@ -206,6 +206,8 @@ class AdminHelper
     }
 
     /**
+     * @deprecated
+     *
      * The route parameters for the current resource base
      *
      * @return array
@@ -213,7 +215,7 @@ class AdminHelper
     public function getResourceBaseRouteParams()
     {
         if ($parent = $this->getResourceParent()) {
-            return $this->getCurrentResource()->getRouteParamsFromParent($parent);
+            return $this->getCurrentResource()->getBaseRouteParams($parent);
         }
 
         return array();
@@ -227,7 +229,7 @@ class AdminHelper
      */
     public function getDataRouteParams($data)
     {
-        return $this->getCurrentResource()->getRouteParamsForInstance($data);
+        return $this->getCurrentResource()->getInstanceRouteParams($data);
     }
 
     /**
@@ -238,7 +240,7 @@ class AdminHelper
      */
     public function getParentRouteParams($parent)
     {
-        return $this->getCurrentResource()->getRouteParamsFromParent($parent);
+        return $this->getCurrentResource()->getBaseRouteParams($parent);
     }
 
     /**

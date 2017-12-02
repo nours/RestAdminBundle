@@ -12,7 +12,6 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Author;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CommentResponse;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
@@ -27,8 +26,6 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
  */
 class LoadAll extends AbstractFixture
 {
-
-
     public function load(ObjectManager $manager)
     {
         // First post (id = 1), with one comment (id = 1), with one response (id = 1)

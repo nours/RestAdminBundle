@@ -397,16 +397,30 @@ class DomainResource
     /**
      * Get the relative uri path for this resource.
      *
+     * @deprecated Use getBaseUriPath
+     *
      * @param string $suffix
-     * @param boolean $objectPart If the object param is to be included
+     * @param boolean $instance If the object param is to be included
      * @return string
      */
-    public function getUriPath($suffix = null, $objectPart = false)
+    public function getUriPath($suffix = null, $instance = false)
+    {
+        return $this->getBaseUriPath($suffix, $instance);
+    }
+
+    /**
+     * Get the relative uri path for this resource.
+     *
+     * @param string $suffix
+     * @param boolean $instance If the object param is to be included
+     * @return string
+     */
+    public function getBaseUriPath($suffix = null, $instance = false)
     {
         $parts = array();
 
         if ($parent = $this->getParent()) {
-            $parts[] = $parent->getResourceUriPath();
+            $parts[] = $parent->getInstanceUriPath();
         }
 
         if ($path = $this->getConfig('base_path')) {
@@ -417,7 +431,7 @@ class DomainResource
 
         // Append the object parameter(s)
         // Always skipped if resource is single
-        if ($objectPart && !$this->isSingleResource()) {
+        if ($instance && !$this->isSingleResource()) {
             foreach ($this->getIdentifierNames() as $name) {
                 $parts[] = '{' . $name . '}';
             }
@@ -436,15 +450,126 @@ class DomainResource
      * @param null $suffix
      * @return string
      */
+    public function getInstanceUriPath($suffix = null)
+    {
+        return $this->getBaseUriPath(str_replace('_', '-', Inflector::tableize($suffix)), true);
+    }
+
+    /**
+     * @deprecated Use getInstanceUriPath
+     *
+     * @param null $suffix
+     * @return string
+     */
     public function getResourceUriPath($suffix = null)
     {
-        return $this->getUriPath(str_replace('_', '-', Inflector::tableize($suffix)), true);
+        return $this->getInstanceUriPath($suffix);
+    }
+
+    /**
+     * Base route params for this resource. The current resource object id is not included in the params.
+     *
+     * @param mixed $data
+     *
+     * @return array
+     */
+    public function getBaseRouteParams($data = null)
+    {
+        if (null !== $data) {
+            $parent = $this->getParent();
+
+            if ($this->isResourceInstance($data)) {
+                if ($parent) {
+                    return $parent->getInstanceRouteParams($this->getParentObject($data));
+                }
+            } elseif ($parent) {
+                if ($parent->isResourceInstance($data)) {
+                    return $parent->getInstanceRouteParams($data);
+                } else {
+                    throw new \InvalidArgumentException(sprintf(
+                        "Invalid data of type %s (%s or %s expected)",
+                        get_class($data), $this->getClass(), $parent->getClass()
+                    ));
+                }
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * Route params including a resource instance's id.
+     *
+     * @param mixed $data
+     *
+     * @return array
+     */
+    public function getInstanceRouteParams($data)
+    {
+        if ($this->isSingleResource()) {
+            // Parent must be set for single resources
+            $parent = $this->getParent();
+            if (empty($parent)) {
+                throw new \DomainException(sprintf(
+                    'Resource %s is single and must be a child of another resource.', $this->getFullName()
+                ));
+            }
+
+            return $parent->getInstanceRouteParams($this->getParentObject($data));
+        } else {
+            $params = $this->getBaseRouteParams($data);
+
+            foreach ($this->getIdentifierValues($data) as $paramName => $value) {
+                $params[$paramName] = $value;
+            }
+
+            return $params;
+        }
+    }
+
+    /**
+     * Build route parameters for a collection of this resource
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getCollectionRouteParams(array $data)
+    {
+        if (!is_array($data) && !is_null($data)) {
+            throw new \InvalidArgumentException(sprintf(
+                "Bulk action %s needs an array of %s (%s given)",
+                $this->getFullName(), $this->getClass(), gettype($data)
+            ));
+        }
+
+        $params = array();
+
+        foreach ((array)$this->getIdentifier() as $identifier) {
+            $params[$identifier] = array();
+        }
+
+        foreach ($data as $entity) {
+            foreach ($this->extractIdentifiers($entity) as $identifier => $value) {
+                $params[$identifier][] = $value;
+            }
+        }
+
+        if ($parent = $this->getParent()) {
+            // Use first item of collection
+            $object = reset($data);
+
+            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($object)));
+        }
+
+        return $params;
     }
 
     /**
      * Build base route parameters (without the instance's identifier).
      *
      * If the resource is a child, it's parent must be taken into account.
+     *
+     * @deprecated Use getBaseRouteParams
      *
      * @param mixed $data
      * @return array
@@ -459,7 +584,7 @@ class DomainResource
     }
 
     /**
-     * @deprecated Unclear name, replace by getResourceBaseRouteParams;
+     * @deprecated Use getBaseRouteParams
      *
      * @param $data
      *
@@ -472,6 +597,8 @@ class DomainResource
 
     /**
      * Returns the route params from the parent object.
+     *
+     * @deprecated Use getBaseRouteParams
      *
      * @param mixed $parent
      * @return array
@@ -526,7 +653,7 @@ class DomainResource
     }
 
     /**
-     * @deprecated Name is not clear, please use getRouteParamsForInstance
+     * @deprecated use getInstanceRouteParams
      *
      * @param $data
      * @return array
@@ -539,7 +666,9 @@ class DomainResource
     /**
      * Build route parameters for an instance of this resource
      *
-     * @param $data
+     * @deprecated use getInstanceRouteParams
+     *
+     * @param mixed $data
      *
      * @return array
      */
@@ -561,44 +690,14 @@ class DomainResource
     /**
      * Build route parameters for a collection of this resource
      *
+     * @deprecated Use getCollectionRouteParams
+     *
      * @param array $data
      * @return array
      */
     public function getRouteParamsForCollection(array $data)
     {
-        $params = array();
-
-        foreach ((array)$this->getIdentifier() as $identifier) {
-            $params[$identifier] = array();
-        }
-
-        foreach ($data as $entity) {
-            foreach ($this->extractIdentifiers($entity) as $identifier => $value) {
-                $params[$identifier][] = $value;
-            }
-        }
-
-        if ($parent = $this->getParent()) {
-            // Use first item of collection
-            $object = reset($data);
-
-            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($object)));
-        }
-
-        return $params;
-    }
-
-    /**
-     * Build route parameters for a collection of this resource
-     *
-     * @deprecated Please use getRouteParamsForCollection
-     *
-     * @param array $data
-     * @return array
-     */
-    public function getCollectionRouteParams(array $data)
-    {
-        return $this->getRouteParamsForCollection($data);
+        return $this->getCollectionRouteParams($data);
     }
 
     /**
@@ -610,7 +709,16 @@ class DomainResource
     public function getParentObject($data)
     {
         if ($parent = $this->getParent()) {
-            return $this->getPropertyAccessor()->getValue($data, $this->getParentPath());
+            if ($parent->isResourceInstance($data)) {
+                return $data;
+            } elseif ($this->isResourceInstance($data)) {
+                return $this->getPropertyAccessor()->getValue($data, $this->getParentPath());
+            } else {
+                throw new \InvalidArgumentException(sprintf(
+                    "Invalid data of type %s (%s or %s expected)",
+                    get_class($data), $this->getClass(), $parent->getClass()
+                ));
+            }
         }
 
         return null;

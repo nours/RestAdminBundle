@@ -38,7 +38,7 @@ class CustomActionBuilder extends AbstractBuilder
                     $action,
                     $route['name'],
                     $route['methods'],
-                    $resource->getUriPath($route['path']),
+                    $resource->getBaseUriPath($route['path']),
                     $route['defaults'],
                     $route['requirements'],
                     $route['options']

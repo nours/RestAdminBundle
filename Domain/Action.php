@@ -203,61 +203,12 @@ class Action
         $resource = $this->resource;
 
         if ($this->isBulk()) {
-            if (!is_array($data) && !is_null($data)) {
-                throw new \InvalidArgumentException(sprintf(
-                    "Bulk action %s needs an array of %s (%s given)",
-                    $this->getFullName(), $resource->getClass(), gettype($data)
-                ));
-            }
-            return $data ? $resource->getRouteParamsForCollection($data) : array();
-        } elseif ($resource->isSingleResource()) {
-            // Single resource : data must be parent
-            $parent = $resource->getParent();
-            if (empty($parent)) {
-                throw new \DomainException(sprintf(
-                    'Resource %s is single and must be a child of another resource.', $resource->getFullName()
-                ));
-            }
-
-            if ($resource->isResourceInstance($data)) {
-                return $resource->getResourceBaseRouteParams($data);
-            } elseif ($parent->isResourceInstance($data)) {
-                return $parent->getRouteParamsForInstance($data);
-            } else {
-                throw new \InvalidArgumentException(sprintf(
-                    "Invalid data of type %s (%s or %s expected)",
-                    get_class($data), $resource->getClass(), $parent->getClass()
-                ));
-            }
+            return $data ? $resource->getCollectionRouteParams($data) : array();
         } elseif ($this->hasInstance()) {
-            // An instance is needed
-            if (empty($data)) {
-                throw new \InvalidArgumentException(sprintf(
-                    "Missing %s instance to generate route params for action %s",
-                    $resource->getName(), $this->getFullName()
-                ));
-            }
-
-            return $resource->getRouteParamsForInstance($data);
-        } elseif ($parent = $resource->getParent()) {
-            // An instance is not needed here, but the resource has a parent,
-            // so the latter must be fetched from current data instance.
-            if (empty($data)) {
-                throw new \InvalidArgumentException(sprintf(
-                    "Missing parent %s to generate route params for action %s",
-                    $parent->getName(), $this->getFullName()
-                ));
-            }
-
-            // $data can be an instance of either the resource itself or its parent
-            if ($resource->isResourceInstance($data)) {
-                return $resource->getResourceBaseRouteParams($data);
-            } elseif ($parent->isResourceInstance($data)) {
-                return $parent->getRouteParamsForInstance($data);
-            }
+            return $resource->getInstanceRouteParams($data);
+        } else {
+            return $resource->getBaseRouteParams($data);
         }
-
-        return array();
     }
 
     /**
@@ -287,7 +238,7 @@ class Action
             // Default suffix is action param name
             $suffix = str_replace('_', '-', Inflector::tableize($this->getName()));
         }
-        return $this->getResource()->getUriPath($suffix, $this->hasInstance());
+        return $this->getResource()->getBaseUriPath($suffix, $this->hasInstance());
     }
 
     /**

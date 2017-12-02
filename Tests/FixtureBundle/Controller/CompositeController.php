@@ -11,8 +11,6 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
 
 use Nours\RestAdminBundle\Annotation as Rest;
-use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CompositeController

@@ -113,6 +113,9 @@ class AdminActionsType extends AbstractFieldType
                         // Look for action in current resource
                         $action = $resource->getAction($action);
                     } else {
+                        // TODO : implement a less magical behavior here, like :
+                        // return $this->helper->getAction($action);
+                        //
                         // Look for action in child resource
                         $exploded = explode(':', $action);
                         $childResource = $resource->getChild($exploded[0]);
