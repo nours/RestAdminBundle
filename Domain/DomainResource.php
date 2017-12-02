@@ -708,7 +708,7 @@ class DomainResource
      */
     public function getParentObject($data)
     {
-        if ($parent = $this->getParent()) {
+        if ($data && ($parent = $this->getParent())) {
             if ($parent->isResourceInstance($data)) {
                 return $data;
             } elseif ($this->isResourceInstance($data)) {

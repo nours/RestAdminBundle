@@ -17,6 +17,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class RepositoryTest
@@ -246,6 +247,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request(array('id' => 1), array(), array(
             'resource' => $resource,
+            'action'   => $resource->getAction('bulk_delete'),
             'post' => 1     // The comments are loaded from post 1
         ));
 
@@ -270,10 +272,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request(array('id' => array()), array(), array(
             'resource' => $resource,
+            'action' => $resource->getAction('bulk_delete'),
             'post' => 1
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException(NotFoundHttpException::class);
 
         $this->fetcher->fetch($request);
     }
@@ -287,10 +290,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request(array('id' => array(1, 9999)), array(), array(
             'resource' => $resource,
+            'action' => $resource->getAction('bulk_delete'),
             'post' => 1
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException(NotFoundHttpException::class);
 
         $this->fetcher->fetch($request);
     }
@@ -304,10 +308,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request(array('id' => 1), array(), array(
             'resource' => $resource,
+            'action' => $resource->getAction('bulk_delete'),
             'post' => 9999
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException(NotFoundHttpException::class);
 
         $this->fetcher->fetch($request);
     }
@@ -321,10 +326,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
 
         $request = new Request(array('id' => 1), array(), array(
             'resource' => $resource,
+            'action' => $resource->getAction('bulk_delete'),
             'post' => 2
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException(NotFoundHttpException::class);
 
         $this->fetcher->fetch($request);
     }

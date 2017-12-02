@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Rest\Action(
  *  "copy", form = CommentType::class
  * )
+ * @Rest\Action("bulk_delete")
  */
 class CommentController
 {
