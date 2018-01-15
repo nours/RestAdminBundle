@@ -20,7 +20,7 @@ use Nours\RestAdminBundle\AdminManager;
  *
  * It will receive a non displayed children which will match any other resource route.
  *
- * @see Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
+ * @see \Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

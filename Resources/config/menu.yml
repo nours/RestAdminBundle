@@ -1,8 +1,9 @@
 services:
   rest_admin.menu.voter:
     class: Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
+    arguments: [ '@request_stack' ]
     tags:
-        - { name: knp_menu.voter, request: true }
+        - { name: knp_menu.voter }
 
   rest_admin.menu.helper:
     class: Nours\RestAdminBundle\Menu\Helper\ResourceMenuHelper

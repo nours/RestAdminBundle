@@ -141,9 +141,8 @@ class ResourceRouteVoterTest extends AdminTestCase
     private function initRequest(array $attributes = array())
     {
         $request = Request::create('test');
-
         $request->attributes->add($attributes);
 
-        $this->voter->setRequest($request);
+        $this->get('request_stack')->push($request);
     }
 }

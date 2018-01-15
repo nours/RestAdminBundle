@@ -14,6 +14,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\Voter\VoterInterface;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ResourceRouteVoter.
@@ -25,16 +26,16 @@ use Symfony\Component\HttpFoundation\Request;
 class ResourceRouteVoter implements VoterInterface
 {
     /**
-     * @var Request
+     * @var RequestStack
      */
-    private $request;
+    private $requestStack;
 
     /**
      * @param Request $request
      */
-    public function setRequest(Request $request)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -42,6 +43,7 @@ class ResourceRouteVoter implements VoterInterface
      */
     public function matchItem(ItemInterface $item)
     {
+        /** @var DomainResource $itemResource */
         if ($itemResource = $item->getExtra('resource')) {
             if ($requestResource = $this->getRequestResource()) {
                 return $itemResource === $requestResource;
@@ -56,10 +58,8 @@ class ResourceRouteVoter implements VoterInterface
      */
     private function getRequestResource()
     {
-        if (empty($this->request)) {
-            return null;
-        }
+        $request = $this->requestStack->getCurrentRequest();
 
-        return $this->request->attributes->get('resource');
+        return $request ? $request->attributes->get('resource') : null;
     }
 }

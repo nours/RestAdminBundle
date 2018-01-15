@@ -24,12 +24,6 @@
         "symfony/phpunit-bridge": "^3.1"
 
     },
-    "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/nours/TableBundle"
-      }
-    ],
     "suggest": {
       "doctrine/doctrine-bundle" : "Support for Doctrine ORM persistence and loading",
       "symfony/security-bundle": "Integrate security checks based on security bundle",

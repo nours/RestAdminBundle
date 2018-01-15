@@ -192,7 +192,6 @@ class MenuFunctionalTest extends AdminTestCase
         $request = Request::create($uri);
         $request->attributes->add($attributes);
 
-        $this->get('knp_menu.voter.router')->setRequest($request);
-        $this->get('rest_admin.menu.voter')->setRequest($request);
+        $this->get('request_stack')->push($request);
     }
 }
