@@ -452,7 +452,11 @@ class DomainResource
      */
     public function getInstanceUriPath($suffix = null)
     {
-        return $this->getBaseUriPath(str_replace('_', '-', Inflector::tableize($suffix)), true);
+        if (null !== $suffix) {
+            $suffix = str_replace('_', '-', Inflector::tableize($suffix));
+        }
+
+        return $this->getBaseUriPath($suffix, true);
     }
 
     /**
