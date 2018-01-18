@@ -42,6 +42,9 @@ class AdminExtension extends AbstractExtension
             'resource' => function(Options $options) {
                 return $this->helper->getCurrentResource();
             },
+            'parent_resource' => function(Options $options) {
+                return ($resource = $options['resource']) ? $resource->getParent() : null;
+            },
             'class'  => function(Options $options) {
                 $resource = $options['resource'];
                 return $resource ? $resource->getClass() : null;
@@ -54,7 +57,10 @@ class AdminExtension extends AbstractExtension
                 return null;
             },
             'route_data' => null,
-            'route_params' => array()
+            'route_params' => array(),
+            'parent_param_name' => function(Options $options) {
+                return ($resource = $options['parent_resource']) ? $resource->getParamName() : null;
+            }
         ));
 
         $resolver->setNormalizer('resource', function(Options $options, $value) {
@@ -76,17 +82,12 @@ class AdminExtension extends AbstractExtension
          * Add to query builder a filter for resources having parents.
          */
         if (!$this->disableParentFilter) {
-            $resolver->setNormalizer('query_builder', function(Options $options, $queryBuilder)
-            {
-                /** @var DomainResource $resource */
-                if ($resource = $options['resource']) {
-                    $parentResource = $resource->getParent();
-
+            $resolver->setNormalizer('query_builder', function(Options $options, $queryBuilder) {
+                if ($options['parent_resource']) {
                     $parentData = $options['route_data'];
+                    $parentName = $options['parent_param_name'];
 
-                    if ($parentResource && $parentData) {
-                        $parentName = $parentResource->getParamName();
-
+                    if ($parentName && $parentData) {
                         /** @var QueryBuilder $queryBuilder */
                         $queryBuilder
                             ->andWhere('_root.' . $parentName . ' = :parentData')
