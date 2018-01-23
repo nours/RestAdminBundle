@@ -11,6 +11,10 @@ env:
   - SYMFONY_VERSION=3.3.*
   - SYMFONY_VERSION=3.4.*
 
+install:
+  - phpenv config-add travis.php.ini
+  - php -ini | grep memory_limit
+
 before_script:
   - composer require "symfony/symfony:${SYMFONY_VERSION}" --dev
   - vendor/bin/phpunit --version
