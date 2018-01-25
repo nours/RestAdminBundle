@@ -84,16 +84,14 @@ class NoursRestAdminExtension extends Extension
 
         // Service aliases (see Configuration for default values)
         if ($config['services']['serializer']) {
-            $container
-                ->setAlias('rest_admin.serializer', $config['services']['serializer'])
-                ->setPublic(true)
-            ;
+            if ($alias = $container->setAlias('rest_admin.serializer', $config['services']['serializer'])) {
+                $alias->setPublic(true);
+            }
         }
         if ($config['services']['serialization_context']) {
-            $container
-                ->setAlias('rest_admin.serialization_context', $config['services']['serialization_context'])
-                ->setPublic(true)
-            ;
+            if ($alias = $container->setAlias('rest_admin.serialization_context', $config['services']['serialization_context'])) {
+                $alias->setPublic(true);
+            }
         }
 
         // Action template parameter
