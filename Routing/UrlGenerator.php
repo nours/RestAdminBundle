@@ -9,10 +9,10 @@
  */
 
 namespace Nours\RestAdminBundle\Routing;
+
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 
 /**
  * UrlGenerator for actions
@@ -30,6 +30,8 @@ class UrlGenerator
      */
     public function __construct(UrlGeneratorInterface $generator)
     {
+        trigger_error("UrlGenerator is deprecated and will be deleted. Please use AdminHelper", E_USER_DEPRECATED);
+
         $this->generator = $generator;
     }
 

@@ -15,6 +15,7 @@ use Knp\Menu\MenuItem;
 use Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class RestResourceRouteVoterTest
@@ -28,11 +29,17 @@ class ResourceRouteVoterTest extends AdminTestCase
      */
     private $voter;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->voter = $this->get('rest_admin.menu.voter');
+        $this->requestStack = new RequestStack();
+        $this->voter = new ResourceRouteVoter($this->requestStack);
     }
 
     /**
@@ -143,6 +150,6 @@ class ResourceRouteVoterTest extends AdminTestCase
         $request = Request::create('test');
         $request->attributes->add($attributes);
 
-        $this->get('request_stack')->push($request);
+        $this->requestStack->push($request);
     }
 }

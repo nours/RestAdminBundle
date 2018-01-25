@@ -1,6 +1,7 @@
 services:
   tests.controller.comment:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment\CommentController
+    public: true
 
   tests.form.post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
@@ -23,10 +24,10 @@ services:
     tags: [ { name: rest_admin.param_fetcher, alias: foo } ]
 
 #    Table
-  tests.table.post:
-    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType
-    tags: [ { name: nours_table.table_type, alias: post } ]
-
-  tests.table.comment:
-    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType
-    tags: [ { name: nours_table.table_type, alias: comment } ]
+#  tests.table.post:
+#    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType
+#    tags: [ { name: nours_table.table_type, alias: post } ]
+#
+#  tests.table.comment:
+#    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType
+#    tags: [ { name: nours_table.table_type, alias: comment } ]

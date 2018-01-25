@@ -79,7 +79,7 @@ class PostControllerTest extends AdminTestCase
         $client->request('GET', '/posts.json');
 
         $response = $client->getResponse();
-        $this->assertTrue($response->isSuccessful());
+        $this->assertTrue($response->isSuccessful(), $response->getContent());
         $this->assertResponseContentType('application/json', $response);
 
         $data = json_decode($response->getContent());

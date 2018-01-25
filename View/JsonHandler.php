@@ -26,12 +26,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class JsonHandler implements ViewHandler
 {
+    /**
+     * @var SerializerInterface|\Symfony\Component\Serializer\SerializerInterface
+     */
+    private $serializer;
+    private $serializationContext;
 
-    private $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct($serializer, $serializationContext = null)
     {
-        $this->container = $container;
+        $this->serializer = $serializer;
+        $this->serializationContext = $serializationContext;
     }
 
 
@@ -45,8 +49,6 @@ class JsonHandler implements ViewHandler
     {
         $responseStatus = Response::HTTP_OK;
 
-        // todo : test this
-
         if ($data instanceof FormInterface) {
             // Change response status if any error
             if ($data->isSubmitted() && !$data->isValid()) {
@@ -58,35 +60,10 @@ class JsonHandler implements ViewHandler
             }
         }
 
-        $serializer = $this->getSerializer();
-        $arguments = array($data, 'json');
-
-        if ($serializer instanceof SerializerInterface && ($context = $this->getSerializationContext())) {
-            $arguments[] = $context;
-        }
-
-        $serialized = call_user_func_array(array($serializer, 'serialize'), $arguments);
+        $serialized = $this->serializer->serialize($data, 'json', $this->serializationContext);
 
         return new Response($serialized, $responseStatus, array(
-            'Content-Type' => $request->getMimeType($request->getRequestFormat())
+            'Content-Type' => $request->getMimeType('json')
         ));
-    }
-
-    /**
-     * @return SerializationContext
-     */
-    private function getSerializationContext()
-    {
-        return $this->container->has('rest_admin.serialization_context') ?
-            $this->container->get('rest_admin.serialization_context') :
-            null;
-    }
-
-    /**
-     * @return Serializer
-     */
-    private function getSerializer()
-    {
-        return $this->container->get('rest_admin.serializer');
     }
 }

@@ -52,6 +52,8 @@ nours_rest_admin:
     listeners:
         orm: true
         security: true
+    services:
+        serializer: jms_serializer
     templates:
         index: index.html.twig
         get: get.html.twig

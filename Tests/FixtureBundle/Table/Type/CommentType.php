@@ -11,7 +11,9 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Table\Field\AdminActionsType;
 use Nours\TableBundle\Builder\TableBuilder;
+use Nours\TableBundle\Field\Type\TextType;
 use Nours\TableBundle\Table\AbstractType;
 
 /**
@@ -27,9 +29,9 @@ class CommentType extends AbstractType
     public function buildTable(TableBuilder $builder, array $options)
     {
         $builder
-            ->add('id', 'text')
-            ->add('comment', 'text')
-            ->add('actions', 'admin_actions', array(
+            ->add('id', TextType::class)
+            ->add('comment', TextType::class)
+            ->add('actions', AdminActionsType::class, array(
                 'resource' => 'post.comment',
                 'actions' => array(
                     'edit',
@@ -50,7 +52,7 @@ class CommentType extends AbstractType
      *
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'comment';
     }

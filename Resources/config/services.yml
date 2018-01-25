@@ -32,10 +32,12 @@ services:
 
   rest_admin.loader:
     class: Symfony\Component\Config\Loader\DelegatingLoader
+    public: true      # Tests only
     arguments: [ '@rest_admin.loader_resolver' ]
 
   rest_admin.loader.resource_factory:
     class: Nours\RestAdminBundle\Loader\ResourceFactory
+    public: true      # Tests only
     arguments: [ '@rest_admin.action_manager', '@event_dispatcher', '%rest_admin.resource_class%' ]
 
 ##############################
@@ -48,6 +50,7 @@ services:
 
   rest_admin.routing.url_generator:
     class: Nours\RestAdminBundle\Routing\UrlGenerator
+    public: true      # Tests only
     arguments: [ '@router' ]
 
 ##############################
@@ -55,11 +58,13 @@ services:
 ##############################
   rest_admin.manager:
     class: Nours\RestAdminBundle\AdminManager
+    public: true
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%', '%kernel.cache_dir%', '%kernel.debug%' ]
     tags: [ { name: 'kernel.cache_warmer' } ]
 
   rest_admin.action_manager:
     class: Nours\RestAdminBundle\ActionManager
+    public: true
 
   rest_admin.view_handler:
     class: Nours\RestAdminBundle\View\ViewHandler
@@ -67,24 +72,26 @@ services:
 
   rest_admin.data_factory:
     class: Nours\RestAdminBundle\Domain\ResourceDataFactory
-    arguments: [ '@controller_resolver' ]
-
-#  rest_admin.resource_handler:
-#    class: Nours\RestAdminBundle\Domain\ResourceHandler
-#    arguments: [ '@controller_resolver' ]
+    public: true
+    arguments:
+     - '@controller_resolver'
+#     - '@argument_resolver'    # Appended by extension if supported
 
   rest_admin.handler.redirect:
     class: Nours\RestAdminBundle\Handler\RedirectHandler
+    public: true
     arguments: [ '@rest_admin.helper' ]
 
   rest_admin.factory.copy:
     class: Nours\RestAdminBundle\Handler\CopyFactory
+    public: true
 
 ##############################
 # Helper
 ##############################
   rest_admin.helper:
     class: Nours\RestAdminBundle\Helper\AdminHelper
+    public: true
     arguments: [ '@request_stack', '@rest_admin.manager', '@router' ]
 
 
@@ -141,27 +148,24 @@ services:
 ##############################
   rest_admin.action_form_factory:
     class: Nours\RestAdminBundle\Form\ActionFormFactory
+    public: true
     arguments: [ '@rest_admin.action_manager', '@form.factory', '@router' ]
 
   rest_admin.form_success_handler:
     class: Nours\RestAdminBundle\Form\FormSuccessHandler
-    arguments: [ '@controller_resolver' ]
-
-  rest_admin.form_type.delete:
-    class: Nours\RestAdminBundle\Form\Type\DeleteType
-    tags: [ { name: 'form.type' } ]
-
-  rest_admin.form_type.bulk_delete:
-    class: Nours\RestAdminBundle\Form\Type\BulkDeleteType
-    tags: [ { name: 'form.type' } ]
-
+    public: true
+    arguments:
+     - '@controller_resolver'
+#     - '@argument_resolver'    # Appended by extension if supported
 
 ##############################
 # Param fetcher
 ##############################
   rest_admin.param_fetcher.custom:
     class: Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher
-    arguments: [ '@controller_resolver' ]
+    arguments:
+     - '@controller_resolver'
+#     - '@argument_resolver'    # Appended by extension if supported
     tags: [ { name: rest_admin.param_fetcher, alias: custom }]
 
 ##############################

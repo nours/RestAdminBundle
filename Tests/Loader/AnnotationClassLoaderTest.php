@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\Loader;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Nours\RestAdminBundle\Loader\AnnotationClassLoader;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 
@@ -25,7 +26,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
     {
         $class = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment\CommentController';
 
-        $loader = new AnnotationClassLoader($this->get('annotation_reader'), $this->get('rest_admin.loader.resource_factory'));
+        $loader = new AnnotationClassLoader(new AnnotationReader(), $this->get('rest_admin.loader.resource_factory'));
 
         $resources = $loader->load($class);
 

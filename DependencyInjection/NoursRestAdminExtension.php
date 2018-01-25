@@ -10,8 +10,11 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
+use Nours\TableBundle\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -33,7 +36,10 @@ class NoursRestAdminExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('twig.yml');
-        $loader->load('table.yml');
+
+        if (class_exists(AbstractExtension::class)) {
+            $loader->load('table.yml');
+        }
 
         /*
          * Table extension supports automatic filter from parent resources
@@ -77,14 +83,32 @@ class NoursRestAdminExtension extends Extension
         $this->configureActionParams($config, $container);
 
         // Service aliases (see Configuration for default values)
-        foreach ($config['services'] as $name => $service) {
-            if ($service) {
-                $container->setAlias('rest_admin.' . $name, $service);
-            }
+        if ($config['services']['serializer']) {
+            $container
+                ->setAlias('rest_admin.serializer', $config['services']['serializer'])
+                ->setPublic(true)
+            ;
+        }
+        if ($config['services']['serialization_context']) {
+            $container
+                ->setAlias('rest_admin.serialization_context', $config['services']['serialization_context'])
+                ->setPublic(true)
+            ;
         }
 
         // Action template parameter
         $container->setParameter('rest_admin.template.action', $config['templates']['action']);
+
+        // Support for Symfony ArgumentResolverInterface
+        if (interface_exists(ArgumentResolverInterface::class)) {
+            foreach ([
+                'rest_admin.param_fetcher.custom',
+                'rest_admin.data_factory',
+                'rest_admin.form_success_handler'
+            ] as $id) {
+                $container->getDefinition($id)->addArgument(new Reference('argument_resolver'));
+            }
+        }
     }
 
     /**

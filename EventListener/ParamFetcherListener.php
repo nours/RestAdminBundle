@@ -14,6 +14,7 @@ use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -32,17 +33,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ParamFetcherListener implements EventSubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|PsrContainerInterface
      */
     private $container;
     private $fetchers;
     private $defaultFetcher;
 
     /**
-     * @param ContainerInterface $container
+     * @param ContainerInterface|PsrContainerInterface $container
      * @param array $fetchers
      */
-    public function __construct(ContainerInterface $container, array $fetchers, $defaultFetcher)
+    public function __construct($container, array $fetchers, $defaultFetcher)
     {
         $this->container = $container;
         $this->fetchers  = $fetchers;

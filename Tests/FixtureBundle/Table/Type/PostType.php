@@ -11,7 +11,9 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type;
 
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Table\Field\AdminActionsType;
 use Nours\TableBundle\Builder\TableBuilder;
+use Nours\TableBundle\Field\Type\TextType;
 use Nours\TableBundle\Table\AbstractType;
 
 /**
@@ -27,8 +29,8 @@ class PostType extends AbstractType
     public function buildTable(TableBuilder $builder, array $options)
     {
         $builder
-            ->add('id', 'text')
-            ->add('actions', 'admin_actions', array(
+            ->add('id', TextType::class)
+            ->add('actions', AdminActionsType::class, array(
                 'resource' => 'post',
                 'actions' => array(
                     'edit',
@@ -49,7 +51,7 @@ class PostType extends AbstractType
      *
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'post';
     }

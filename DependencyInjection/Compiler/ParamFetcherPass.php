@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -27,7 +28,7 @@ class ParamFetcherPass implements CompilerPassInterface
         $definition = $container->getDefinition('rest_admin.listener.param_fetcher');
 
         $ids = $container->findTaggedServiceIds('rest_admin.param_fetcher');
-        $fetchers = array();
+        $fetchers = $references = array();
         foreach ($ids as $id => $tags) {
             if (!isset($tags[0]['alias'])) {
                 throw new \DomainException(sprintf(
@@ -55,8 +56,14 @@ class ParamFetcherPass implements CompilerPassInterface
             }
 
             $fetchers[$alias] = $id;
+            $references[$id] = new Reference($id);
         }
 
         $definition->replaceArgument(1, $fetchers);
+
+        if (class_exists(ServiceLocatorTagPass::class)) {
+            // Replace container with service locator
+            $definition->replaceArgument(0, ServiceLocatorTagPass::register($container, $references));
+        }
     }
 }

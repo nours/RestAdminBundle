@@ -6,6 +6,7 @@ services:
 
   rest_admin.handler.orm:
     class: Nours\RestAdminBundle\Handler\ORMHandler
+    public: true
     arguments: [ '@doctrine.orm.entity_manager' ]
 
   rest_admin.listener.orm_action_config:

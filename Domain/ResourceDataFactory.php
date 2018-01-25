@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Domain;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 
@@ -27,14 +28,23 @@ class ResourceDataFactory
     /**
      * @var ControllerResolverInterface
      */
-    private $resolver;
+    private $controllerResolver;
+    private $argumentResolver;
 
     /**
-     * @param ControllerResolverInterface $resolver
+     * @param ControllerResolverInterface $controllerResolver
+     * @param ArgumentResolverInterface|null $argumentResolver
      */
-    public function __construct(ControllerResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+    public function __construct(
+        ControllerResolverInterface $controllerResolver,
+        ArgumentResolverInterface $argumentResolver = null
+    ) {
+        if (!$argumentResolver) {
+            trigger_error('TEST');
+        }
+
+        $this->controllerResolver = $controllerResolver;
+        $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
     }
 
 
@@ -78,7 +88,7 @@ class ResourceDataFactory
         $subRequest->attributes->set('_controller', $factory);
 
         // Find controller
-        $controller = $this->resolver->getController($subRequest);
+        $controller = $this->controllerResolver->getController($subRequest);
 
         if ($controller === false) {
             throw new \DomainException(sprintf(
@@ -87,7 +97,7 @@ class ResourceDataFactory
             ));
         }
 
-        $arguments = $this->resolver->getArguments($request, $controller);
+        $arguments = $this->argumentResolver->getArguments($request, $controller);
 
         return call_user_func_array($controller, $arguments);
     }

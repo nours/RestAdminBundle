@@ -15,6 +15,7 @@ use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Helper\AdminHelper;
 use Nours\TableBundle\Field\AbstractFieldType;
 use Nours\TableBundle\Field\FieldInterface;
+use Nours\TableBundle\Field\Type\PrototypeType;
 use Nours\TableBundle\Table\View;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -133,13 +134,13 @@ class AdminActionsType extends AbstractFieldType
      */
     public function getParent()
     {
-        return 'prototype';
+        return PrototypeType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin_actions';
     }

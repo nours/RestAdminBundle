@@ -12,6 +12,8 @@ namespace Nours\RestAdminBundle\Tests\Table;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType;
 use Nours\TableBundle\Table\TableInterface;
 
 /**
@@ -24,7 +26,7 @@ class AdminExtensionTest extends AdminTestCase
     public function testAdminResourceTable()
     {
         /** @var TableInterface $table */
-        $table = $this->get('nours_table.factory')->createTable('post', array(
+        $table = $this->get('nours_table.factory')->createTable(PostType::class, array(
             'resource' => 'post'
         ));
 
@@ -38,7 +40,7 @@ class AdminExtensionTest extends AdminTestCase
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
 
         /** @var TableInterface $table */
-        $table = $this->get('nours_table.factory')->createTable('comment', array(
+        $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
             'resource'   => 'post.comment',
             'route_data' => $post
         ));
@@ -53,7 +55,7 @@ class AdminExtensionTest extends AdminTestCase
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
 
         /** @var TableInterface $table */
-        $table = $this->get('nours_table.factory')->createTable('comment', array(
+        $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
             'resource'   => 'post.comment',
             'route_data' => $post,
             'route_params' => array('foo' => 'bar')
@@ -75,7 +77,7 @@ class AdminExtensionTest extends AdminTestCase
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 3);
 
         /** @var TableInterface $table */
-        $table = $this->get('nours_table.factory')->createTable('comment', array(
+        $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
             'resource'   => 'post.comment',
             'route_data' => $post
         ));

@@ -9,7 +9,7 @@ services:
 
   rest_admin.view_handler.json:
     class: Nours\RestAdminBundle\View\JsonHandler
-    arguments: [ '@service_container' ]
+    arguments: [ '@rest_admin.serializer' ]
     tags: [ { name: 'rest_admin.view_handler' } ]
 
   rest_admin.listener.view_handler:

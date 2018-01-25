@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Form;
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
@@ -28,11 +29,21 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  */
 class FormSuccessHandler
 {
-    private $resolver;
+    private $controllerResolver;
+    private $argumentResolver;
 
-    public function __construct(ControllerResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+    /**
+     * FormSuccessHandler constructor.
+     *
+     * @param ControllerResolverInterface $controllerResolver
+     * @param ArgumentResolverInterface|null $argumentResolver
+     */
+    public function __construct(
+        ControllerResolverInterface $controllerResolver,
+        ArgumentResolverInterface $argumentResolver = null
+    ) {
+        $this->controllerResolver = $controllerResolver;
+        $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
     }
 
     /**
@@ -55,7 +66,7 @@ class FormSuccessHandler
         foreach ($action->getHandlers() as $handler) {
             $request->attributes->set('_controller', $handler);
 
-            $controller = $this->resolver->getController($request);
+            $controller = $this->controllerResolver->getController($request);
 
             if ($controller === false) {
                 throw new \DomainException(sprintf(
@@ -64,7 +75,7 @@ class FormSuccessHandler
                 ));
             }
 
-            $arguments  = $this->resolver->getArguments($request, $controller);
+            $arguments  = $this->argumentResolver->getArguments($request, $controller);
 
             $response = call_user_func_array($controller, $arguments);
 

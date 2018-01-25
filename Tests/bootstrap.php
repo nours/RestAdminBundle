@@ -2,6 +2,7 @@
 
 // Autoload
 require $_SERVER['KERNEL_DIR'] . 'autoload.php';
+require $_SERVER['KERNEL_DIR'] . 'AppKernel.php';
 
 // Clear cache
 passthru(sprintf(

@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\ParamFetcher;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
@@ -24,11 +25,21 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  */
 class CustomParamFetcher implements ParamFetcherInterface
 {
-    private $resolver;
+    private $controllerResolver;
+    private $argumentResolver;
 
-    public function __construct(ControllerResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+    /**
+     * CustomParamFetcher constructor.
+     *
+     * @param ControllerResolverInterface $controllerResolver
+     * @param ArgumentResolverInterface|null $argumentResolver
+     */
+    public function __construct(
+        ControllerResolverInterface $controllerResolver,
+        ArgumentResolverInterface $argumentResolver = null
+    ) {
+        $this->controllerResolver = $controllerResolver;
+        $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
     }
 
     public function fetch(Request $request)
@@ -58,7 +69,7 @@ class CustomParamFetcher implements ParamFetcherInterface
 
         $subRequest->attributes->set('_controller', $callback);
 
-        $controller = $this->resolver->getController($subRequest);
+        $controller = $this->controllerResolver->getController($subRequest);
 
         if ($controller === false) {
             throw new \DomainException(sprintf(
@@ -67,7 +78,7 @@ class CustomParamFetcher implements ParamFetcherInterface
             ));
         }
 
-        $arguments  = $this->resolver->getArguments($request, $controller);
+        $arguments  = $this->argumentResolver->getArguments($request, $controller);
 
         call_user_func_array($controller, $arguments);
     }

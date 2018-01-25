@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * A sample Post class.

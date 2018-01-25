@@ -41,7 +41,7 @@ class MenuFunctionalTest extends AdminTestCase
 
     public function setUp()
     {
-        $this->helper  = $this->get('rest_admin.menu.helper');
+        $this->helper  = new ResourceMenuHelper($this->getAdminManager());
         $this->matcher = $this->get('knp_menu.matcher');
 
         $this->menu = $this->get('knp_menu.factory')->createItem('root');
