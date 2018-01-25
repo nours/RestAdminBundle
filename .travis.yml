@@ -2,11 +2,6 @@ dist: trusty
 sudo: required
 language: php
 
-env:
-  - SYMFONY_VERSION=2.8.*
-  - SYMFONY_VERSION=3.3.*
-  - SYMFONY_VERSION=3.4.*
-
 matrix:
   include:
     - php: 5.6
