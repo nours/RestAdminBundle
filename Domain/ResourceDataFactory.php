@@ -39,10 +39,6 @@ class ResourceDataFactory
         ControllerResolverInterface $controllerResolver,
         ArgumentResolverInterface $argumentResolver = null
     ) {
-        if (!$argumentResolver) {
-            trigger_error('TEST');
-        }
-
         $this->controllerResolver = $controllerResolver;
         $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
     }
