@@ -97,4 +97,19 @@ class RestAdminExtensionTest extends AdminTestCase
             'default_option' => 'foobar'
         ), $params);
     }
+
+
+    public function testServiceSerializer()
+    {
+        $serializer = $this->getContainer()->get('rest_admin.serializer');
+
+        $this->assertSame($this->getContainer()->get('jms_serializer'), $serializer);
+    }
+
+    public function testServiceSerializationContext()
+    {
+        $context = $this->getContainer()->get('rest_admin.serialization_context');
+
+        $this->assertNotNull($context);
+    }
 }

@@ -31,3 +31,8 @@ services:
 #  tests.table.comment:
 #    class: Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType
 #    tags: [ { name: nours_table.table_type, alias: comment } ]
+
+  tests.serialization_context:
+    class: JMS\Serializer\SerializationContext
+    calls:
+      - [ 'enableMaxDepthChecks' ]

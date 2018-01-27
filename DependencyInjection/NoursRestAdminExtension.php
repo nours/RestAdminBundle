@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\DependencyInjection;
 use Nours\TableBundle\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -93,6 +94,11 @@ class NoursRestAdminExtension extends Extension
                 $alias->setPublic(true);
             }
         }
+
+        // Fix Json Handler optional argument
+        $container->getDefinition('rest_admin.view_handler.json')->addArgument(new Reference(
+            'rest_admin.serialization_context', ContainerInterface::NULL_ON_INVALID_REFERENCE
+        ));
 
         // Action template parameter
         $container->setParameter('rest_admin.template.action', $config['templates']['action']);
