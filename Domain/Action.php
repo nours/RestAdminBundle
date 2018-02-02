@@ -203,12 +203,14 @@ class Action
         $resource = $this->resource;
 
         if ($this->isBulk()) {
-            return $data ? $resource->getCollectionRouteParams($data) : array();
+            if (is_array($data)) {
+                return $resource->getCollectionRouteParams($data);
+            }
         } elseif ($this->hasInstance()) {
             return $resource->getInstanceRouteParams($data);
-        } else {
-            return $resource->getBaseRouteParams($data);
         }
+
+        return $resource->getBaseRouteParams($data);
     }
 
     /**

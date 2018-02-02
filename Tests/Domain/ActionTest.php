@@ -166,6 +166,20 @@ class ActionTest extends AdminTestCase
         $this->assertCount(0, $params);
     }
 
+    public function testGetRouteParamsForBulkUsingParent()
+    {
+        $this->loadFixtures();
+
+        $action = $this->getAdminManager()->getAction('post.comment:bulk_delete');
+        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        // Without instances
+        $params = $action->getRouteParams($post);
+        $this->assertEquals([
+            'post' => 1
+        ], $params);
+    }
+
     public function testGetRouteParamsForSingleResource()
     {
         $this->loadFixtures();
