@@ -31,9 +31,7 @@ resources:
   secured:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo
     actions:
-      create: { form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType }
-      edit: {}
-      delete: {}
+      create: { form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType, role: ROLE_SUPER_ADMIN }
       index: { controller: 'FixtureBundle:Secured:index' }
     role: ROLE_ADMIN
     slug: secured

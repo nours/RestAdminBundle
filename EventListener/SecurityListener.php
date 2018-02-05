@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
+use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -42,11 +43,14 @@ class SecurityListener implements EventSubscriberInterface
             return;
         }
 
-        // Search resource in attributes
-        $resource = $event->getRequest()->attributes->get('resource');
-        if (empty($resource)) {
+        // Search resource/action in attributes
+        /** @var Action $action */
+        $action = $event->getRequest()->attributes->get('action');
+        if (empty($action)) {
             return;
         }
+
+        $resource = $action->getResource();
 
         // If the resource has a role, check it
         if ($role = $resource->getRole()) {
@@ -54,6 +58,16 @@ class SecurityListener implements EventSubscriberInterface
                 throw new AccessDeniedHttpException(sprintf(
                     'Security check failure (%s is not granted for resource %s)',
                     $role, $resource->getFullName()
+                ));
+            }
+        }
+
+        // Same for action
+        if ($role = $action->getRole()) {
+            if (!$this->checker->isGranted($role)) {
+                throw new AccessDeniedHttpException(sprintf(
+                    'Security check failure (%s is not granted for action %s)',
+                    $role, $action->getFullName()
                 ));
             }
         }

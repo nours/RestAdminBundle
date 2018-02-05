@@ -73,11 +73,23 @@ class SecurityControllerTest extends AdminTestCase
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
-    public function testCreateIsAllowedForAdmin()
+    public function testCreateIsNotAllowedForAdmin()
     {
         $client = $this->createClient(array(), array(
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'passadmin',
+        ));
+
+        $client->request('GET', '/secured/create');
+
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testCreateIsAllowedForSuperAdmin()
+    {
+        $client = $this->createClient(array(), array(
+            'PHP_AUTH_USER' => 'super',
+            'PHP_AUTH_PW' => 'passsuper',
         ));
 
         $client->request('GET', '/secured/create');

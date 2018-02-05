@@ -4,6 +4,7 @@ security:
 
   role_hierarchy:
     ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: ROLE_ADMIN
 
   providers:
     default:
@@ -11,6 +12,7 @@ security:
         users:
           user:  { password: passuser, roles: 'ROLE_USER' }
           admin: { password: passadmin, roles: 'ROLE_ADMIN' }
+          super: { password: passsuper, roles: 'ROLE_SUPER_ADMIN' }
 
   firewalls:
     main:

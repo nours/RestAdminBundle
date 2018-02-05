@@ -87,7 +87,8 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             'factory'   => null,
             'action_template'  => null,
             'fetcher_callback' => null,
-            'handler_action' => null
+            'handler_action' => null,
+            'role' => null
         ));
         $resolver->setAllowedValues('handler_action', array(null, 'create', 'update', 'delete'));
 
