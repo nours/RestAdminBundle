@@ -340,8 +340,6 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     /**
      * Builds the query builder to select and filter on resource parent.
      *
-     * Resource must have parent
-     *
      * @param QueryBuilder $builder
      * @param Request $request
      * @param DomainResource $resource

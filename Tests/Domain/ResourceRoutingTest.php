@@ -152,4 +152,42 @@ class ResourceRoutingTest extends AdminTestCase
         $this->assertEquals('contracts/{contract}/order/invoice/transactions', $resourceContractOrderInvoiceTransaction->getBaseUriPath());
         $this->assertEquals('contracts/{contract}/order/invoice/transactions/{transaction}', $resourceContractOrderInvoiceTransaction->getInstanceUriPath());
     }
+
+    /**
+     */
+    public function testGetPrototypeRouteParams()
+    {
+        $resourceComposite = $this->getAdminManager()->getResource('composite');
+        $resourceCompositeChild = $this->getAdminManager()->getResource('composite.composite_child');
+
+        $this->assertEquals(array(
+            'composite_id' => '__composite_id__',
+            'composite_name' => '__composite_name__'
+        ), $resourceComposite->getPrototypeRouteParams(true));
+        $this->assertEquals(array(
+            'composite_child_id' => '__composite_child_id__',
+            'composite_child_name' => '__composite_child_name__',
+            'composite_id' => '__composite_id__',
+            'composite_name' => '__composite_name__'
+        ), $resourceCompositeChild->getPrototypeRouteParams(true));
+    }
+
+    /**
+     */
+    public function testGetPrototypeParamsMapping()
+    {
+        $resourceComposite = $this->getAdminManager()->getResource('composite');
+        $resourceCompositeChild = $this->getAdminManager()->getResource('composite.composite_child');
+
+        $this->assertEquals(array(
+            '__composite_id__'   => 'id',
+            '__composite_name__' => 'name'
+        ), $resourceComposite->getPrototypeParamsMapping(true));
+        $this->assertEquals(array(
+            '__composite_child_id__'   => 'id',
+            '__composite_child_name__' => 'name',
+            '__composite_id__'     => 'parent.id',
+            '__composite_name__'   => 'parent.name'
+        ), $resourceCompositeChild->getPrototypeParamsMapping(true));
+    }
 }

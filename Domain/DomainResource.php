@@ -852,7 +852,7 @@ class DomainResource
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $this->getParentAssociation() . '.';
+            $suffix = $suffix . $this->getParentPath() . '.';
 
             $mapping = array_merge($mapping, $parent->makePrototypeParamsMapping($suffix));
 
@@ -889,7 +889,7 @@ class DomainResource
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $this->getParentAssociation() . '.';
+            $suffix = $suffix . $this->getParentPath() . '.';
             $mapping = array_merge($mapping, $parent->makeRouteParamsMapping($suffix));
 
             $parent = $parent->getParent();
@@ -918,7 +918,9 @@ class DomainResource
      */
     public function getParentAssociation()
     {
-        return $this->getConfig('parent_association', $this->getParentName());
+        trigger_error('Deprecated function, use getParentPath', E_USER_DEPRECATED);
+
+        return $this->getConfig('parent_association', $this->getParentPath());
     }
 
     /**
