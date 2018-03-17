@@ -56,11 +56,14 @@ services:
 ##############################
 # Core
 ##############################
-  rest_admin.manager:
-    class: Nours\RestAdminBundle\AdminManager
+  Nours\RestAdminBundle\AdminManager:
     public: true
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%', '%kernel.cache_dir%', '%kernel.debug%' ]
     tags: [ { name: 'kernel.cache_warmer' } ]
+
+  rest_admin.manager:
+    alias: Nours\RestAdminBundle\AdminManager
+    public: true
 
   rest_admin.action_manager:
     class: Nours\RestAdminBundle\ActionManager
@@ -89,10 +92,13 @@ services:
 ##############################
 # Helper
 ##############################
-  rest_admin.helper:
-    class: Nours\RestAdminBundle\Helper\AdminHelper
+  Nours\RestAdminBundle\Helper\AdminHelper:
     public: true
     arguments: [ '@request_stack', '@rest_admin.manager', '@router' ]
+
+  rest_admin.helper:
+    alias: Nours\RestAdminBundle\Helper\AdminHelper
+    public: true
 
 
 ##############################
