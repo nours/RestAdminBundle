@@ -130,7 +130,10 @@ class RestAdminExtension extends \Twig_Extension
     {
         $action = $this->helper->getAction($action);
 
-        $options['routeParams'] = $action->getPrototypeRouteParams();
+        if (!isset($options['routeParams'])) {
+            $options['routeParams'] = array();
+        }
+        $options['routeParams'] = array_merge($action->getPrototypeRouteParams(), $options['routeParams']);
 
         $context = $this->makeActionContext($action, $options);
         $template = isset($options['template']) ? $options['template'] : $this->getTemplate($action);
