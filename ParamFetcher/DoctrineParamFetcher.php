@@ -221,6 +221,8 @@ class DoctrineParamFetcher implements ParamFetcherInterface
             throw new NotFoundHttpException(sprintf('Failed to load collection'));
         }
 
+        $ids = is_array($ids) ? $ids : [ $ids ];
+
         $builder->where($builder->expr()->in(
             'r.'.$identifier,
             $ids
