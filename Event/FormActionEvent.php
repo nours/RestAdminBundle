@@ -10,7 +10,7 @@
 
 namespace Nours\RestAdminBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class FormActionEvent extends Event
+class FormActionEvent extends ResourceEvent
 {
     private $formBuilder;
     private $data;
@@ -26,11 +26,14 @@ class FormActionEvent extends Event
     /**
      * FormActionEvent constructor.
      *
+     * @param Action $action
      * @param FormBuilderInterface $formBuilder
      * @param mixed $data
      */
-    public function __construct(FormBuilderInterface $formBuilder, $data)
+    public function __construct(Action $action, FormBuilderInterface $formBuilder, $data)
     {
+        parent::__construct($action->getResource(), $action);
+
         $this->formBuilder = $formBuilder;
         $this->data        = $data;
     }

@@ -88,7 +88,7 @@ class ActionFormFactory
 
         $actionBuilder->buildForm($builder, $action, $this->generator, $data);
 
-        $this->dispatcher->dispatch(RestAdminEvents::FORM, new FormActionEvent($builder, $data));
+        $this->dispatcher->dispatch(RestAdminEvents::FORM, new FormActionEvent($action, $builder, $data));
 
         return $builder->getForm();
     }
