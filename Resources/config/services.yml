@@ -157,7 +157,11 @@ services:
   rest_admin.action_form_factory:
     class: Nours\RestAdminBundle\Form\ActionFormFactory
     public: true
-    arguments: [ '@rest_admin.action_manager', '@form.factory', '@router' ]
+    arguments:
+     - '@rest_admin.action_manager'
+     - '@form.factory'
+     - '@router'
+     - '@event_dispatcher'
 
   rest_admin.form_success_handler:
     class: Nours\RestAdminBundle\Form\FormSuccessHandler

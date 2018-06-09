@@ -12,6 +12,9 @@ namespace Nours\RestAdminBundle\Form;
 
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Event\FormActionEvent;
+use Nours\RestAdminBundle\Event\RestAdminEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -40,11 +43,21 @@ class ActionFormFactory
      */
     private $generator;
 
-    public function __construct(ActionManager $manager, FormFactoryInterface $factory, UrlGeneratorInterface $generator)
-    {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    public function __construct(
+        ActionManager $manager,
+        FormFactoryInterface $factory,
+        UrlGeneratorInterface $generator,
+        EventDispatcherInterface $dispatcher
+    ) {
         $this->manager = $manager;
         $this->factory = $factory;
         $this->generator = $generator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -74,6 +87,8 @@ class ActionFormFactory
         $builder = $this->factory->createNamedBuilder($action->getResource()->getParamName(), $formName, $data, $options);
 
         $actionBuilder->buildForm($builder, $action, $this->generator, $data);
+
+        $this->dispatcher->dispatch(RestAdminEvents::FORM, new FormActionEvent($builder, $data));
 
         return $builder->getForm();
     }

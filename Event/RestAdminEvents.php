@@ -52,4 +52,13 @@ class RestAdminEvents
      * @see ResourceCollectionEvent
      */
     const RESOURCE = 'rest_admin.resource';
+
+    /**
+     * Triggered on form creation, using to access form builder.
+     *
+     * It receives a ResourceCollectionEvent so the collection can be used to append new resources onto it.
+     *
+     * @see ResourceCollectionEvent
+     */
+    const FORM = 'rest_admin.form';
 }
