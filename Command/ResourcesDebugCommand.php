@@ -116,6 +116,9 @@ EOF
                 $this->writeVal($output, $name, $value);
             }
         }
+
+        $output->writeLn('Route name : <info>' . $action->getRouteName() . '</info>');
+        $output->writeLn('Form action route name : <info>' . $action->getFormActionRouteName() . '</info>');
     }
 
     private function writeVal(OutputInterface $output, $label, $value)

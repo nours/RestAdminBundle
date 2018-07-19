@@ -66,15 +66,15 @@ class AdminHelper
     /**
      * Generates url for an action.
      *
-     * @param $action
-     * @param null $data
+     * @param string|Action|null $action
+     * @param mixed $data
      * @param array $routeParams
-     * @param $referenceType
+     * @param string $referenceType
      * @return string
      */
-    public function generateUrl($action, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($action = null, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
-        $action = $this->getAction($action);
+        $action = $this->getAction($action ?: $this->getCurrentAction());
 
         if (!is_array($routeParams)) {
             trigger_error("Using reference type parameter is deprecated, and is replaced by route params", E_USER_DEPRECATED);
@@ -84,6 +84,26 @@ class AdminHelper
         $routeParams = array_merge($routeParams, $action->getRouteParams($data));
 
         return $this->urlGenerator->generate($action->getRouteName(), $routeParams, $referenceType);
+    }
+
+    /**
+     * Generate the url for the form action's post
+     *
+     * @param null $action
+     * @param null $data
+     * @param array $routeParams
+     * @param int $referenceType
+     *
+     * @return string
+     */
+    public function generateFormAction($action = null, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        $action = $this->getAction($action ?: $this->getCurrentAction());
+
+        // The action guesses it's route params from data
+        $routeParams = array_merge($routeParams, $action->getRouteParams($data));
+
+        return $this->urlGenerator->generate($action->getFormActionRouteName(), $routeParams, $referenceType);
     }
 
     /**

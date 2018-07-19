@@ -1,5 +1,12 @@
 services:
 ##############################
+# Command
+##############################
+  Nours\RestAdminBundle\Command\ResourcesDebugCommand:
+    class: Nours\RestAdminBundle\Command\ResourcesDebugCommand
+    tags: [ { name: console.command }]
+
+##############################
 # Resources loading
 ##############################
   rest_admin.loader.yml:

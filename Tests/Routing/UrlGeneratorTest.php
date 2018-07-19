@@ -15,6 +15,8 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 /**
  * Class UrlGeneratorTest
+ *
+ * @deprecated This tool is deprecated
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */

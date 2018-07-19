@@ -29,8 +29,8 @@ class EditActionBuilder extends AbstractBuilder
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $builder->addRoute($action, 'edit', 'GET', $action->getUriPath());
-        $builder->addRoute($action, 'update', 'PUT', $action->getUriPath(''));
+        $builder->addRoute($action, $action->getName(), 'GET', $action->getUriPath());
+        $builder->addRoute($action, $action->getFormActionRouteSuffix(), 'PUT', $action->getUriPath(''));
     }
 
     /**
@@ -42,7 +42,7 @@ class EditActionBuilder extends AbstractBuilder
             $builder
                 ->setMethod('PUT')
                 ->setAction($generator->generate(
-                    $action->getRouteName('update'),
+                    $action->getFormActionRouteName(),
                     $action->getRouteParams($data)
                 ))
             ;
@@ -54,8 +54,11 @@ class EditActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('form', null);
-        $resolver->setDefault('handler_action', 'update');
+        $resolver->setDefaults([
+            'handler_action' => 'update',
+            'form' => null,
+            'form_action_route_suffix' => 'update'
+        ]);
     }
 
     /**

@@ -29,7 +29,7 @@ class CopyActionBuilder extends AbstractBuilder
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $builder->addRoute($action, 'copy', array('GET', 'POST'), $action->getUriPath('copy'));
+        $builder->addRoute($action, $action->getName(), array('GET', 'POST'), $action->getUriPath('copy'));
     }
 
     /**
@@ -41,7 +41,7 @@ class CopyActionBuilder extends AbstractBuilder
             $builder
                 ->setMethod('POST')
                 ->setAction($generator->generate(
-                    $action->getRouteName('copy'),
+                    $action->getRouteName(),
                     $action->getRouteParams($data)
                 ))
             ;

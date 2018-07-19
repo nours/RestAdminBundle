@@ -40,7 +40,7 @@ class RoutesBuilder
 
     /**
      * @param Action $action
-     * @param $routeName
+     * @param $routeSuffix
      * @param $method
      * @param $path
      * @param array $defaults
@@ -48,7 +48,7 @@ class RoutesBuilder
      * @param array $options
      */
     public function addRoute(
-        Action $action, $routeName, $method, $path,
+        Action $action, $routeSuffix, $method, $path,
         array $defaults = array(), array $requirements = array(),
         array $options = array()
     ) {
@@ -79,6 +79,6 @@ class RoutesBuilder
             $event->path, $event->defaults, $event->requirements, $event->options, $event->host, $event->schemes, $event->method
         );
 
-        $this->collection->add($resource->getRouteName($routeName), $route);
+        $this->collection->add($resource->getRouteName($routeSuffix), $route);
     }
 }

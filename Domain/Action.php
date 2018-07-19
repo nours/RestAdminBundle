@@ -189,7 +189,31 @@ class Action
      */
     public function getRouteName($name = null)
     {
+        if ($name) {
+            trigger_error(sprintf('Overriding action route name is deprecated, use getFormActionRouteName instead'), E_USER_DEPRECATED);
+        }
+
         return $this->resource->getRouteName($name ?: $this->getName());
+    }
+
+    /**
+     * Returns the route name suffix for the form action
+     *
+     * @return string
+     */
+    public function getFormActionRouteSuffix()
+    {
+        return $this->getConfig('form_action_route_suffix', $this->getName());
+    }
+
+    /**
+     * Returns the route name for the form action
+     *
+     * @return string
+     */
+    public function getFormActionRouteName()
+    {
+        return $this->resource->getRouteName($this->getFormActionRouteSuffix());
     }
 
     /**

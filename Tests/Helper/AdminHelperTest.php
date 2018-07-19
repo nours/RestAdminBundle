@@ -73,7 +73,10 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlWithData()
     {
         $this->loadFixtures();
+        $posts = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findAll();
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+
+        $this->assertNotNull($post);
 
         $url = $this->helper->generateUrl('post:get', $post);
 
@@ -89,8 +92,10 @@ class AdminHelperTest extends AdminTestCase
         $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
 
         $url = $this->helper->generateUrl('post.comment:create', $post);
+        $formUrl = $this->helper->generateFormAction('post.comment:create', $post);
 
         $this->assertEquals('/posts/1/comments/create', $url);
+        $this->assertEquals('/posts/1/comments', $formUrl);
     }
 
     /**
@@ -102,8 +107,10 @@ class AdminHelperTest extends AdminTestCase
         $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
 
         $url = $this->helper->generateUrl('post.comment:edit', $comment);
+        $formUrl = $this->helper->generateFormAction('post.comment:edit', $comment);
 
         $this->assertEquals('/posts/1/comments/1/edit', $url);
+        $this->assertEquals('/posts/1/comments/1', $formUrl);
     }
 
     /**
@@ -118,8 +125,10 @@ class AdminHelperTest extends AdminTestCase
         ));
 
         $url = $this->helper->generateUrl('composite:edit', $composite);
+        $formUrl = $this->helper->generateFormAction('composite:edit', $composite);
 
         $this->assertEquals('/composites/1/first/edit', $url);
+        $this->assertEquals('/composites/1/first', $formUrl);
     }
 
     /**

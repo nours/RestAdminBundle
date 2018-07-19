@@ -500,4 +500,26 @@ class ActionTest extends AdminTestCase
         $this->assertEquals('posts/{post}/extension/edit', $extensionResource->getAction('edit')->getUriPath());
         $this->assertEquals('posts/{post}/extension/delete', $extensionResource->getAction('delete')->getUriPath());
     }
+
+    public function testGetFormActionRouteSuffix()
+    {
+        $resource = $this->getAdminManager()->getResource('post');
+
+        $this->assertEquals('new', $resource->getAction('create')->getFormActionRouteSuffix());
+        $this->assertEquals('update', $resource->getAction('edit')->getFormActionRouteSuffix());
+        $this->assertEquals('remove', $resource->getAction('delete')->getFormActionRouteSuffix());
+        $this->assertEquals('copy', $resource->getAction('copy')->getFormActionRouteSuffix());
+        $this->assertEquals('bulk_remove', $resource->getAction('bulk_delete')->getFormActionRouteSuffix());
+    }
+
+    public function testGetFormActionRouteName()
+    {
+        $resource = $this->getAdminManager()->getResource('post');
+
+        $this->assertEquals('post_new', $resource->getAction('create')->getFormActionRouteName());
+        $this->assertEquals('post_update', $resource->getAction('edit')->getFormActionRouteName());
+        $this->assertEquals('post_remove', $resource->getAction('delete')->getFormActionRouteName());
+        $this->assertEquals('post_copy', $resource->getAction('copy')->getFormActionRouteName());
+        $this->assertEquals('post_bulk_remove', $resource->getAction('bulk_delete')->getFormActionRouteName());
+    }
 }

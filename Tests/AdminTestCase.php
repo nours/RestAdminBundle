@@ -15,6 +15,7 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Nours\RestAdminBundle\AdminManager;
+use Nours\RestAdminBundle\Tests\FixtureBundle\DataFixtures\SqlitePurger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,7 +100,7 @@ class AdminTestCase extends WebTestCase
         $loader = new Loader();
         $loader->loadFromDirectory(__DIR__ . '/FixtureBundle/Fixtures');
 
-        $purger = new ORMPurger();
+        $purger = new SqlitePurger();
         $executor = new ORMExecutor($this->getEntityManager(), $purger);
         $executor->execute($loader->getFixtures());
     }

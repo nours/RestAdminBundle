@@ -29,8 +29,8 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
-        $builder->addRoute($action, 'delete', 'GET', $action->getUriPath());
-        $builder->addRoute($action, 'remove', 'DELETE', $action->getUriPath(''));
+        $builder->addRoute($action, $action->getName(), 'GET', $action->getUriPath());
+        $builder->addRoute($action, $action->getFormActionRouteSuffix(), 'DELETE', $action->getUriPath(''));
     }
 
     /**
@@ -42,7 +42,7 @@ class DeleteActionBuilder extends AbstractBuilder
             $builder
                 ->setMethod('DELETE')
                 ->setAction($generator->generate(
-                    $action->getRouteName('remove'),
+                    $action->getFormActionRouteName(),
                     $action->getRouteParams($data)
                 ));
             ;
@@ -54,8 +54,11 @@ class DeleteActionBuilder extends AbstractBuilder
      */
     public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('form', null);
-        $resolver->setDefault('handler_action', 'delete');
+        $resolver->setDefaults([
+            'handler_action' => 'delete',
+            'form' => null,
+            'form_action_route_suffix' => 'remove'
+        ]);
     }
 
     /**

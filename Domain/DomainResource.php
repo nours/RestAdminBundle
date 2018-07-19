@@ -352,14 +352,14 @@ class DomainResource
     }
 
     /**
-     * Get route name for an action
+     * Get route name for an action. The suffix should be action name.
      *
-     * @param string $actionName
+     * @param string $routeSuffix
      * @return string
      */
-    public function getRouteName($actionName)
+    public function getRouteName($routeSuffix)
     {
-        return $this->routePrefix . $actionName;
+        return $this->routePrefix . $routeSuffix;
     }
 
     /**

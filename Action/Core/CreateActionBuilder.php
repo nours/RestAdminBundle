@@ -30,7 +30,7 @@ class CreateActionBuilder extends AbstractBuilder
     public function buildRoutes(RoutesBuilder $builder, Action $action)
     {
         $builder->addRoute($action, 'create', 'GET', $action->getUriPath());
-        $builder->addRoute($action, 'new', 'POST', $action->getUriPath(''));
+        $builder->addRoute($action, $action->getFormActionRouteSuffix(), 'POST', $action->getUriPath(''));
     }
 
     /**
@@ -42,7 +42,7 @@ class CreateActionBuilder extends AbstractBuilder
             $builder
                 ->setMethod('POST')
                 ->setAction($generator->generate(
-                    $action->getRouteName('new'),
+                    $action->getFormActionRouteName(),
                     $action->getRouteParams($data)
                 ));
             ;
@@ -57,7 +57,8 @@ class CreateActionBuilder extends AbstractBuilder
         $resolver->setDefaults(array(
             'instance' => false,
             'handler_action' => 'create',
-            'form'     => null
+            'form'     => null,
+            'form_action_route_suffix' => 'new'
         ));
     }
 
