@@ -298,23 +298,30 @@ class ResourceTest extends AdminTestCase
     /**
      * Parent path
      */
-    public function testGetParentPath()
+    public function testGetParentPropertyPath()
     {
         $comment  = $this->getAdminManager()->getResource('post.comment');
         $response = $this->getAdminManager()->getResource('post.comment.comment_response');
+        $child = $this->getAdminManager()->getResource('composite.composite_child');
 
         $this->assertEquals('post', $comment->getParentPath());
+        $this->assertEquals('post', $comment->getParentPropertyPath());
         $this->assertEquals('comment', $response->getParentPath());
+        $this->assertEquals('comment', $response->getParentPropertyPath());
+
+        // Parent property path is defined explicitly in CompositeChildController
+        $this->assertEquals('parent', $child->getParentPropertyPath());
     }
 
     /**
      * Parent path
      */
-    public function testGetParentPathOfSingleResource()
+    public function testGetParentPropertyPathOfSingleResource()
     {
         $extension = $this->getAdminManager()->getResource('post.extension');
 
         $this->assertEquals('post', $extension->getParentPath());
+        $this->assertEquals('post', $extension->getParentPropertyPath());
     }
 
     /**

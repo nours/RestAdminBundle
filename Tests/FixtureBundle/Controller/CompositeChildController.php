@@ -11,8 +11,6 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
 
 use Nours\RestAdminBundle\Annotation as Rest;
-use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CompositeChildController
@@ -23,8 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild",
  *  identifier = { "id", "name" },
  *  parent = "composite",
- *  parent_path = "parent",
- *  parent_association = "parent",
+ *  parent_property_path = "parent",
  *  slug = "children"
  * )
  *

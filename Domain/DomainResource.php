@@ -716,7 +716,7 @@ class DomainResource
             if ($parent->isResourceInstance($data)) {
                 return $data;
             } elseif ($this->isResourceInstance($data)) {
-                return $this->getPropertyAccessor()->getValue($data, $this->getParentPath());
+                return $this->getPropertyAccessor()->getValue($data, $this->getParentPropertyPath());
             } else {
                 throw new \InvalidArgumentException(sprintf(
                     "Invalid data of type %s (%s or %s expected)",
@@ -852,7 +852,7 @@ class DomainResource
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $this->getParentPath() . '.';
+            $suffix = $suffix . $this->getParentPropertyPath() . '.';
 
             $mapping = array_merge($mapping, $parent->makePrototypeParamsMapping($suffix));
 
@@ -889,7 +889,7 @@ class DomainResource
         $parent = $this->getParent();
         $suffix = '';
         while ($parent) {
-            $suffix = $suffix . $this->getParentPath() . '.';
+            $suffix = $suffix . $this->getParentPropertyPath() . '.';
             $mapping = array_merge($mapping, $parent->makeRouteParamsMapping($suffix));
 
             $parent = $parent->getParent();
@@ -914,27 +914,59 @@ class DomainResource
     }
 
     /**
+     * @deprecated
+     *
      * @return string
      */
     public function getParentAssociation()
     {
-        trigger_error('Deprecated function, use getParentPath', E_USER_DEPRECATED);
+        trigger_error('Deprecated function, use getParentPropertyPath', E_USER_DEPRECATED);
 
-        return $this->getConfig('parent_association', $this->getParentPath());
+        return $this->getConfig('parent_association', $this->getParentPropertyPath());
     }
 
     /**
      * Path of the parent from this resource's instance.
      *
+     * @deprecated use getParentPropertyPath instead
+     *
      * @return string
      */
     public function getParentPath()
     {
+        trigger_error('Deprecated function, use getParentPropertyPath', E_USER_DEPRECATED);
+
         if ($parent = $this->getParent()) {
             return $this->getConfig('parent_path', $parent->getName());
         }
 
         return null;
+    }
+
+    public function getParentPropertyPath()
+    {
+        // Property path custom definition
+        $propertyPath = $this->getConfig('parent_property_path');
+
+        if (null === $propertyPath) {
+            // Use parent_path deprecated parameter
+            if ($parent = $this->getParent()) {
+                $propertyPath = $this->getConfig('parent_path');
+
+                if ($propertyPath) {
+                    // parent_path parameter deprecation
+                    trigger_error(sprintf(
+                        'parent_path resource parameter is deprecated (resource %s), use parent_property_path in %s',
+                        $parent->getFullName(), $this->getFullName()
+                    ), E_USER_DEPRECATED);
+                } else {
+                    // Defaults to parent's name
+                    $propertyPath = $parent->getName();
+                }
+            }
+        }
+
+        return $propertyPath;
     }
 
     /**
