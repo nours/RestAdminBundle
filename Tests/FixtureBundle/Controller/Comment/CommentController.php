@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Rest\Resource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
  *  parent = "post",
+ *  parent_property_path = "post",
  *  service = "tests.controller.comment",
  *  foo = "bar"
  * )

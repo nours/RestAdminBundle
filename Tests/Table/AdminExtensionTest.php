@@ -12,7 +12,10 @@ namespace Nours\RestAdminBundle\Tests\Table;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CompositeChildType;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType;
 use Nours\TableBundle\Table\TableInterface;
 
@@ -92,5 +95,30 @@ class AdminExtensionTest extends AdminTestCase
         $this->assertEquals(2, $comment->getId());
         $comment = $data[1];
         $this->assertEquals(3, $comment->getId());
+    }
+
+    public function testCompositeChildTable()
+    {
+        $this->loadFixtures();
+        $compositeChild = $this->getEntityManager()->find(Composite::class, [
+            'id' => 1,
+            'name' => 'first'
+        ]);
+
+        /** @var TableInterface $table */
+        $table = $this->get('nours_table.factory')->createTable(CompositeChildType::class, array(
+            'resource'   => 'composite.composite_child',
+            'route_data' => $compositeChild,
+            'fetch_join_collection' => false
+        ));
+
+        $this->assertEquals('/composites/1/first/children', $table->getOption('url'));
+        $this->assertEquals(CompositeChild::class, $table->getOption('class'));
+
+        /// Composite keys are badly supported by table bundle paginator query
+//        $table->handle();
+//
+//        $data = $table->getData();
+//        $this->assertCount(1, $data);
     }
 }

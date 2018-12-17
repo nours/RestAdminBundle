@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A child to a composite entity
+ * A composite child to a composite entity
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  *
@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CompositeChild
 {
     /**
-     * @var integer
+     * @var Composite
      *
      * @ORM\ManyToOne(targetEntity="Composite")
      * @ORM\JoinColumns({

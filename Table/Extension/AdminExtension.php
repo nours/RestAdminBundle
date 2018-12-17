@@ -59,7 +59,25 @@ class AdminExtension extends AbstractExtension
             'route_data' => null,
             'route_params' => array(),
             'parent_param_name' => function(Options $options) {
+                /** @var DomainResource $resource */
+                if ($resource = $options['resource']) {
+                    return $resource->getParentPropertyPath();
+                }
+
                 return ($resource = $options['parent_resource']) ? $resource->getParamName() : null;
+            },
+            'parent_property_path' => function(Options $options) {
+                /** @var DomainResource $resource */
+                if ($resource = $options['resource']) {
+                    if ($propertyPath =  $resource->getConfig('parent_property_path')) {
+                        return $propertyPath;
+                    } else {
+                        // BC with parent_param_name
+                        return $options['parent_param_name'];
+                    }
+                }
+
+                return null;
             }
         ));
 
@@ -84,13 +102,13 @@ class AdminExtension extends AbstractExtension
         if (!$this->disableParentFilter) {
             $resolver->setNormalizer('query_builder', function(Options $options, $queryBuilder) {
                 if ($options['parent_resource']) {
-                    $parentData = $options['route_data'];
-                    $parentName = $options['parent_param_name'];
+                    $parentData  = $options['route_data'];
+                    $parentField = $options['parent_property_path'];
 
-                    if ($parentName && $parentData) {
+                    if ($parentField && $parentData) {
                         /** @var QueryBuilder $queryBuilder */
                         $queryBuilder
-                            ->andWhere('_root.' . $parentName . ' = :parentData')
+                            ->andWhere('_root.' . $parentField . ' = :parentData')
                             ->setParameter('parentData', $parentData)
                         ;
                     }
