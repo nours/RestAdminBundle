@@ -10,7 +10,9 @@
 
 namespace Nours\RestAdminBundle\Domain;
 
-use Doctrine\Common\Inflector\Inflector;
+use DomainException;
+use InvalidArgumentException;
+use Nours\RestAdminBundle\Util\Inflector;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -79,7 +81,7 @@ class DomainResource
      * @param string $class
      * @param array $configs
      */
-    public function __construct($class, array $configs)
+    public function __construct(string $class, array $configs)
     {
         $this->class = $class;
 
@@ -120,7 +122,7 @@ class DomainResource
      * @param array $configs
      * @return DomainResource
      */
-    public function duplicate($newName, array $configs = array())
+    public function duplicate(string $newName, array $configs = array()): DomainResource
     {
         $configs = array_merge($this->configs, $configs);
         $configs['name'] = $newName;
@@ -145,15 +147,15 @@ class DomainResource
     /**
      * @return mixed
      */
-    public function getConfig($name, $default = null)
+    public function getConfig(string $name, $default = null)
     {
-        return isset($this->configs[$name]) ? $this->configs[$name] : $default;
+        return $this->configs[$name] ?? $default;
     }
 
     /**
      * @return array
      */
-    public function getConfigs()
+    public function getConfigs(): array
     {
         return $this->configs;
     }
@@ -161,7 +163,7 @@ class DomainResource
     /**
      * @return string|null
      */
-    public function getFactory()
+    public function getFactory(): ?string
     {
         return $this->getConfig('factory');
     }
@@ -169,7 +171,7 @@ class DomainResource
     /**
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -187,7 +189,7 @@ class DomainResource
      *
      * @return bool
      */
-    public function isIdentifierComposite()
+    public function isIdentifierComposite(): bool
     {
         return is_array($this->getIdentifier());
     }
@@ -195,7 +197,7 @@ class DomainResource
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -205,7 +207,7 @@ class DomainResource
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName(): string
     {
         $fullName = $this->name;
         if ($parentName = $this->getParentName()) {
@@ -218,7 +220,7 @@ class DomainResource
     /**
      * @return string
      */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -226,7 +228,7 @@ class DomainResource
     /**
      * @return string
      */
-    public function getParentName()
+    public function getParentName(): ?string
     {
         return $this->getConfig('parent');
     }
@@ -237,13 +239,13 @@ class DomainResource
     public function getParent()
     {
         if ($this->parent === false) {
-            throw new \DomainException("The parent resource of {$this->getName()} is not resolved yet");
+            throw new DomainException("The parent resource of {$this->getName()} is not resolved yet");
         }
         return $this->parent;
     }
 
     /**
-     * @param DomainResource $parent
+     * @param DomainResource|null $parent
      */
     public function setParent(DomainResource $parent = null)
     {
@@ -259,15 +261,15 @@ class DomainResource
     /**
      * @return string
      */
-    public function getForm()
+    public function getForm(): ?string
     {
         return $this->getConfig('form');
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRole()
+    public function getRole(): ?string
     {
         return $this->getConfig('role');
     }
@@ -275,39 +277,41 @@ class DomainResource
     /**
      * @return boolean
      */
-    public function isSingleResource()
+    public function isSingleResource(): bool
     {
         return $this->getConfig('single', false);
     }
 
     /**
      * @param string $name
+     *
      * @return bool
      */
-    public function hasAction($name)
+    public function hasAction(string $name): bool
     {
         return isset($this->actions[$name]);
     }
 
     /**
      * @param string $name
+     *
      * @return Action
      */
-    public function getAction($name)
+    public function getAction(string $name): ?Action
     {
         if (!$this->hasAction($name)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "The action %s is not registered in resource %s (actions : %s)",
                 $name, $this->getFullName(), implode(', ', array_keys($this->actions))
             ));
         }
-        return isset($this->actions[$name]) ? $this->actions[$name] : null;
+        return $this->actions[$name] ?? null;
     }
 
     /**
      * @return Action[]
      */
-    public function getActions()
+    public function getActions(): array
     {
         return $this->actions;
     }
@@ -318,7 +322,7 @@ class DomainResource
      * @param array $names
      * @return array
      */
-    public function getActionList(array $names)
+    public function getActionList(array $names): array
     {
         $results = array();
 
@@ -326,7 +330,7 @@ class DomainResource
             if ($action = $this->getAction($name)) {
                 $results[] = $action;
             } else {
-                throw new \DomainException("Action $name not found");
+                throw new DomainException("Action $name not found");
             }
         }
 
@@ -346,7 +350,7 @@ class DomainResource
      *
      * @return string
      */
-    public function getRoutePrefix()
+    public function getRoutePrefix(): string
     {
         return $this->routePrefix;
     }
@@ -355,21 +359,23 @@ class DomainResource
      * Get route name for an action. The suffix should be action name.
      *
      * @param string $routeSuffix
+     *
      * @return string
      */
-    public function getRouteName($routeSuffix)
+    public function getRouteName(string $routeSuffix): string
     {
         return $this->routePrefix . $routeSuffix;
     }
 
     /**
      * @param string $name
+     *
      * @return DomainResource
      */
-    public function getChild($name)
+    public function getChild(string $name): DomainResource
     {
         if (!isset($this->children[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Resource %s has no child resource %s",
                 $this->getFullName(), $name
             ));
@@ -379,9 +385,10 @@ class DomainResource
 
     /**
      * @param string $name
+     *
      * @return boolean
      */
-    public function hasChild($name)
+    public function hasChild(string $name): bool
     {
         return isset($this->children[$name]);
     }
@@ -389,7 +396,7 @@ class DomainResource
     /**
      * @return DomainResource[]
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
@@ -397,25 +404,12 @@ class DomainResource
     /**
      * Get the relative uri path for this resource.
      *
-     * @deprecated Use getBaseUriPath
-     *
-     * @param string $suffix
+     * @param string|null $suffix
      * @param boolean $instance If the object param is to be included
+     *
      * @return string
      */
-    public function getUriPath($suffix = null, $instance = false)
-    {
-        return $this->getBaseUriPath($suffix, $instance);
-    }
-
-    /**
-     * Get the relative uri path for this resource.
-     *
-     * @param string $suffix
-     * @param boolean $instance If the object param is to be included
-     * @return string
-     */
-    public function getBaseUriPath($suffix = null, $instance = false)
+    public function getBaseUriPath(string $suffix = null, bool $instance = false): string
     {
         $parts = array();
 
@@ -450,7 +444,7 @@ class DomainResource
      * @param null $suffix
      * @return string
      */
-    public function getInstanceUriPath($suffix = null)
+    public function getInstanceUriPath($suffix = null): string
     {
         if (null !== $suffix) {
             $suffix = str_replace('_', '-', Inflector::tableize($suffix));
@@ -460,24 +454,13 @@ class DomainResource
     }
 
     /**
-     * @deprecated Use getInstanceUriPath
-     *
-     * @param null $suffix
-     * @return string
-     */
-    public function getResourceUriPath($suffix = null)
-    {
-        return $this->getInstanceUriPath($suffix);
-    }
-
-    /**
      * Base route params for this resource. The current resource object id is not included in the params.
      *
      * @param mixed $data
      *
      * @return array
      */
-    public function getBaseRouteParams($data = null)
+    public function getBaseRouteParams($data = null): array
     {
         if (null !== $data) {
             $parent = $this->getParent();
@@ -490,7 +473,7 @@ class DomainResource
                 if ($parent->isResourceInstance($data)) {
                     return $parent->getInstanceRouteParams($data);
                 } else {
-                    throw new \InvalidArgumentException(sprintf(
+                    throw new InvalidArgumentException(sprintf(
                         "Invalid data of type %s (%s or %s expected)",
                         get_class($data), $this->getClass(), $parent->getClass()
                     ));
@@ -508,13 +491,13 @@ class DomainResource
      *
      * @return array
      */
-    public function getInstanceRouteParams($data)
+    public function getInstanceRouteParams($data): array
     {
         if ($this->isSingleResource()) {
             // Parent must be set for single resources
             $parent = $this->getParent();
             if (empty($parent)) {
-                throw new \DomainException(sprintf(
+                throw new DomainException(sprintf(
                     'Resource %s is single and must be a child of another resource.', $this->getFullName()
                 ));
             }
@@ -537,15 +520,8 @@ class DomainResource
      * @param array $data
      * @return array
      */
-    public function getCollectionRouteParams(array $data)
+    public function getCollectionRouteParams(array $data): array
     {
-        if (!is_array($data) && !is_null($data)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Bulk action %s needs an array of %s (%s given)",
-                $this->getFullName(), $this->getClass(), gettype($data)
-            ));
-        }
-
         $params = array();
 
         foreach ((array)$this->getIdentifier() as $identifier) {
@@ -562,58 +538,10 @@ class DomainResource
             // Use first item of collection
             $object = reset($data);
 
-            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($object)));
+            $params = array_merge($params, $parent->getInstanceRouteParams($this->getParentObject($object)));
         }
 
         return $params;
-    }
-
-    /**
-     * Build base route parameters (without the instance's identifier).
-     *
-     * If the resource is a child, it's parent must be taken into account.
-     *
-     * @deprecated Use getBaseRouteParams
-     *
-     * @param mixed $data
-     * @return array
-     */
-    public function getResourceBaseRouteParams($data)
-    {
-        if ($parent = $this->getParent()) {
-            return $parent->getRouteParamsForInstance($this->getParentObject($data));
-        }
-
-        return array();
-    }
-
-    /**
-     * @deprecated Use getBaseRouteParams
-     *
-     * @param $data
-     *
-     * @return array
-     */
-    public function getRouteParamsFromData($data)
-    {
-        return $this->getResourceBaseRouteParams($data);
-    }
-
-    /**
-     * Returns the route params from the parent object.
-     *
-     * @deprecated Use getBaseRouteParams
-     *
-     * @param mixed $parent
-     * @return array
-     */
-    public function getRouteParamsFromParent($parent)
-    {
-        if ($parentResource = $this->getParent()) {
-            return $parentResource->getRouteParamsForInstance($parent);
-        }
-
-        return array();
     }
 
     /**
@@ -631,7 +559,7 @@ class DomainResource
      *
      * @return array
      */
-    public function getIdentifierNames()
+    public function getIdentifierNames(): array
     {
         $paramName = $this->getParamName();
         $names = array();
@@ -651,57 +579,9 @@ class DomainResource
      * @param $data
      * @return bool
      */
-    public function isResourceInstance($data)
+    public function isResourceInstance($data): bool
     {
         return $data instanceof $this->class;
-    }
-
-    /**
-     * @deprecated use getInstanceRouteParams
-     *
-     * @param $data
-     * @return array
-     */
-    public function getResourceRouteParams($data)
-    {
-        return $this->getRouteParamsForInstance($data);
-    }
-
-    /**
-     * Build route parameters for an instance of this resource
-     *
-     * @deprecated use getInstanceRouteParams
-     *
-     * @param mixed $data
-     *
-     * @return array
-     */
-    public function getRouteParamsForInstance($data)
-    {
-        $params = array();
-
-        foreach ($this->getIdentifierValues($data) as $paramName => $value) {
-            $params[$paramName] = $value;
-        }
-
-        if ($parent = $this->getParent()) {
-            $params = array_merge($params, $parent->getRouteParamsForInstance($this->getParentObject($data)));
-        }
-
-        return $params;
-    }
-
-    /**
-     * Build route parameters for a collection of this resource
-     *
-     * @deprecated Use getCollectionRouteParams
-     *
-     * @param array $data
-     * @return array
-     */
-    public function getRouteParamsForCollection(array $data)
-    {
-        return $this->getCollectionRouteParams($data);
     }
 
     /**
@@ -718,7 +598,7 @@ class DomainResource
             } elseif ($this->isResourceInstance($data)) {
                 return $this->getPropertyAccessor()->getValue($data, $this->getParentPropertyPath());
             } else {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(sprintf(
                     "Invalid data of type %s (%s or %s expected)",
                     get_class($data), $this->getClass(), $parent->getClass()
                 ));
@@ -744,25 +624,12 @@ class DomainResource
     }
 
     /**
-     * Returns an object id value
-     *
-     * @deprecated Do not support composite id
-     *
-     * @param $data
-     * @return mixed
-     */
-    public function getObjectIdentifier($data)
-    {
-        return $this->getPropertyAccessor()->getValue($data, $this->getIdentifier());
-    }
-
-    /**
      * Returns the param => value used in routing
      *
      * @param mixed $data
      * @return array
      */
-    private function getIdentifierValues($data)
+    private function getIdentifierValues($data): array
     {
         $paramName = $this->getParamName();
         $values = array();
@@ -784,7 +651,7 @@ class DomainResource
      * @param $data
      * @return array
      */
-    private function extractIdentifiers($data)
+    private function extractIdentifiers($data): array
     {
         $values = array();
 
@@ -798,7 +665,7 @@ class DomainResource
     /**
      * @return PropertyAccessor
      */
-    private function getPropertyAccessor()
+    private function getPropertyAccessor(): PropertyAccessor
     {
         if (empty(self::$propertyAccessor)) {
             self::$propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -811,9 +678,10 @@ class DomainResource
      * Route parameters for action prototypes : placeholders are generated.
      *
      * @param bool $includeSelf
+     *
      * @return array
      */
-    public function getPrototypeRouteParams($includeSelf = false)
+    public function getPrototypeRouteParams(bool $includeSelf = false): array
     {
         $params = array();
 
@@ -839,9 +707,10 @@ class DomainResource
      * which will be used to get values from domain objects
      *
      * @param bool $includeSelf
+     *
      * @return array
      */
-    public function getPrototypeParamsMapping($includeSelf = false)
+    public function getPrototypeParamsMapping(bool $includeSelf = false): array
     {
         $mapping = array();
 
@@ -862,7 +731,7 @@ class DomainResource
         return $mapping;
     }
 
-    private function makePrototypeParamsMapping($suffix = '')
+    private function makePrototypeParamsMapping($suffix = ''): array
     {
         $mapping = array();
 
@@ -882,7 +751,7 @@ class DomainResource
      *
      * @return array
      */
-    public function getRouteParamsMapping()
+    public function getRouteParamsMapping(): array
     {
         $mapping = $this->makeRouteParamsMapping();
 
@@ -898,7 +767,7 @@ class DomainResource
         return $mapping;
     }
 
-    private function makeRouteParamsMapping($suffix = '')
+    private function makeRouteParamsMapping($suffix = ''): array
     {
         $mapping = array();
 
@@ -913,37 +782,7 @@ class DomainResource
         return $mapping;
     }
 
-    /**
-     * @deprecated
-     *
-     * @return string
-     */
-    public function getParentAssociation()
-    {
-        trigger_error('Deprecated function, use getParentPropertyPath', E_USER_DEPRECATED);
-
-        return $this->getConfig('parent_association', $this->getParentPropertyPath());
-    }
-
-    /**
-     * Path of the parent from this resource's instance.
-     *
-     * @deprecated use getParentPropertyPath instead
-     *
-     * @return string
-     */
-    public function getParentPath()
-    {
-        trigger_error('Deprecated function, use getParentPropertyPath', E_USER_DEPRECATED);
-
-        if ($parent = $this->getParent()) {
-            return $this->getConfig('parent_path', $parent->getName());
-        }
-
-        return null;
-    }
-
-    public function getParentPropertyPath()
+    public function getParentPropertyPath(): ?string
     {
         // Property path custom definition
         $propertyPath = $this->getConfig('parent_property_path');
@@ -970,11 +809,11 @@ class DomainResource
     }
 
     /**
-     * Path for this resource's instance from it's parent.
+     * Path for this resource's instance from its parent.
      *
      * @return string
      */
-    public function getSingleChildPath()
+    public function getSingleChildPath(): ?string
     {
         if (!$this->isSingleResource()) {
             return null;
@@ -987,7 +826,7 @@ class DomainResource
      * @param $data
      * @return array
      */
-    public function getObjectIdentifiers($data)
+    public function getObjectIdentifiers($data): array
     {
         $values = array();
 

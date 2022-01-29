@@ -26,7 +26,7 @@ class ResourceFactoryTest extends AdminTestCase
      */
     private $factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

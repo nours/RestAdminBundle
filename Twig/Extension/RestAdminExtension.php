@@ -16,13 +16,16 @@ use Nours\RestAdminBundle\Helper\AdminHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class RestAdminExtension
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class RestAdminExtension extends \Twig_Extension
+class RestAdminExtension extends AbstractExtension
 {
     private $requestStack;
     private $adminManager;
@@ -43,15 +46,15 @@ class RestAdminExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('rest_action', array($this, 'createControllerReference')),
-            new \Twig_SimpleFunction('rest_action_path', array($this, 'getActionPath')),
-            new \Twig_SimpleFunction('rest_action_url', array($this, 'getActionUrl')),
-            new \Twig_SimpleFunction('rest_action_controller', array($this, 'createControllerReference')),
-            new \Twig_SimpleFunction('rest_action_link', array($this, 'renderActionLink'), array(
+            new TwigFunction('rest_action', array($this, 'createControllerReference')),
+            new TwigFunction('rest_action_path', array($this, 'getActionPath')),
+            new TwigFunction('rest_action_url', array($this, 'getActionUrl')),
+            new TwigFunction('rest_action_controller', array($this, 'createControllerReference')),
+            new TwigFunction('rest_action_link', array($this, 'renderActionLink'), array(
                 'is_safe' => array('html'),
                 'needs_environment' => true
             )),
-            new \Twig_SimpleFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'), array(
+            new TwigFunction('rest_action_link_prototype', array($this, 'renderActionPrototype'), array(
                 'is_safe' => array('html'),
                 'needs_environment' => true
             ))
@@ -62,9 +65,10 @@ class RestAdminExtension extends \Twig_Extension
      * @param Action|string $action
      * @param mixed $data
      * @param array $params
-     * @return ControllerReference
+     *
+     * @return string
      */
-    public function getActionPath($action, $data = null, $params = array())
+    public function getActionPath($action, $data = null, array $params = []): string
     {
         $action = $this->helper->getAction($action);
 
@@ -75,9 +79,10 @@ class RestAdminExtension extends \Twig_Extension
      * @param Action|string $action
      * @param mixed $data
      * @param array $params
-     * @return ControllerReference
+     *
+     * @return string
      */
-    public function getActionUrl($action, $data = null, $params = array())
+    public function getActionUrl($action, $data = null, array $params = []): string
     {
         $action = $this->helper->getAction($action);
 
@@ -89,23 +94,23 @@ class RestAdminExtension extends \Twig_Extension
      * @param array $attributes
      * @return ControllerReference
      */
-    public function createControllerReference($action, array $attributes = array())
+    public function createControllerReference($action, array $attributes = array()): ControllerReference
     {
         return $this->helper->createControllerReference($action, $attributes);
     }
 
     /**
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param string|Action $action
      * @param $data
      * @param array $options
      * @return string
      */
-    public function renderActionLink(\Twig_Environment $environment, $action, $data = null, array $options = array())
+    public function renderActionLink(Environment $environment, $action, $data = null, array $options = array())
     {
         $action = $this->helper->getAction($action);
 
-        $routeParams = isset($options['routeParams']) ? $options['routeParams'] : array();
+        $routeParams = $options['routeParams'] ?? array();
 
         if ($data) {
             $routeParams = array_merge($action->getRouteParams($data), $routeParams);
@@ -121,12 +126,12 @@ class RestAdminExtension extends \Twig_Extension
     }
 
     /**
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param string|Action $action
      * @param array $options
      * @return string
      */
-    public function renderActionPrototype(\Twig_Environment $environment, $action, array $options = array())
+    public function renderActionPrototype(Environment $environment, $action, array $options = array()): string
     {
         $action = $this->helper->getAction($action);
 
@@ -136,7 +141,7 @@ class RestAdminExtension extends \Twig_Extension
         $options['routeParams'] = array_merge($action->getPrototypeRouteParams(), $options['routeParams']);
 
         $context = $this->makeActionContext($action, $options);
-        $template = isset($options['template']) ? $options['template'] : $this->getTemplate($action);
+        $template = $options['template'] ?? $this->getTemplate($action);
 
         return $environment->render($template, $context);
     }
@@ -152,7 +157,7 @@ class RestAdminExtension extends \Twig_Extension
      * @param array $options
      * @return array
      */
-    private function makeActionContext(Action $action, array $options)
+    private function makeActionContext(Action $action, array $options): array
     {
         return array_merge(array(
             'label'       => $action->getConfig('label', $action->getName()),

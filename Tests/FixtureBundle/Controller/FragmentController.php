@@ -12,7 +12,9 @@ namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
 
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class FragmentController.
@@ -21,14 +23,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class FragmentController extends Controller
+class FragmentController extends AbstractController
 {
     /**
      * The template renders a post create action
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function createPostAction()
+    public function createPost(): Response
     {
         return $this->render('fragment/post_create.html.twig');
     }
@@ -37,9 +39,9 @@ class FragmentController extends Controller
      * The template renders a comment create action, using the post from main request attributes
      *
      * @param Post $parent
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function createPostCommentAction(Post $parent)
+    public function createPostComment(Post $parent): Response
     {
         return $this->render('fragment/post_comment_create.html.twig', array(
             'post' => $parent
@@ -50,9 +52,9 @@ class FragmentController extends Controller
      * The template forwards to current resource's create action : the main request
      * attributes are used to discover everything.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function createAction()
+    public function create(): Response
     {
         return $this->render('fragment/create.html.twig');
     }
@@ -60,9 +62,9 @@ class FragmentController extends Controller
     /**
      *
      * @param Comment $data
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function editPostCommentAction(Comment $data)
+    public function editPostComment(Comment $data): Response
     {
         return $this->render('fragment/post_comment_edit.html.twig', array(
             'comment' => $data
@@ -71,9 +73,9 @@ class FragmentController extends Controller
 
     /**
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function editAction()
+    public function edit(): Response
     {
         return $this->render('fragment/edit.html.twig');
     }

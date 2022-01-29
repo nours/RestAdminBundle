@@ -27,17 +27,17 @@ class FooControllerTest extends AdminTestCase
      */
     public function testFooIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/foos');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'foo/index.html.twig',
             $client->getResponse()->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '1-2-3-4-5-',
             $client->getResponse()->getContent()
         );
@@ -48,17 +48,17 @@ class FooControllerTest extends AdminTestCase
      */
     public function testFooGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/foos/42');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'foo/get.html.twig',
             $client->getResponse()->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'foo 42',
             $client->getResponse()->getContent()
         );

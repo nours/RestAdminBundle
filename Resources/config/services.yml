@@ -4,7 +4,24 @@ services:
 ##############################
   Nours\RestAdminBundle\Command\ResourcesDebugCommand:
     class: Nours\RestAdminBundle\Command\ResourcesDebugCommand
+    arguments: [ '@rest_admin.manager' ]
     tags: [ { name: console.command }]
+
+##############################
+# Controller
+##############################
+  Nours\RestAdminBundle\Controller\IndexController:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+    tags: ['controller.service_arguments']
+
+  Nours\RestAdminBundle\Controller\FormController:
+    class: Nours\RestAdminBundle\Controller\FormController
+    arguments:
+      - '@rest_admin.data_factory'
+      - '@rest_admin.action_form_factory'
+      - '@rest_admin.form_success_handler'
+    tags: ['controller.service_arguments']
 
 ##############################
 # Resources loading
@@ -54,11 +71,6 @@ services:
     class: Nours\RestAdminBundle\Routing\RoutingLoader
     arguments: [ '@rest_admin.manager', '@rest_admin.action_manager', '@event_dispatcher' ]
     tags: [ { name: 'routing.loader' } ]
-
-  rest_admin.routing.url_generator:
-    class: Nours\RestAdminBundle\Routing\UrlGenerator
-    public: true      # Tests only
-    arguments: [ '@router' ]
 
 ##############################
 # Core

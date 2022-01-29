@@ -24,7 +24,7 @@ class ActionManagerTest extends AdminTestCase
      */
     private $manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

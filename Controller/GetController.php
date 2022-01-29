@@ -8,18 +8,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Nours\RestAdminBundle\Tests\FixtureBundle\Controller;
-
+namespace Nours\RestAdminBundle\Controller;
 
 /**
- * Class SecuredController
- * 
+ * Class GetController
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class SecuredController
+class GetController
 {
-    public function index()
+    public function __invoke($data)
     {
-        return array();
+        return $data;
     }
 }

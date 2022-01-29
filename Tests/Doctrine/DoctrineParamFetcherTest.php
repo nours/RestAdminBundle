@@ -31,7 +31,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
      */
     private $fetcher;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -155,7 +155,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
             'comment' => 1,
         ));
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException(NotFoundHttpException::class);
 
         $this->fetcher->fetch($request);
     }
@@ -229,7 +229,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
         /** @var Post[] $data */
         $data = $request->attributes->get('data');
 
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertCount(2, $data);
 
         $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post', $data[0]);
@@ -256,7 +256,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
         /** @var Comment[] $data */
         $data = $request->attributes->get('data');
 
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertCount(1, $data);
 
         $this->assertInstanceOf('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment', $data[0]);

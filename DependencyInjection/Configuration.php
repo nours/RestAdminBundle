@@ -10,6 +10,10 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
+use Nours\RestAdminBundle\Controller\DefaultController;
+use Nours\RestAdminBundle\Controller\FormController;
+use Nours\RestAdminBundle\Controller\GetController;
+use Nours\RestAdminBundle\Controller\IndexController;
 use Nours\RestAdminBundle\Form\Type\BulkDeleteType;
 use Nours\RestAdminBundle\Form\Type\DeleteType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -27,8 +31,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('nours_rest_admin');
+        $treeBuilder = new TreeBuilder('nours_rest_admin');
+        $rootNode = $treeBuilder->getRootNode();
         
         $rootNode
             ->children()
@@ -83,20 +87,20 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('delete')->isRequired()->end()
                         ->scalarNode('bulk_delete')->isRequired()->end()
                         ->scalarNode('form')->defaultNull()->end()
-                        ->scalarNode('action')->defaultValue('NoursRestAdminBundle::action.html.twig')->end()
+                        ->scalarNode('action')->defaultValue('@NoursRestAdmin/action.html.twig')->end()
                     ->end()
                 ->end()
                 ->arrayNode('controllers')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('index')->defaultValue('NoursRestAdminBundle:Default:index')->end()
-                        ->scalarNode('get')->defaultValue('NoursRestAdminBundle:Default:get')->end()
-                        ->scalarNode('create')->defaultValue('NoursRestAdminBundle:Default:form')->end()
-                        ->scalarNode('edit')->defaultValue('NoursRestAdminBundle:Default:form')->end()
-                        ->scalarNode('copy')->defaultValue('NoursRestAdminBundle:Default:form')->end()
-                        ->scalarNode('delete')->defaultValue('NoursRestAdminBundle:Default:form')->end()
-                        ->scalarNode('bulk_delete')->defaultValue('NoursRestAdminBundle:Default:form')->end()
-                        ->scalarNode('form')->defaultValue('NoursRestAdminBundle:Default:form')->end()
+                        ->scalarNode('index')->defaultValue(IndexController::class)->end()
+                        ->scalarNode('get')->defaultValue(GetController::class)->end()
+                        ->scalarNode('create')->defaultValue(FormController::class)->end()
+                        ->scalarNode('edit')->defaultValue(FormController::class)->end()
+                        ->scalarNode('copy')->defaultValue(FormController::class)->end()
+                        ->scalarNode('delete')->defaultValue(FormController::class)->end()
+                        ->scalarNode('bulk_delete')->defaultValue(FormController::class)->end()
+                        ->scalarNode('form')->defaultValue(FormController::class)->end()
                     ->end()
                 ->end()
                 ->arrayNode('forms')

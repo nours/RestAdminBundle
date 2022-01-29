@@ -29,7 +29,7 @@ class JsonHandlerTest extends AdminTestCase
      */
     private $jsonHandler;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->jsonHandler = new JsonHandler($this->get('rest_admin.serializer'), $this->get('rest_admin.serialization_context'));
     }

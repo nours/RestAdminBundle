@@ -3,6 +3,12 @@ services:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment\CommentController
     public: true
 
+  Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FragmentController:
+    class: Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FragmentController
+    calls:
+      - [setContainer, ['@service_container']]
+    tags: ['controller.service_arguments']
+
   tests.form.post:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostType
     tags: [ { name: form.type } ]

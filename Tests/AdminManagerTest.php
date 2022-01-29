@@ -24,7 +24,7 @@ class AdminManagerTest extends AdminTestCase
      */
     private $manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class AdminManagerTest extends AdminTestCase
     {
         $this->manager->getResourceCollection();
 
-        $path = $this->getContainer()->getParameter('kernel.cache_dir') . '/appRestResourceCollection.php';
+        $path = static::getContainer()->getParameter('kernel.cache_dir') . '/appRestResourceCollection.php';
 
         $this->assertFileExists($path);
         $this->assertTrue(class_exists('appRestResourceCollection'));

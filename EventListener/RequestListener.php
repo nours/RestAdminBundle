@@ -11,9 +11,10 @@
 namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\AdminManager;
+use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 
@@ -32,9 +33,9 @@ class RequestListener implements EventSubscriberInterface
         $this->adminManager = $adminManager;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -49,13 +50,13 @@ class RequestListener implements EventSubscriberInterface
             if ($resource = $this->adminManager->getResource($resourceName)) {
                 $action = $resource->getAction($actionName);
                 if (!$action) {
-                    throw new \RuntimeException("Action ".$actionName." not found for resource ".$resourceName);
+                    throw new RuntimeException("Action ".$actionName." not found for resource ".$resourceName);
                 }
 
                 $attributes->set('resource', $resource);
                 $attributes->set('action', $action);
             } else {
-                throw new \RuntimeException("Resource ".$resourceName." not found");
+                throw new RuntimeException("Resource ".$resourceName." not found");
             }
         }
 

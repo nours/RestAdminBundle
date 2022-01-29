@@ -27,7 +27,7 @@ class PostControllerTest extends AdminTestCase
 //    public function testCreateJsonAction()
 //    {
 //        $this->loadFixtures();
-//        $client = $this->getClient();
+//        $client = $this->createClient();
 //
 //        $client->request('POST', '/posts.json', array(
 //            'post[content]' => 'created'
@@ -55,14 +55,14 @@ class PostControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts');
 
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post index</h1>',
             $client->getResponse()->getContent()
         );
@@ -73,8 +73,8 @@ class PostControllerTest extends AdminTestCase
      */
     public function testIndexJsonAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts.json');
 
@@ -96,19 +96,19 @@ class PostControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post 1</h1>',
             $response->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'content',
             $response->getContent()
         );
@@ -119,8 +119,8 @@ class PostControllerTest extends AdminTestCase
      */
     public function testGetAction404()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/9999');
 
@@ -134,8 +134,8 @@ class PostControllerTest extends AdminTestCase
      */
     public function testGetJsonAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request(
             'GET', '/posts/1',
@@ -159,13 +159,13 @@ class PostControllerTest extends AdminTestCase
      */
     public function testCreateAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create post</h1>',
             $client->getResponse()->getContent()
         );
@@ -193,13 +193,13 @@ class PostControllerTest extends AdminTestCase
      */
     public function testEditAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -228,14 +228,14 @@ class PostControllerTest extends AdminTestCase
      */
     public function testCopyAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/copy');
 
         $this->assertSuccessful($client->getResponse());
 //        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>copy post 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -267,15 +267,15 @@ class PostControllerTest extends AdminTestCase
      */
     public function testCustomFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/custom-form');
 
 //        echo $client->getResponse()->getContent();die;
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -302,8 +302,8 @@ class PostControllerTest extends AdminTestCase
      */
     public function testEditAction404()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/9999/edit');
 
@@ -317,13 +317,13 @@ class PostControllerTest extends AdminTestCase
      */
     public function testDeleteAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/2/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>delete post 2</h1>',
             $client->getResponse()->getContent()
         );
@@ -348,8 +348,8 @@ class PostControllerTest extends AdminTestCase
      */
     public function testDeleteAction404()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/9999/delete');
 
@@ -361,13 +361,13 @@ class PostControllerTest extends AdminTestCase
 
     public function testBulkDeleteAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/delete?id[]=1&id[]=2&id[]=3');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>bulk delete post</h1>',
             $client->getResponse()->getContent()
         );

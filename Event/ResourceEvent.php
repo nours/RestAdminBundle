@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\Event;
 
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * ResourceEvent, having knowledge of a resource and an action (optional)

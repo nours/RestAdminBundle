@@ -26,7 +26,7 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     private $fetcher;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

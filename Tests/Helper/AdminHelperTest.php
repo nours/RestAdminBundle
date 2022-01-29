@@ -26,7 +26,7 @@ class AdminHelperTest extends AdminTestCase
      */
     private $helper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->helper = $this->get('rest_admin.helper');
     }

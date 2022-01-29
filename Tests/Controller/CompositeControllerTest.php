@@ -25,21 +25,21 @@ class CompositeControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/composites');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>composite index</h1>',
             $client->getResponse()->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '1 - first',
             $client->getResponse()->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '1 - second',
             $client->getResponse()->getContent()
         );
@@ -50,15 +50,15 @@ class CompositeControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/composites/1/first');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>composite 1 - first</h1>',
             $response->getContent()
         );
@@ -69,13 +69,13 @@ class CompositeControllerTest extends AdminTestCase
      */
     public function testCreateAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/composites/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create composite</h1>',
             $client->getResponse()->getContent()
         );
@@ -113,12 +113,12 @@ class CompositeControllerTest extends AdminTestCase
      */
     public function testEditAction(Composite $composite)
     {
-        $client = $this->getClient();
+        $client = static::createClient();
 
         $crawler = $client->request('GET', '/composites/' . $composite->getId() . '/' . $composite->getName() . '/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit composite 2 - third</h1>',
             $client->getResponse()->getContent()
         );
@@ -156,12 +156,12 @@ class CompositeControllerTest extends AdminTestCase
      */
     public function testDeleteAction(Composite $composite)
     {
-        $client = $this->getClient();
+        $client = static::createClient();
 
         $crawler = $client->request('GET', '/composites/' . $composite->getId() . '/' . $composite->getName() . '/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>delete composite 1 - fourth</h1>',
             $client->getResponse()->getContent()
         );

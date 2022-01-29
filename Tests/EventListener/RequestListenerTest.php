@@ -14,6 +14,7 @@ use Nours\RestAdminBundle\EventListener\RequestListener;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -33,7 +34,7 @@ class RequestListenerTest extends AdminTestCase
         $request->attributes->set('_action', 'create');
         $request->headers->set('Accept', 'application/json');
 
-        $event = new GetResponseEvent($this->get('http_kernel'), $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($this->get('http_kernel'), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener->onKernelRequest($event);
 

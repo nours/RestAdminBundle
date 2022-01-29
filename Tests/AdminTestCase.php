@@ -12,10 +12,10 @@ namespace Nours\RestAdminBundle\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Tests\FixtureBundle\DataFixtures\SqlitePurger;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,20 +27,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdminTestCase extends WebTestCase
 {
-
-    public function setUp()
-    {
-
-
-        parent::setUp();
-    }
-
     /**
      * @return AdminManager
      */
-    protected function getAdminManager()
+    protected function getAdminManager(): AdminManager
     {
-        return $this->getContainer()->get('rest_admin.manager');
+        return static::getContainer()->get('rest_admin.manager');
     }
 
     /**
@@ -49,33 +41,16 @@ class AdminTestCase extends WebTestCase
      */
     protected function get($service)
     {
-        return $this->getContainer()->get($service);
+        return static::getContainer()->get($service);
     }
 
-    /**
-     * @return \Symfony\Bundle\FrameworkBundle\Client
-     */
-    protected function getClient()
-    {
-        $client = static::createClient();
-        return $client;
-    }
-
-    /**
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    protected function getContainer()
-    {
-        if (empty(static::$kernel)) {
-            static::bootKernel();
-        }
-
-        if (!static::$kernel->getContainer()) {
-            static::$kernel->boot();
-        }
-
-        return static::$kernel->getContainer();
-    }
+//    /**
+//     * @return KernelBrowser
+//     */
+//    protected function getClient(): KernelBrowser
+//    {
+//        return static::createClient();
+//    }
 
     /**
      * Returns a file locator for test config files.
@@ -84,11 +59,9 @@ class AdminTestCase extends WebTestCase
      */
     protected function getFileLocator()
     {
-        $locator = new FileLocator(array(
+        return new FileLocator(array(
             __DIR__ . '/app/config'
         ));
-
-        return $locator;
     }
 
 
@@ -110,9 +83,9 @@ class AdminTestCase extends WebTestCase
      *
      * @return EntityManager
      */
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
+        return static::getContainer()->get('doctrine.orm.entity_manager');
     }
 
     /**

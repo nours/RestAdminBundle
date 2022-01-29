@@ -31,7 +31,7 @@ class RedirectActionConfigListener implements EventSubscriberInterface
         }
 
         // Add default redirect handler
-        $event->addHandler('rest_admin.handler.redirect:handleRedirect', -20);
+        $event->addHandler('rest_admin.handler.redirect::handleRedirect', -20);
     }
 
     public static function getSubscribedEvents()

@@ -25,7 +25,7 @@ class ActionTest extends AdminTestCase
      */
     private $resource;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->resource = $this->getAdminManager()->getResource('post');
     }
@@ -48,7 +48,7 @@ class ActionTest extends AdminTestCase
         $action = $this->getAdminManager()->getAction('post.comment:copy');
 
         // Factory
-        $this->assertSame('tests.controller.comment:copyComment', $action->getFactory());
+        $this->assertSame('tests.controller.comment::copyComment', $action->getFactory());
 
         // Copy action is NOT read only
         $this->assertFalse($action->isReadOnly());

@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 /**
  * Creates resource instances.
  *
- * A resource can define it's own factory callback, using SF2 controller syntax. Otherwise, the new operator is called
+ * A resource can define its own factory callback, using SF2 controller syntax. Otherwise, the new operator is called
  * on resource class.
  * 
  * @author David Coudrier <david.coudrier@gmail.com>

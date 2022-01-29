@@ -9,7 +9,9 @@
  */
 
 namespace Nours\RestAdminBundle\Domain;
-use Doctrine\Common\Inflector\Inflector;
+
+use Nours\RestAdminBundle\Util\Inflector;
+use SplPriorityQueue;
 
 /**
  * Resource action description.
@@ -26,7 +28,7 @@ class Action
     /**
      * @var array
      */
-    private $config = array();
+    private $config;
 
     /**
      * @param DomainResource $resource
@@ -41,7 +43,7 @@ class Action
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getConfig('name');
     }
@@ -51,7 +53,7 @@ class Action
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->getResource()->getFullName() . ':' . $this->getName();
     }
@@ -59,7 +61,7 @@ class Action
     /**
      * @return bool
      */
-    public function hasInstance()
+    public function hasInstance(): bool
     {
         return $this->getConfig('instance');
     }
@@ -67,7 +69,7 @@ class Action
     /**
      * @return bool
      */
-    public function isBulk()
+    public function isBulk(): bool
     {
         return $this->getConfig('bulk');
     }
@@ -75,7 +77,7 @@ class Action
     /**
      * @return DomainResource
      */
-    public function getResource()
+    public function getResource(): DomainResource
     {
         return $this->resource;
     }
@@ -83,7 +85,7 @@ class Action
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->getConfig('type');
     }
@@ -91,11 +93,12 @@ class Action
     /**
      * @param string $key
      * @param mixed $default
+     *
      * @return mixed
      */
-    public function getConfig($key, $default = null)
+    public function getConfig(string $key, $default = null)
     {
-        return isset($this->config[$key]) ? $this->config[$key] : $default;
+        return $this->config[$key] ?? $default;
     }
 
     /**
@@ -103,7 +106,7 @@ class Action
      * @param mixed $value
      * @return mixed
      */
-    public function setConfig($key, $value)
+    public function setConfig(string $key, $value)
     {
         return $this->config[$key] = $value;
     }
@@ -111,7 +114,7 @@ class Action
     /**
      * @return array
      */
-    public function getConfigs()
+    public function getConfigs(): array
     {
         return $this->config;
     }
@@ -119,7 +122,7 @@ class Action
     /**
      * @return string
      */
-    public function getForm()
+    public function getForm(): string
     {
         return $this->getConfig('form', $this->getResource()->getForm());
     }
@@ -127,15 +130,15 @@ class Action
     /**
      * @return string|null
      */
-    public function getFactory()
+    public function getFactory(): ?string
     {
         return $this->getConfig('factory');
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRole()
+    public function getRole(): ?string
     {
         return $this->getConfig('role');
     }
@@ -147,7 +150,7 @@ class Action
      *
      * @return boolean
      */
-    public function isReadOnly()
+    public function isReadOnly(): bool
     {
         return $this->getConfig('read_only');
     }
@@ -155,7 +158,7 @@ class Action
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->getConfig('template');
     }
@@ -163,7 +166,7 @@ class Action
     /**
      * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         return $this->getConfig('controller');
     }
@@ -171,11 +174,11 @@ class Action
     /**
      * @return array
      */
-    public function getHandlers()
+    public function getHandlers(): array
     {
         $handlers = $this->getConfig('handlers', array());
 
-        $priorityQueue = new \SplPriorityQueue();
+        $priorityQueue = new SplPriorityQueue();
         foreach ($handlers as $handler) {
             $priorityQueue->insert($handler[0], $handler[1]);
         }
@@ -184,13 +187,14 @@ class Action
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
+     *
      * @return string
      */
-    public function getRouteName($name = null)
+    public function getRouteName(string $name = null): string
     {
         if ($name) {
-            trigger_error(sprintf('Overriding action route name is deprecated, use getFormActionRouteName instead'), E_USER_DEPRECATED);
+            trigger_error('Overriding action route name is deprecated, use getFormActionRouteName instead', E_USER_DEPRECATED);
         }
 
         return $this->resource->getRouteName($name ?: $this->getName());
@@ -201,7 +205,7 @@ class Action
      *
      * @return string
      */
-    public function getFormActionRouteSuffix()
+    public function getFormActionRouteSuffix(): string
     {
         return $this->getConfig('form_action_route_suffix', $this->getName());
     }
@@ -211,7 +215,7 @@ class Action
      *
      * @return string
      */
-    public function getFormActionRouteName()
+    public function getFormActionRouteName(): string
     {
         return $this->resource->getRouteName($this->getFormActionRouteSuffix());
     }
@@ -222,7 +226,7 @@ class Action
      * @param mixed $data
      * @return array
      */
-    public function getRouteParams($data = null)
+    public function getRouteParams($data = null): array
     {
         $resource = $this->resource;
 
@@ -243,7 +247,7 @@ class Action
      * @param DomainResource $resource
      * @return Action
      */
-    public function duplicate(DomainResource $resource)
+    public function duplicate(DomainResource $resource): Action
     {
         $clone = clone $this;
         $clone->resource = $resource;
@@ -258,7 +262,7 @@ class Action
      * @param null $suffix
      * @return string
      */
-    public function getUriPath($suffix = null)
+    public function getUriPath($suffix = null): string
     {
         if (is_null($suffix)) {
             // Default suffix is action param name
@@ -272,7 +276,7 @@ class Action
      *
      * @return array
      */
-    public function getPrototypeRouteParams()
+    public function getPrototypeRouteParams(): array
     {
         return $this->getResource()->getPrototypeRouteParams($this->hasInstance());
     }
@@ -285,7 +289,7 @@ class Action
      *
      * @return array
      */
-    public function getPrototypeParamsMapping()
+    public function getPrototypeParamsMapping(): array
     {
         $resource = $this->getResource();
 

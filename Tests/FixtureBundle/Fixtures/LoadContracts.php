@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Contract;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Invoice;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Order;

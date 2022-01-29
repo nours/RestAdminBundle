@@ -12,7 +12,7 @@ namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -37,9 +37,9 @@ class SecurityListener implements EventSubscriberInterface
         $this->checker = $checker;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

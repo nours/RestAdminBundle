@@ -73,7 +73,7 @@ class RoutesBuilder
             $method
         );
 
-        $this->eventDispatcher->dispatch(RestAdminEvents::ROUTE, $event);
+        $this->eventDispatcher->dispatch($event, RestAdminEvents::ROUTE);
 
         $route = new Route(
             $event->path, $event->defaults, $event->requirements, $event->options, $event->host, $event->schemes, $event->method

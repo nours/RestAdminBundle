@@ -10,6 +10,12 @@
 
 namespace Nours\RestAdminBundle\Tests\DependencyInjection;
 
+use Nours\RestAdminBundle\Controller\DefaultController;
+use Nours\RestAdminBundle\Controller\FormController;
+use Nours\RestAdminBundle\Controller\GetController;
+use Nours\RestAdminBundle\Controller\IndexController;
+use Nours\RestAdminBundle\Form\Type\BulkDeleteType;
+use Nours\RestAdminBundle\Form\Type\DeleteType;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 /**
@@ -21,11 +27,11 @@ class RestAdminExtensionTest extends AdminTestCase
 {
     public function testIndexActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.index');
+        $params = static::getContainer()->getParameter('rest_admin.actions.index');
 
         $this->assertEquals(array(
             'template'   => 'index.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:index',
+            'controller' => IndexController::class,
             'icon'       => 'list',        // See Tests/app/config/config_test.yml
             'default_option' => 'baz'
         ), $params);
@@ -34,11 +40,11 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testGetActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.get');
+        $params = static::getContainer()->getParameter('rest_admin.actions.get');
 
         $this->assertEquals(array(
             'template'   => 'get.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:get',
+            'controller' => GetController::class,
             'default_option' => 'foobar'        // See Tests/app/config/config_test.yml
         ), $params);
     }
@@ -46,11 +52,11 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testCreateActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.create');
+        $params = static::getContainer()->getParameter('rest_admin.actions.create');
 
         $this->assertEquals(array(
             'template'   => 'create.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:form',
+            'controller' => FormController::class,
 //            'form'       => null,
             'icon'       => 'plus',        // See Tests/app/config/config_test.yml
             'default_option' => 'foobar'
@@ -60,11 +66,11 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testEditActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.edit');
+        $params = static::getContainer()->getParameter('rest_admin.actions.edit');
 
         $this->assertEquals(array(
             'template'   => 'edit.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:form',
+            'controller' => FormController::class,
 //            'form'       => null,
             'icon'       => 'pencil',        // See Tests/app/config/config_test.yml
             'default_option' => 'foobar'
@@ -74,12 +80,12 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testDeleteActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.delete');
+        $params = static::getContainer()->getParameter('rest_admin.actions.delete');
 
         $this->assertEquals(array(
             'template'   => 'delete.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => 'Nours\RestAdminBundle\Form\Type\DeleteType',
+            'controller' => FormController::class,
+            'form'       => DeleteType::class,
             'icon'       => 'trash',        // See Tests/app/config/config_test.yml
             'default_option' => 'foobar'
         ), $params);
@@ -88,12 +94,12 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testBulkDeleteActionsParams()
     {
-        $params = $this->getContainer()->getParameter('rest_admin.actions.bulk_delete');
+        $params = static::getContainer()->getParameter('rest_admin.actions.bulk_delete');
 
         $this->assertEquals(array(
             'template'   => 'bulk_delete.html.twig',
-            'controller' => 'NoursRestAdminBundle:Default:form',
-            'form'       => 'Nours\RestAdminBundle\Form\Type\BulkDeleteType',
+            'controller' => FormController::class,
+            'form'       => BulkDeleteType::class,
             'default_option' => 'foobar'
         ), $params);
     }
@@ -101,14 +107,14 @@ class RestAdminExtensionTest extends AdminTestCase
 
     public function testServiceSerializer()
     {
-        $serializer = $this->getContainer()->get('rest_admin.serializer');
+        $serializer = static::getContainer()->get('rest_admin.serializer');
 
-        $this->assertSame($this->getContainer()->get('jms_serializer'), $serializer);
+        $this->assertSame(static::getContainer()->get('jms_serializer'), $serializer);
     }
 
     public function testServiceSerializationContext()
     {
-        $context = $this->getContainer()->get('rest_admin.serialization_context');
+        $context = static::getContainer()->get('rest_admin.serialization_context');
 
         $this->assertNotNull($context);
     }

@@ -50,19 +50,19 @@ class ORMActionConfigListener implements EventSubscriberInterface
         switch ($ormAction) {
             case 'create' :
                 if ($action->isBulk()) {
-                    $event->addHandler('rest_admin.handler.orm:handleBulkCreate', $priority);
+                    $event->addHandler('rest_admin.handler.orm::handleBulkCreate', $priority);
                 } else {
-                    $event->addHandler('rest_admin.handler.orm:handleCreate', $priority);
+                    $event->addHandler('rest_admin.handler.orm::handleCreate', $priority);
                 }
                 break;
             case 'update' :
-                $event->addHandler('rest_admin.handler.orm:handleUpdate', $priority);
+                $event->addHandler('rest_admin.handler.orm::handleUpdate', $priority);
                 break;
             case 'delete' :
                 if ($action->isBulk()) {
-                    $event->addHandler('rest_admin.handler.orm:handleBulkDelete', $priority);
+                    $event->addHandler('rest_admin.handler.orm::handleBulkDelete', $priority);
                 } else {
-                    $event->addHandler('rest_admin.handler.orm:handleDelete', $priority);
+                    $event->addHandler('rest_admin.handler.orm::handleDelete', $priority);
                 }
                 break;
         }

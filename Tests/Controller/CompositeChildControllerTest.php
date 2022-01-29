@@ -25,17 +25,17 @@ class CompositeChildControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/composites/1/first/children');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>composite.composite_child index</h1>',
             $client->getResponse()->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '1 - first - 1 - child',
             $client->getResponse()->getContent()
         );
@@ -46,8 +46,8 @@ class CompositeChildControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/composites/1/first/children/1/child');
 
@@ -55,7 +55,7 @@ class CompositeChildControllerTest extends AdminTestCase
 
 //        echo $response->getContent();die;
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>composite.composite_child 1 - first - 1 - child</h1>',
             $response->getContent()
         );

@@ -31,7 +31,7 @@ class RoutingLoaderTest extends AdminTestCase
      */
     private $collection;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -26,13 +26,13 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/1/comments');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post.comment index</h1>',
             $client->getResponse()->getContent()
         );
@@ -43,19 +43,19 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/1/comments/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post.comment 1</h1>',
             $response->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'comment',
             $response->getContent()
         );
@@ -66,8 +66,8 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testGetAction404ForBadParent()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/9999/comments/1');
 
@@ -81,13 +81,13 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testCreateFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/2/comments/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create post.comment</h1>',
             $client->getResponse()->getContent()
         );
@@ -116,13 +116,13 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testEditFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/comments/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post.comment 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -149,13 +149,13 @@ class CommentControllerTest extends AdminTestCase
      */
     public function testCopyAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/comments/1/copy');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>copy post.comment 1</h1>',
             $client->getResponse()->getContent()
         );

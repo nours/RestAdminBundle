@@ -10,10 +10,9 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
-use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\View\ViewHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 
@@ -36,9 +35,8 @@ class ViewListener implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseForControllerResultEvent $event
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(ViewEvent $event)
     {
         $request = $event->getRequest();
 

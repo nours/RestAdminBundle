@@ -10,10 +10,12 @@
 
 namespace Nours\RestAdminBundle\View;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 
 /**
@@ -21,16 +23,15 @@ use Symfony\Component\HttpFoundation\Response;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class TemplatingHandler implements ViewHandler
+class TwigHandler implements ViewHandler
 {
-
-    private $container;
+    private $twig;
     private $formats;
 
-    public function __construct(ContainerInterface $container, array $formats)
+    public function __construct(Environment $twig, array $formats)
     {
-        $this->container = $container;
-        $this->formats   = $formats;
+        $this->twig = $twig;
+        $this->formats = $formats;
     }
 
 
@@ -43,7 +44,9 @@ class TemplatingHandler implements ViewHandler
     public function handle($data, Request $request)
     {
         // Find template from action
+        /** @var DomainResource $resource */
         $resource = $request->attributes->get('resource');
+        /** @var Action $action */
         $action   = $request->attributes->get('action');
 
         // If the request has no resource nor action, return the data
@@ -77,20 +80,10 @@ class TemplatingHandler implements ViewHandler
         }
 
         // Render response
-        $content = $this->getTemplating()->render($template, $parameters);
+        $content = $this->twig->render($template, $parameters);
 
-        $response = new Response($content, $responseStatus, array(
+        return new Response($content, $responseStatus, array(
             'Content-Type' => $request->getMimeType($request->getRequestFormat())
         ));
-
-        return $response;
-    }
-
-    /**
-     * @return \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
-     */
-    private function getTemplating()
-    {
-        return $this->container->get('templating');
     }
 }

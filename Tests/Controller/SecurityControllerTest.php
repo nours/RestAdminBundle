@@ -21,7 +21,7 @@ class SecurityControllerTest extends AdminTestCase
 {
     public function testIndexIsForbiddenForAnonymous()
     {
-        $client = $this->createClient();
+        $client = static::createClient();
 
         $client->request('GET', '/secured');
 
@@ -30,7 +30,7 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testIndexIsForbiddenForUsery()
     {
-        $client = $this->createClient(array(), array(
+        $client = static::createClient(array(), array(
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'passuser',
         ));
@@ -42,10 +42,11 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testIndexIsAllowedForAdmin()
     {
-        $client = $this->createClient(array(), array(
+        $client = static::createClient(array(), array(
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'passadmin',
         ));
+        $client->catchExceptions(false);
 
         $client->request('GET', '/secured');
 
@@ -54,7 +55,7 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testCreateIsForbiddenForAnonymous()
     {
-        $client = $this->createClient();
+        $client = static::createClient();
 
         $client->request('GET', '/secured/create');
 
@@ -63,7 +64,7 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testCreateIsForbiddenForUsery()
     {
-        $client = $this->createClient(array(), array(
+        $client = static::createClient(array(), array(
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'passuser',
         ));
@@ -75,7 +76,7 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testCreateIsNotAllowedForAdmin()
     {
-        $client = $this->createClient(array(), array(
+        $client = static::createClient(array(), array(
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'passadmin',
         ));
@@ -87,7 +88,7 @@ class SecurityControllerTest extends AdminTestCase
 
     public function testCreateIsAllowedForSuperAdmin()
     {
-        $client = $this->createClient(array(), array(
+        $client = static::createClient(array(), array(
             'PHP_AUTH_USER' => 'super',
             'PHP_AUTH_PW' => 'passsuper',
         ));

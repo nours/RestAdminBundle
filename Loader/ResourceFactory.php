@@ -43,7 +43,7 @@ class ResourceFactory
      * @param EventDispatcherInterface $dispatcher
      * @param string $resourceClass
      */
-    public function __construct(ActionManager $actionManager, EventDispatcherInterface $dispatcher, $resourceClass)
+    public function __construct(ActionManager $actionManager, EventDispatcherInterface $dispatcher, string $resourceClass)
     {
         $this->actionManager = $actionManager;
         $this->dispatcher    = $dispatcher;
@@ -57,7 +57,7 @@ class ResourceFactory
      * @param array $configs
      * @return DomainResource
      */
-    public function createResource($class, array $configs)
+    public function createResource($class, array $configs): DomainResource
     {
         return new $this->resourceClass($class, $configs);
     }
@@ -74,7 +74,7 @@ class ResourceFactory
 
         foreach ($actions as $name => $config) {
             // Type may be defined in config, otherwise defaults to name
-            $type = isset($config['type']) ? $config['type'] : $name;
+            $type = $config['type'] ?? $name;
 
             // Check if this action type is registered
             if (!$this->actionManager->hasActionBuilder($type)) {
@@ -90,7 +90,7 @@ class ResourceFactory
             // Dispatch deprecated action config event
             // Adding handlers using this event did overwrite default configuration.
             $event = new ActionConfigEvent($resource, $name, $type, $config);
-            $this->dispatcher->dispatch(RestAdminEvents::ACTION, $event);
+            $this->dispatcher->dispatch($event, RestAdminEvents::ACTION);
 
             // Create the action
             $action = $builder->createAction($resource, $event->config);
@@ -113,7 +113,7 @@ class ResourceFactory
 
             // Dispatch action configuration after the action has been created.
             $event = new ActionConfigurationEvent($action);
-            $this->dispatcher->dispatch(RestAdminEvents::ACTION_CONFIG, $event);
+            $this->dispatcher->dispatch($event, RestAdminEvents::ACTION_CONFIG);
         }
     }
 
@@ -127,7 +127,7 @@ class ResourceFactory
     {
         // Dispatch resource config event
         $event = new ResourceCollectionEvent($resource, $collection);
-        $this->dispatcher->dispatch(RestAdminEvents::RESOURCE, $event);
+        $this->dispatcher->dispatch($event, RestAdminEvents::RESOURCE);
     }
 
     /**
@@ -140,7 +140,7 @@ class ResourceFactory
      *
      * @return array
      */
-    private function normalizeActionsConfig(DomainResource $resource, array $configs)
+    private function normalizeActionsConfig(DomainResource $resource, array $configs): array
     {
         // Append index action if not set and resource is not single
         if (!array_key_exists('index', $configs) && !$resource->isSingleResource()) {

@@ -20,4 +20,4 @@ new Nours\RestAdminBundle\NoursRestAdminBundle()
 Create main resources config file, for example in app/config/resources.yml, then configure it in bundle main configuration :
 
 nours_rest_admin:
-    resource: '%kernel.root_dir%/config/resources.yml'
+    resource: '%kernel.project_dir%/config/resources.yml'

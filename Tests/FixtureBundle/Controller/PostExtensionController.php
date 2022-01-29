@@ -27,6 +27,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
  *  form="Nours\RestAdminBundle\Tests\FixtureBundle\Form\PostExtensionType"
  * )
  *
+ * @Rest\Action("get", template="extension/get.html.twig")
  * @Rest\Action("create", template="extension/create.html.twig")
  * @Rest\Action("edit")
  * @Rest\Action("delete")

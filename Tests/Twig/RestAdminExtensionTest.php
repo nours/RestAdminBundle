@@ -40,7 +40,7 @@ class RestAdminExtensionTest extends AdminTestCase
      */
     private $requestStack;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -95,7 +95,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->assertNull($this->requestStack->getCurrentRequest());
 
-        $this->setExpectedException("RuntimeException");
+        $this->expectException("RuntimeException");
         $this->extension->createControllerReference('create');
     }
 

@@ -25,13 +25,14 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
+        $client->catchExceptions(false);
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/prefixed/posts');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post_prefixed index</h1>',
             $client->getResponse()->getContent()
         );
@@ -42,8 +43,8 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testIndexJsonAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/prefixed/posts.json');
 
@@ -65,19 +66,19 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/prefixed/posts/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post_prefixed 1</h1>',
             $response->getContent()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'content',
             $response->getContent()
         );
@@ -88,8 +89,8 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testGetJsonAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request(
             'GET', '/prefixed/posts/1',
@@ -113,13 +114,13 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testCreateFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/prefixed/posts/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create post_prefixed</h1>',
             $client->getResponse()->getContent()
         );
@@ -147,13 +148,13 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testEditFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/prefixed/posts/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post_prefixed 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -182,13 +183,13 @@ class PostPrefixedControllerTest extends AdminTestCase
      */
     public function testDeleteFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/prefixed/posts/2/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>delete post_prefixed 2</h1>',
             $client->getResponse()->getContent()
         );

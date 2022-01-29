@@ -41,7 +41,7 @@ class ResourceRouteVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function matchItem(ItemInterface $item)
+    public function matchItem(ItemInterface $item): ?bool
     {
         /** @var DomainResource $itemResource */
         if ($itemResource = $item->getExtra('resource')) {
@@ -56,7 +56,7 @@ class ResourceRouteVoter implements VoterInterface
     /**
      * @return DomainResource
      */
-    private function getRequestResource()
+    private function getRequestResource(): ?DomainResource
     {
         $request = $this->requestStack->getCurrentRequest();
 

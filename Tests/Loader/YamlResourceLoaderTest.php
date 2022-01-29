@@ -23,7 +23,7 @@ class YamlResourceLoaderTest extends AdminTestCase
      */
     private $loader;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class YamlResourceLoaderTest extends AdminTestCase
     public function testLoadPostResource()
     {
         /** @var ResourceCollection $resources */
-        $resources = $this->loader->load('../config/resources.yml');
+        $resources = $this->loader->load(__DIR__ . '/../app/config/resources.yml');
 
         $this->assertTrue($resources->has('post'));
 
@@ -83,7 +83,7 @@ class YamlResourceLoaderTest extends AdminTestCase
         });
 
         /** @var ResourceCollection $resources */
-        $resources = $this->loader->load('../config/resources.yml');
+        $resources = $this->loader->load(__DIR__ . '/../app/config/resources.yml');
 
         $post = $resources->get('post.comment');
         $this->assertEquals('bar', $post->getConfig('foo'));

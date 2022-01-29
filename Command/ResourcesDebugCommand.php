@@ -10,9 +10,10 @@
 
 namespace Nours\RestAdminBundle\Command;
 
+use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,8 +27,20 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ResourcesDebugCommand extends ContainerAwareCommand
+class ResourcesDebugCommand extends Command
 {
+    /**
+     * @var AdminManager
+     */
+    private $adminManager;
+
+    public function __construct(AdminManager $adminManager)
+    {
+        parent::__construct();
+
+        $this->adminManager = $adminManager;
+    }
+
     public function configure()
     {
         $this
@@ -48,9 +61,7 @@ EOF
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $manager = $this->getContainer()->get('rest_admin.manager');
-
-        $resources = $manager->getResourceCollection();
+        $resources = $this->adminManager->getResourceCollection();
 
         if ($resourceName = $input->getArgument('resource')) {
             $this->dumpResource($input, $output, $resources->get($resourceName));
@@ -135,7 +146,7 @@ EOF
         return $handlers;
     }
 
-    private function escape($value)
+    private function escape($value): string
     {
         if (is_array($value)) {
             return '[' . implode(', ', array_map(array($this, 'escape'), $value)) . ']';

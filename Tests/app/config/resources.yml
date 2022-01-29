@@ -32,7 +32,9 @@ resources:
     class: Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo
     actions:
       create: { form: Nours\RestAdminBundle\Tests\FixtureBundle\Form\FooType, role: ROLE_SUPER_ADMIN }
-      index: { controller: 'FixtureBundle:Secured:index' }
+      index:
+        controller: 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\SecuredController::index'
+        template: 'secured/index.html.twig'
     role: ROLE_ADMIN
     slug: secured
 

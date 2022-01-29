@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\Response;
  * )
  *
  * @Rest\Action(
+ *  "get", template = "comment/get.html.twig"
+ * )
+ * @Rest\Action(
  *  "create", form = CommentType::class
  * )
  * @Rest\Action(

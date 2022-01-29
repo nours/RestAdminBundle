@@ -57,7 +57,7 @@ class CopyActionBuilder extends AbstractBuilder
             'form' => null,
             'read_only' => false,
             'handler_action' => 'create',
-            'factory' => 'rest_admin.factory.copy:factory'
+            'factory' => 'rest_admin.factory.copy::factory'
         ));
     }
 

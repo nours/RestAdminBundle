@@ -39,7 +39,7 @@ class MenuFunctionalTest extends AdminTestCase
      */
     private $matcher;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->helper  = new ResourceMenuHelper($this->getAdminManager());
         $this->matcher = $this->get('knp_menu.matcher');

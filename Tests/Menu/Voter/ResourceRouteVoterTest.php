@@ -34,7 +34,7 @@ class ResourceRouteVoterTest extends AdminTestCase
      */
     private $requestStack;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

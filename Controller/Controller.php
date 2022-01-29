@@ -11,17 +11,28 @@
 namespace Nours\RestAdminBundle\Controller;
 
 use Nours\RestAdminBundle\Domain\Action;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Class Controller
+ *
+ * @deprecated TO DELETE AND REPLACE BY AbstractController
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class Controller extends BaseController
+class Controller extends AbstractController
 {
+    public static function getSubscribedServices()
+    {
+        return array_merge(parent::getSubscribedServices(), [
+//            'rest_admin.action_form_factory',
+//            'rest_admin.form_success_handler'
+        ]);
+    }
+
     /**
      * @param $data
      * @param Action $action
@@ -29,7 +40,7 @@ class Controller extends BaseController
      */
     protected function createResourceForm($data, Action $action)
     {
-        return $this->get('rest_admin.action_form_factory')->createForm($data, $action);
+        return $this->container->get('rest_admin.action_form_factory')->createForm($data, $action);
     }
 
     /**
@@ -41,6 +52,6 @@ class Controller extends BaseController
      */
     protected function handleSuccess($data, Request $request, FormInterface $form, Action $action)
     {
-        return $this->get('rest_admin.form_success_handler')->handle($data, $request, $form, $action);
+        return $this->container->get('rest_admin.form_success_handler')->handle($data, $request, $form, $action);
     }
 }

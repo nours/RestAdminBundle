@@ -25,13 +25,13 @@ class PostExtensionControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $client->request('GET', '/posts/1/extension');
 
         $this->assertSuccessful($client->getResponse());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post.extension 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -42,13 +42,13 @@ class PostExtensionControllerTest extends AdminTestCase
      */
     public function testCreateAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/2/extension/create');
 
         $this->assertSuccessful($client->getResponse());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create extension from post 2</h1>',
             $client->getResponse()->getContent()
         );
@@ -80,13 +80,13 @@ class PostExtensionControllerTest extends AdminTestCase
      */
     public function testEditAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/extension/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post.extension 1</h1>',
             $client->getResponse()->getContent()
         );
@@ -115,13 +115,13 @@ class PostExtensionControllerTest extends AdminTestCase
      */
     public function testDeleteAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/extension/delete');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>delete post.extension 1</h1>',
             $client->getResponse()->getContent()
         );

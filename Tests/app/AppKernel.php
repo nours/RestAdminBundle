@@ -40,6 +40,16 @@ class AppKernel extends Kernel
         $loader->load(__DIR__.'/config/config_test.yml');
     }
 
+    public function getCacheDir()
+    {
+        return __DIR__ . '/var/cache/' . $this->environment;
+    }
+
+    public function getLogDir()
+    {
+        return __DIR__ . '/var/log';
+    }
+
 //    /**
 //     * @return string
 //     */

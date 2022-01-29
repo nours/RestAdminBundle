@@ -25,13 +25,13 @@ class CommentBisControllerTest extends AdminTestCase
      */
     public function testIndexAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comment-bis');
+        $client->request('GET', '/posts/1/comment-bis');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post.comment_bis index</h1>',
             $client->getResponse()->getContent()
         );
@@ -42,20 +42,20 @@ class CommentBisControllerTest extends AdminTestCase
      */
     public function testGetAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
-        $crawler = $client->request('GET', '/posts/1/comment-bis/1');
+        $client->request('GET', '/posts/1/comment-bis/1');
 
         $response = $client->getResponse();
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>post.comment_bis 1</h1>',
             $response->getContent()
         );
-        $this->assertContains(
-            'comment',
+        $this->assertStringContainsString(
+            '<p>comment</p>',
             $response->getContent()
         );
     }
@@ -65,13 +65,13 @@ class CommentBisControllerTest extends AdminTestCase
      */
     public function testCreateFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/2/comment-bis/create');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>create post.comment_bis</h1>',
             $client->getResponse()->getContent()
         );
@@ -104,13 +104,13 @@ class CommentBisControllerTest extends AdminTestCase
      */
     public function testEditFormAction()
     {
+        $client = static::createClient();
         $this->loadFixtures();
-        $client = $this->getClient();
 
         $crawler = $client->request('GET', '/posts/1/comment-bis/1/edit');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<h1>edit post.comment_bis 1</h1>',
             $client->getResponse()->getContent()
         );

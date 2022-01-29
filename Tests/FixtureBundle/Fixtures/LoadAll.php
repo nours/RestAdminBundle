@@ -11,7 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CommentResponse;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
