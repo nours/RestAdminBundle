@@ -28,4 +28,9 @@ class BulkDeleteType extends AbstractType
     {
         $builder->add('submit', SubmitType::class);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'bulk_delete';
+    }
 }

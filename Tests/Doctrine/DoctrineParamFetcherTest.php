@@ -64,7 +64,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     }
 
     /**
-     * Hierarchy use case : the resource and it's parent must be loaded.
+     * Hierarchy use case : the resource and its parent must be loaded.
      */
     public function testFindModelHierarchy()
     {
@@ -116,7 +116,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     }
 
     /**
-     * Parent only use case : the resource has only it's parent parameter.
+     * Parent only use case : the resource has only its parent parameter.
      */
     public function testFindParentModel()
     {
@@ -141,7 +141,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     }
 
     /**
-     * Parent only use case : the resource has only it's parent parameter.
+     * Parent only use case : the resource has only its parent parameter.
      */
     public function testFindParentModelThrowsIfParentDoNotMatch()
     {
@@ -245,11 +245,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment');
 
-        $request = new Request(array('id' => 1), array(), array(
+        $request = new Request(['id' => [1]], [], [
             'resource' => $resource,
             'action'   => $resource->getAction('bulk_delete'),
             'post' => 1     // The comments are loaded from post 1
-        ));
+        ]);
 
         $this->fetcher->fetch($request);
 
@@ -270,11 +270,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment');
 
-        $request = new Request(array('id' => array()), array(), array(
+        $request = new Request(['id' => []], [], [
             'resource' => $resource,
             'action' => $resource->getAction('bulk_delete'),
             'post' => 1
-        ));
+        ]);
 
         $this->expectException(NotFoundHttpException::class);
 
@@ -288,11 +288,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment');
 
-        $request = new Request(array('id' => array(1, 9999)), array(), array(
+        $request = new Request(['id' => [1, 9999]], [], [
             'resource' => $resource,
             'action' => $resource->getAction('bulk_delete'),
             'post' => 1
-        ));
+        ]);
 
         $this->expectException(NotFoundHttpException::class);
 
@@ -306,11 +306,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment');
 
-        $request = new Request(array('id' => 1), array(), array(
+        $request = new Request(['id' => [1]], [], [
             'resource' => $resource,
             'action' => $resource->getAction('bulk_delete'),
             'post' => 9999
-        ));
+        ]);
 
         $this->expectException(NotFoundHttpException::class);
 
@@ -324,11 +324,11 @@ class DoctrineParamFetcherTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment');
 
-        $request = new Request(array('id' => 1), array(), array(
+        $request = new Request(['id' => [1]], [], [
             'resource' => $resource,
             'action' => $resource->getAction('bulk_delete'),
             'post' => 2
-        ));
+        ]);
 
         $this->expectException(NotFoundHttpException::class);
 

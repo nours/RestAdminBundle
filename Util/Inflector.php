@@ -30,17 +30,17 @@ final class Inflector
         return $inflector;
     }
 
-    public static function classify(string $word)
+    public static function classify(string $word): string
     {
         return self::getInflector()->classify($word);
     }
 
-    public static function tableize(string $word)
+    public static function tableize(string $word): string
     {
         return self::getInflector()->tableize($word);
     }
 
-    public static function pluralize(string $word)
+    public static function pluralize(string $word): string
     {
         return self::getInflector()->pluralize($word);
     }

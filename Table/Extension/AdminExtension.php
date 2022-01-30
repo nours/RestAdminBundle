@@ -130,7 +130,7 @@ class AdminExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'admin';
     }

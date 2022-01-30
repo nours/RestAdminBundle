@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -35,7 +36,7 @@ class DelegatingHandler implements ViewHandler
     /**
      * {@inheritdoc}
      */
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         foreach ($this->handlers as $handler) {
             if ($handler->supports($request)) {
@@ -50,7 +51,7 @@ class DelegatingHandler implements ViewHandler
     /**
      * {@inheritdoc}
      */
-    public function handle($data, Request $request)
+    public function handle($data, Request $request): ?Response
     {
         foreach ($this->handlers as $handler) {
             if ($handler->supports($request)) {

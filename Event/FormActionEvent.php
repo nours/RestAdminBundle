@@ -41,7 +41,7 @@ class FormActionEvent extends ResourceEvent
     /**
      * @return FormBuilderInterface
      */
-    public function getFormBuilder()
+    public function getFormBuilder(): FormBuilderInterface
     {
         return $this->formBuilder;
     }

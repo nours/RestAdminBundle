@@ -64,7 +64,7 @@ class EditActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'edit';
     }

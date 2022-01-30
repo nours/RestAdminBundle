@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
+use DomainException;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface;
@@ -19,7 +20,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-
 
 /**
  * Fetches parameters on master requests.
@@ -93,7 +93,7 @@ class ParamFetcherListener implements EventSubscriberInterface
 
         // Retrieve from map
         if (!isset($this->fetchers[$name])) {
-            throw new \DomainException("Param fetcher $name is not registered, please declare a service with rest_admin.param_fetcher tag");
+            throw new DomainException("Param fetcher $name is not registered, please declare a service with rest_admin.param_fetcher tag");
         }
 
         return $this->container->get($this->fetchers[$name]);

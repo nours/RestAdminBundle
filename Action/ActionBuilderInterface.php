@@ -29,7 +29,7 @@ interface ActionBuilderInterface
      * @param array $options
      * @return Action
      */
-    public function createAction(DomainResource $resource, array $options = array());
+    public function createAction(DomainResource $resource, array $options = []): Action;
 
     /**
      * Override to provide default options for
@@ -60,5 +60,5 @@ interface ActionBuilderInterface
     /**
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 }

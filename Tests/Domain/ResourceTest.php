@@ -152,7 +152,7 @@ class ResourceTest extends AdminTestCase
     }
 
     /**
-     * The resource route params for a resource having a parent should contain the resource and it's parent identifiers.
+     * The resource route params for a resource having a parent should contain the resource and its parent identifiers.
      */
     public function testGetInstanceRouteParamsOfChildResource()
     {

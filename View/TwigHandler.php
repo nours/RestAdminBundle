@@ -35,13 +35,13 @@ class TwigHandler implements ViewHandler
     }
 
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return in_array($request->getRequestFormat(), $this->formats);
     }
 
 
-    public function handle($data, Request $request)
+    public function handle($data, Request $request): ?Response
     {
         // Find template from action
         /** @var DomainResource $resource */

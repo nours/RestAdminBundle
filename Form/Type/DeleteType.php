@@ -29,4 +29,9 @@ class DeleteType extends AbstractType
     {
         $builder->add('submit', SubmitType::class);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'delete';
+    }
 }

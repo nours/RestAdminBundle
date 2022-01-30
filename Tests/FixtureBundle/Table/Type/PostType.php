@@ -36,8 +36,8 @@ class PostType extends AbstractType
                     'edit',
                     'comment:index'
                 ),
-                'action_attr' => function(Action $action) {
-                    return array('class' => 'btn');
+                'action_attr' => function() {
+                    return ['class' => 'btn'];
                 },
                 'action_label' => function(Action $action) {
                     return '<i class="fa fa-' . $action->getConfig('icon', 'question') . '"></i>' . $action->getName();
@@ -51,7 +51,7 @@ class PostType extends AbstractType
      *
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'post';
     }

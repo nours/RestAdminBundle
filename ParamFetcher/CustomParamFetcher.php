@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\ParamFetcher;
 
+use DomainException;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +43,7 @@ class CustomParamFetcher implements ParamFetcherInterface
         $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
     }
 
-    public function fetch(Request $request)
+    public function fetch(Request $request): void
     {
         /** @var DomainResource $resource */
         /** @var Action $action */
@@ -52,7 +53,7 @@ class CustomParamFetcher implements ParamFetcherInterface
         $callback = $action->getConfig('fetcher_callback', $resource->getConfig('fetcher_callback'));
 
         if (empty($callback)) {
-            throw new \DomainException(sprintf(
+            throw new DomainException(sprintf(
                 "The param fetcher callback for action %s is not defined",
                 $action->getFullName()
             ));
@@ -72,7 +73,7 @@ class CustomParamFetcher implements ParamFetcherInterface
         $controller = $this->controllerResolver->getController($subRequest);
 
         if ($controller === false) {
-            throw new \DomainException(sprintf(
+            throw new DomainException(sprintf(
                 "Param Fetcher controller %s for action %s could not be resolved",
                 $callback, $action->getFullName()
             ));

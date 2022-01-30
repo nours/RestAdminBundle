@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
- * @Rest\Resource(
+ * @Rest\DomainResource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Foo"
  * )
  *

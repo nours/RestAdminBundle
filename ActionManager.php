@@ -23,7 +23,7 @@ class ActionManager
     /**
      * @var ActionBuilderInterface[]
      */
-    private $actionBuilders = array();
+    private $actionBuilders = [];
 
     /**
      * @param ActionBuilderInterface $builder
@@ -37,7 +37,7 @@ class ActionManager
      * @param string $type
      * @return bool
      */
-    public function hasActionBuilder($type)
+    public function hasActionBuilder($type): bool
     {
         return isset($this->actionBuilders[$type]);
     }
@@ -46,7 +46,7 @@ class ActionManager
      * @param string $type
      * @return ActionBuilderInterface
      */
-    public function getActionBuilder($type)
+    public function getActionBuilder(string $type): ActionBuilderInterface
     {
         if (!$this->hasActionBuilder($type)) {
             throw new \InvalidArgumentException(sprintf(
@@ -59,7 +59,7 @@ class ActionManager
     /**
      * @return ActionBuilderInterface
      */
-    public function getCustomActionBuilder()
+    public function getCustomActionBuilder(): ActionBuilderInterface
     {
         if (!isset($this->actionBuilders['custom'])) {
             throw new \InvalidArgumentException(sprintf(
@@ -73,7 +73,7 @@ class ActionManager
     /**
      * @return ActionBuilderInterface[]
      */
-    public function getActionBuilders()
+    public function getActionBuilders(): array
     {
         return $this->actionBuilders;
     }

@@ -39,13 +39,13 @@ class JsonHandler implements ViewHandler
     }
 
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return $request->getRequestFormat() == 'json';
     }
 
 
-    public function handle($data, Request $request)
+    public function handle($data, Request $request): ?Response
     {
         $responseStatus = Response::HTTP_OK;
 

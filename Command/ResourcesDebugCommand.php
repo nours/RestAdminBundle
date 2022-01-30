@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Without arguments, prints all available resources.
  *
- * The first argument is the resource name, the command will dump it's actions.
+ * The first argument is the resource name, the command will dump its actions.
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  */

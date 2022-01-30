@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Action;
 
+use DomainException;
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
@@ -30,7 +31,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * @param array $defaultOptions
      */
-    public function __construct(array $defaultOptions = array())
+    public function __construct(array $defaultOptions = [])
     {
         $this->defaultOptions   = $defaultOptions;
     }
@@ -38,7 +39,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createAction(DomainResource $resource, array $options = array())
+    public function createAction(DomainResource $resource, array $options = []): Action
     {
         return new Action($resource, $this->resolveOptions($options));
     }
@@ -59,7 +60,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
      * @param array $options
      * @return array
      */
-    protected function resolveOptions(array $options)
+    protected function resolveOptions(array $options): array
     {
         $resolver = new OptionsResolver();
         $resolver->setRequired(array(
@@ -72,7 +73,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
             },
             'type'      => $this->getName(),
             'instance'  => function(Options $options) {
-                // If the action needs an instance, it's resource's param name must be used for route building
+                // If the action needs an instance, its resource's param name must be used for route building
                 // Activated by default on all non bulk actions (bulks do not need single instance, but a collection)
                 // For custom action builders, set false as default if there is no specific instance involved in it (and is non bulk)
                 // See index or create
@@ -105,7 +106,7 @@ abstract class AbstractBuilder implements ActionBuilderInterface
         try {
             return $resolver->resolve($options);
         } catch (UndefinedOptionsException $e) {
-            throw new \DomainException(sprintf(
+            throw new DomainException(sprintf(
                 "Error while resolving options for action builder %s",
                 $this->getName()
             ), 0, $e);

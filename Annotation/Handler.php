@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
+use InvalidArgumentException;
 
 /**
  * @Annotation
@@ -33,11 +34,11 @@ class Handler
     public function __construct(array $values)
     {
         if (!isset($values['value'])) {
-            throw new \InvalidArgumentException("Missing action name");
+            throw new InvalidArgumentException("Missing action name");
         }
 
         $this->action = $values['value'];
 
-        $this->priority = isset($values['priority']) ? $values['priority'] : null;
+        $this->priority = $values['priority'] ?? null;
     }
 }

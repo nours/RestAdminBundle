@@ -17,7 +17,7 @@ use Nours\RestAdminBundle\Annotation as Rest;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
- * @Rest\Resource(
+ * @Rest\DomainResource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite",
  *  identifier = { "id", "name" },
  *  form = "Nours\RestAdminBundle\Tests\FixtureBundle\Form\CompositeType"

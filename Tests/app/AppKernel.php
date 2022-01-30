@@ -39,40 +39,4 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__.'/config/config_test.yml');
     }
-
-    public function getCacheDir()
-    {
-        return __DIR__ . '/var/cache/' . $this->environment;
-    }
-
-    public function getLogDir()
-    {
-        return __DIR__ . '/var/log';
-    }
-
-//    /**
-//     * @return string
-//     */
-//    public function getCacheDir()
-//    {
-//        $cacheDir = sys_get_temp_dir().'/nours-restrestadmin/cache';
-//        if (!is_dir($cacheDir)) {
-//            mkdir($cacheDir, 0777, true);
-//        }
-//
-//        return $cacheDir;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getLogDir()
-//    {
-//        $logDir = sys_get_temp_dir().'/nours-restrestadmin/logs';
-//        if (!is_dir($logDir)) {
-//            mkdir($logDir, 0777, true);
-//        }
-//
-//        return $logDir;
-//    }
 }

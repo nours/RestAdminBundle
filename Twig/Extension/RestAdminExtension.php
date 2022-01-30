@@ -10,10 +10,8 @@
 
 namespace Nours\RestAdminBundle\Twig\Extension;
 
-use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Helper\AdminHelper;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -27,15 +25,11 @@ use Twig\TwigFunction;
  */
 class RestAdminExtension extends AbstractExtension
 {
-    private $requestStack;
-    private $adminManager;
     private $helper;
     private $actionTemplate;
 
-    public function __construct(RequestStack $requestStack, AdminManager $adminManager, AdminHelper $helper, $actionTemplate)
+    public function __construct(AdminHelper $helper, $actionTemplate)
     {
-        $this->requestStack   = $requestStack;
-        $this->adminManager   = $adminManager;
         $this->helper         = $helper;
         $this->actionTemplate = $actionTemplate;
     }
@@ -43,7 +37,7 @@ class RestAdminExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return array(
             new TwigFunction('rest_action', array($this, 'createControllerReference')),
@@ -94,7 +88,7 @@ class RestAdminExtension extends AbstractExtension
      * @param array $attributes
      * @return ControllerReference
      */
-    public function createControllerReference($action, array $attributes = array()): ControllerReference
+    public function createControllerReference($action, array $attributes = []): ControllerReference
     {
         return $this->helper->createControllerReference($action, $attributes);
     }
@@ -106,7 +100,7 @@ class RestAdminExtension extends AbstractExtension
      * @param array $options
      * @return string
      */
-    public function renderActionLink(Environment $environment, $action, $data = null, array $options = array())
+    public function renderActionLink(Environment $environment, $action, $data = null, array $options = []): string
     {
         $action = $this->helper->getAction($action);
 
@@ -120,7 +114,7 @@ class RestAdminExtension extends AbstractExtension
         $options['routeParams'] = $routeParams;
 
         $context = $this->makeActionContext($action, $options);
-        $template = isset($options['template']) ? $options['template'] : $this->getTemplate($action);
+        $template = $options['template'] ?? $this->getTemplate($action);
 
         return $environment->render($template, $context);
     }
@@ -131,12 +125,12 @@ class RestAdminExtension extends AbstractExtension
      * @param array $options
      * @return string
      */
-    public function renderActionPrototype(Environment $environment, $action, array $options = array()): string
+    public function renderActionPrototype(Environment $environment, $action, array $options = []): string
     {
         $action = $this->helper->getAction($action);
 
         if (!isset($options['routeParams'])) {
-            $options['routeParams'] = array();
+            $options['routeParams'] = [];
         }
         $options['routeParams'] = array_merge($action->getPrototypeRouteParams(), $options['routeParams']);
 

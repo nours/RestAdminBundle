@@ -46,7 +46,7 @@ class AdminActionsType extends AbstractFieldType
         $actions = $options['actions'];
         $view->vars['actions'] = $actions;
 
-        $labels = $attrs = array();
+        $labels = $attrs = [];
         foreach ($actions as $index => $action) {
             $label = $options['action_label']($action);
             $labels[$index] = $label;
@@ -79,10 +79,10 @@ class AdminActionsType extends AbstractFieldType
             'action_label' => function(Action $action) {
                 return $action->getName();
             },
-            'action_attr' => function(Action $action) {
-                return array();
+            'action_attr' => function() {
+                return [];
             },
-            'attr_by_actions' => array()
+            'attr_by_actions' => []
         ));
 
         $resolver->setAllowedTypes('actions', array('array'));
@@ -136,7 +136,7 @@ class AdminActionsType extends AbstractFieldType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return PrototypeType::class;
     }
@@ -144,7 +144,7 @@ class AdminActionsType extends AbstractFieldType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'admin_actions';
     }

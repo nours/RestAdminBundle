@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Routing;
 
+use Nours\RestAdminBundle\Action\ActionBuilderInterface;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
@@ -50,6 +51,8 @@ class RoutingLoader extends Loader
      */
     public function __construct(AdminManager $manager, ActionManager $factory, EventDispatcherInterface $eventDispatcher)
     {
+        parent::__construct();
+
         $this->manager  = $manager;
         $this->builders = $factory;
         $this->eventDispatcher = $eventDispatcher;
@@ -98,16 +101,16 @@ class RoutingLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null): bool
     {
         return $type == 'admin';
     }
 
     /**
      * @param Action $action
-     * @return \Nours\RestAdminBundle\Action\ActionBuilderInterface
+     * @return ActionBuilderInterface
      */
-    private function getActionBuilder(Action $action)
+    private function getActionBuilder(Action $action): ActionBuilderInterface
     {
         try {
             return $this->builders->getActionBuilder($action->getType());

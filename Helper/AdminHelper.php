@@ -13,6 +13,7 @@ namespace Nours\RestAdminBundle\Helper;
 use Nours\RestAdminBundle\AdminManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -47,7 +48,7 @@ class AdminHelper
      * @param array $attributes
      * @return ControllerReference
      */
-    public function createControllerReference($action, array $attributes = array())
+    public function createControllerReference($action, array $attributes = []): ControllerReference
     {
         $request = $this->getRequest();
 
@@ -69,18 +70,23 @@ class AdminHelper
      * @param string|Action|null $action
      * @param mixed $data
      * @param array $routeParams
-     * @param string $referenceType
+     * @param int $referenceType
+     *
      * @return string
      */
-    public function generateUrl($action = null, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
-    {
+    public function generateUrl(
+        $action = null,
+        $data = null,
+        array $routeParams = [],
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
         $action = $this->getAction($action ?: $this->getCurrentAction());
 
         if (!is_array($routeParams)) {
             trigger_error("Using reference type parameter is deprecated, and is replaced by route params", E_USER_DEPRECATED);
         }
 
-        // The action guesses it's route params from data
+        // The action guesses its route params from data
         $routeParams = array_merge($routeParams, $action->getRouteParams($data));
 
         return $this->urlGenerator->generate($action->getRouteName(), $routeParams, $referenceType);
@@ -96,11 +102,15 @@ class AdminHelper
      *
      * @return string
      */
-    public function generateFormAction($action = null, $data = null, $routeParams = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
-    {
+    public function generateFormAction(
+        $action = null,
+        $data = null,
+        array $routeParams = [],
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
         $action = $this->getAction($action ?: $this->getCurrentAction());
 
-        // The action guesses it's route params from data
+        // The action guesses its route params from data
         $routeParams = array_merge($routeParams, $action->getRouteParams($data));
 
         return $this->urlGenerator->generate($action->getFormActionRouteName(), $routeParams, $referenceType);
@@ -112,7 +122,7 @@ class AdminHelper
      * @param Action|string $name
      * @return Action
      */
-    public function getAction($name)
+    public function getAction($name): Action
     {
         if ($name instanceof Action) {
             return $name;
@@ -125,16 +135,16 @@ class AdminHelper
 
         // Action relative to current resource
         if (!($resource = $this->getCurrentResource())) {
-            throw new \RuntimeException("No current resource to get action '$name' from");
+            throw new RuntimeException("No current resource to get action '$name' from");
         }
 
         return $resource->getAction($name);
     }
 
     /**
-     * @return DomainResource
+     * @return DomainResource|null
      */
-    public function getCurrentResource()
+    public function getCurrentResource(): ?DomainResource
     {
         if ($request = $this->getRequest()) {
             return $request->attributes->get('resource');
@@ -144,9 +154,9 @@ class AdminHelper
     }
 
     /**
-     * @return Action
+     * @return Action|null
      */
-    public function getCurrentAction()
+    public function getCurrentAction(): ?Action
     {
         $request = $this->getRequest();
         return $request ? $request->attributes->get('action') : null;
@@ -199,7 +209,7 @@ class AdminHelper
             return $parent;
         }
 
-        // Otherwise look for data, and retrieve it's parent
+        // Otherwise look for data, and retrieve its parent
         if ($data = $this->getResourceInstance()) {
             return $this->getCurrentResource()->getParentObject($data);
         }
@@ -212,7 +222,7 @@ class AdminHelper
      *
      * @return array
      */
-    public function getCurrentRouteParams()
+    public function getCurrentRouteParams(): array
     {
         if ($action = $this->getCurrentAction()) {
             if ($data = $this->getResourceInstance()) {
@@ -222,62 +232,22 @@ class AdminHelper
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
-     * @deprecated
-     *
-     * The route parameters for the current resource base
-     *
-     * @return array
+     * @return Request|null
      */
-    public function getResourceBaseRouteParams()
+    public function getRequest(): ?Request
     {
-        if ($parent = $this->getResourceParent()) {
-            return $this->getCurrentResource()->getBaseRouteParams($parent);
-        }
-
-        return array();
-    }
-
-    /**
-     * The route parameters for some data instance
-     *
-     * @param mixed $data
-     * @return array
-     */
-    public function getDataRouteParams($data)
-    {
-        return $this->getCurrentResource()->getInstanceRouteParams($data);
-    }
-
-    /**
-     * The route parameters for a parent resource
-     *
-     * @param mixed $parent
-     * @return array
-     */
-    public function getParentRouteParams($parent)
-    {
-        return $this->getCurrentResource()->getBaseRouteParams($parent);
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        return $request;
+        return $this->requestStack->getCurrentRequest();
     }
 
     /**
      * @param $name
      * @return DomainResource
      */
-    public function getResource($name)
+    public function getResource($name): DomainResource
     {
         return $this->adminManager->getResource($name);
     }

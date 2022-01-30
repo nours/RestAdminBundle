@@ -23,6 +23,6 @@ class ParamFetcher
 
     public function __construct(array $values)
     {
-        $this->action = isset($values['value']) ? $values['value'] : null;
+        $this->action = $values['value'] ?? null;
     }
 }

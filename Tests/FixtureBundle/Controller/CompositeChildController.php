@@ -17,7 +17,7 @@ use Nours\RestAdminBundle\Annotation as Rest;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
- * @Rest\Resource(
+ * @Rest\DomainResource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild",
  *  identifier = { "id", "name" },
  *  parent = "composite",

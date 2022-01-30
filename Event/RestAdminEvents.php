@@ -27,7 +27,7 @@ class RestAdminEvents
     const ROUTE = 'rest_admin.route';
 
     /**
-     * Action events are triggered when an action is built, and enables to update it's configuration.
+     * Action events are triggered when an action is built, and enables to update its configuration.
      *
      * The main use of this event is to append handlers for actions.
      *
@@ -40,7 +40,7 @@ class RestAdminEvents
     /**
      * Replacement for rest_admin.action event.
      *
-     * Has access to the whole action object, all of it's configuration is therefore available.
+     * Has access to the whole action object, all of its configuration is therefore available.
      */
     const ACTION_CONFIG = 'rest_admin.action_config';
 

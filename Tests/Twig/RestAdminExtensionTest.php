@@ -17,6 +17,7 @@ use Nours\RestAdminBundle\Twig\Extension\RestAdminExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Twig\Environment;
 
 /**
  * Class RestAdminExtensionTest
@@ -31,7 +32,7 @@ class RestAdminExtensionTest extends AdminTestCase
     private $extension;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -44,7 +45,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         parent::setUp();
 
-        $this->twig = $this->get('twig');
+        $this->twig = $this->get(Environment::class);
         $this->requestStack = $this->get('request_stack');
 //        $this->get('twig')->initRuntime();
         $this->extension    = $this->twig->getExtension(RestAdminExtension::class);

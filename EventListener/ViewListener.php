@@ -35,6 +35,9 @@ class ViewListener implements EventSubscriberInterface
     }
 
     /**
+     * @param ViewEvent $event
+     *
+     * @return void
      */
     public function onKernelView(ViewEvent $event)
     {

@@ -10,6 +10,11 @@
 
 namespace Nours\RestAdminBundle\Domain;
 
+use ArrayIterator;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
+use Serializable;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -18,22 +23,22 @@ use JMS\Serializer\Annotation as Serializer;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class ResourceCollection implements \Countable, \IteratorAggregate, \Serializable
+class ResourceCollection implements Countable, IteratorAggregate, Serializable
 {
     /**
      * @var DomainResource[]
      */
-    private $resources = array();
+    private $resources = [];
 
     /**
      * @var array
      *
      * @Serializer\Exclude()
      */
-    private $configResources = array();
+    private $configResources = [];
 
     /**
-     * Adds a resource, after resolving it's parent.
+     * Adds a resource, after resolving its parent.
      *
      * @param DomainResource $resource
      */
@@ -44,20 +49,24 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     }
 
     /**
-     * @return boolean
+     * @param string $name
+     *
+     * @return bool
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return isset($this->resources[$name]);
     }
 
     /**
+     * @param string $name
+     *
      * @return DomainResource
      */
-    public function get($name)
+    public function get(string $name): DomainResource
     {
         if (!$this->has($name)) {
-            throw new \InvalidArgumentException("No $name resource registered in this collection");
+            throw new InvalidArgumentException("No $name resource registered in this collection");
         }
         return $this->resources[$name];
     }
@@ -67,8 +76,7 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
      */
     public function resolveParents()
     {
-        $this->resolving = array();
-        foreach ($this->resources as $name => $resource) {
+        foreach ($this->resources as $resource) {
             $this->resolveResourceParent($resource);
         }
     }
@@ -92,24 +100,24 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->resources);
     }
 
     /**
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->resources);
+        return new ArrayIterator($this->resources);
     }
 
     /**
      * @param ResourceInterface $resource
      * @return $this
      */
-    public function addConfigResource(ResourceInterface $resource)
+    public function addConfigResource(ResourceInterface $resource): ResourceCollection
     {
         $this->configResources[] = $resource;
         return $this;
@@ -118,7 +126,7 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     /**
      * @return ResourceInterface[]
      */
-    public function getConfigResources()
+    public function getConfigResources(): array
     {
         return $this->configResources;
     }
@@ -154,6 +162,6 @@ class ResourceCollection implements \Countable, \IteratorAggregate, \Serializabl
     public function unserialize($serialized)
     {
         $this->resources = unserialize($serialized);
-        $this->configResources = array();
+        $this->configResources = [];
     }
 }

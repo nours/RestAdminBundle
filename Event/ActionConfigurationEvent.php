@@ -31,7 +31,7 @@ class ActionConfigurationEvent extends ResourceEvent
     /**
      * @return Action
      */
-    public function getAction()
+    public function getAction(): Action
     {
         return $this->action;
     }
@@ -42,7 +42,7 @@ class ActionConfigurationEvent extends ResourceEvent
      * @param string $handler
      * @param int $priority
      */
-    public function addHandler($handler, $priority)
+    public function addHandler(string $handler, int $priority)
     {
         $handlers = $this->action->getConfig('handlers');
         $handlers[] = array($handler, $priority);
@@ -54,7 +54,7 @@ class ActionConfigurationEvent extends ResourceEvent
      * @param string $key
      * @param mixed $value
      */
-    public function updateConfig($key, $value)
+    public function updateConfig(string $key, $value)
     {
         $this->action->setConfig($key, $value);
     }

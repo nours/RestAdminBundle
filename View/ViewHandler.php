@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\View;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -20,8 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface ViewHandler
 {
-    public function supports(Request $request);
+    public function supports(Request $request): bool;
 
 
-    public function handle($data, Request $request);
+    public function handle($data, Request $request): ?Response;
 }

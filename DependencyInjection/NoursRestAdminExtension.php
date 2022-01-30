@@ -10,7 +10,10 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
+use DomainException;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\TableBundle\Extension\AbstractExtension;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -146,7 +149,7 @@ class NoursRestAdminExtension extends Extension
             if (isset($config['extras'][$actionType])) {
                 $extras = $config['extras'][$actionType];
                 if (!is_array($extras)) {
-                    throw new \DomainException("Extra params for action type $actionType must be an array");
+                    throw new DomainException("Extra params for action type $actionType must be an array");
                 }
 
                 foreach ($extras as $extra => $value) {
@@ -165,10 +168,10 @@ class NoursRestAdminExtension extends Extension
     private function configureDomainClasses(array $config, ContainerBuilder $container)
     {
         $resourceClass = $config['resource_class'];
-        $subClass = 'Nours\\RestAdminBundle\\Domain\\DomainResource';
-        $reflection = new \ReflectionClass($resourceClass);
+        $subClass = DomainResource::class;
+        $reflection = new ReflectionClass($resourceClass);
         if ($resourceClass !== $subClass && !$reflection->isSubclassOf($subClass)) {
-            throw new \DomainException("Resource class $resourceClass must extend base class $subClass");
+            throw new DomainException("Resource class $resourceClass must extend base class $subClass");
         }
 
         $container->setParameter('rest_admin.resource_class', $resourceClass);

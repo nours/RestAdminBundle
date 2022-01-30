@@ -18,7 +18,7 @@ namespace Nours\RestAdminBundle\Domain;
  */
 class ResourceCollectionDumper
 {
-    public function dump(ResourceCollection $collection, $classCacheName)
+    public function dump(ResourceCollection $collection, $classCacheName): string
     {
         $content = <<<'EOS'
 <?php
@@ -69,7 +69,7 @@ EOS;
 //
 //class RestResourceCollection extends ResourceCollection
 //{
-//    private $serialized = array();
+//    private $serialized = [];
 //
 //    public function __construct()
 //    {

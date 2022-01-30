@@ -10,7 +10,6 @@
 
 namespace Nours\RestAdminBundle\EventListener;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Nours\RestAdminBundle\Event\ActionConfigurationEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,19 +23,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ORMActionConfigListener implements EventSubscriberInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $manager;
-
-    /**
-     * @param EntityManagerInterface $manager
-     */
-    public function __construct(EntityManagerInterface $manager)
-    {
-        $this->manager = $manager;
-    }
-
     /**
      * @param ActionConfigurationEvent $event
      */

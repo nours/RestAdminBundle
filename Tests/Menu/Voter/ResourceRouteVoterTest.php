@@ -130,7 +130,7 @@ class ResourceRouteVoterTest extends AdminTestCase
      * @param array $extras
      * @return MenuItem
      */
-    private function createItem($route = null, array $extras = array())
+    private function createItem($route = null, array $extras = [])
     {
         $item = new MenuItem('item', new MenuFactory());
         $item->setExtras($extras);
@@ -145,7 +145,7 @@ class ResourceRouteVoterTest extends AdminTestCase
     /**
      * @return Request
      */
-    private function initRequest(array $attributes = array())
+    private function initRequest(array $attributes = [])
     {
         $request = Request::create('test');
         $request->attributes->add($attributes);

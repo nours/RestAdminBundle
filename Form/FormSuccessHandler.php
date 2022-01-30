@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Form;
 
+use DomainException;
 use Nours\RestAdminBundle\Domain\Action;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,7 @@ class FormSuccessHandler
             $controller = $this->controllerResolver->getController($request);
 
             if ($controller === false) {
-                throw new \DomainException(sprintf(
+                throw new DomainException(sprintf(
                     "Handler %s for resource %s and action %s could not be resolved",
                     $handler, $action->getResource()->getFullName(), $action->getName()
                 ));

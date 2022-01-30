@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Action;
 
+use InvalidArgumentException;
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
@@ -39,10 +40,10 @@ class PublishActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $model)
+    public function buildForm(FormBuilderInterface $builder, Action $action, UrlGeneratorInterface $generator, $data)
     {
-        if (!$model instanceof Comment) {
-            throw new \InvalidArgumentException("Comment expected !");
+        if (!$data instanceof Comment) {
+            throw new InvalidArgumentException("Comment expected !");
         }
 
         $routeName = $action->getResource()->getRouteName('publish');
@@ -68,7 +69,7 @@ class PublishActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'publish';
     }

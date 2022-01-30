@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FooParamFetcher implements ParamFetcherInterface
 {
-    public function fetch(Request $request)
+    public function fetch(Request $request): void
     {
         if ($id = $request->attributes->get('foo')) {
             $request->attributes->set('data', new Foo($id));

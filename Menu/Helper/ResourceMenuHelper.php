@@ -18,7 +18,7 @@ use Nours\RestAdminBundle\AdminManager;
  *
  * The createResourceMenuItem adds an item for the index action of the resource, which will match stricly the index route.
  *
- * It will receive a non displayed children which will match any other resource route.
+ * It will receive a non-displayed children which will match any other resource route.
  *
  * @see \Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
  * 
@@ -38,14 +38,14 @@ class ResourceMenuHelper
         ItemInterface $menu,
         $resourceName,
         $childName,
-        array $childOptions = array()
-    ) {
+        array $childOptions = []
+    ): ItemInterface {
         $resource = $this->adminManager->getResource($resourceName);
 
         $route = $resource->getRouteName('index');
 
         $childOptions['route'] = $route;
-        $extras = isset($childOptions['extras']) ? $childOptions['extras'] : array();
+        $extras = $childOptions['extras'] ?? array();
         $childOptions['extras'] = $extras;
 
         // Add index action item

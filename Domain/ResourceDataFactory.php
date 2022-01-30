@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Domain;
 
+use DomainException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -46,7 +47,7 @@ class ResourceDataFactory
 
     public function handle(Request $request)
     {
-        /** @var \Nours\RestAdminBundle\Domain\Action $action */
+        /** @var Action $action */
         $action = $request->attributes->get('action');
 
         // Use action factory if defined (mandatory if present)
@@ -75,11 +76,13 @@ class ResourceDataFactory
      * Uses the creation callback if configured.
      *
      * @param Request $request
+     * @param Action $action
+     * @param ?string $factory
      * @return mixed
      */
-    private function makeData(Request $request, Action $action, $factory)
+    private function makeData(Request $request, Action $action, ?string $factory)
     {
-        // Clone request to use it's _controller attribute for resolver
+        // Clone request to use its _controller attribute for resolver
         $subRequest = $request->duplicate();
         $subRequest->attributes->set('_controller', $factory);
 
@@ -87,7 +90,7 @@ class ResourceDataFactory
         $controller = $this->controllerResolver->getController($subRequest);
 
         if ($controller === false) {
-            throw new \DomainException(sprintf(
+            throw new DomainException(sprintf(
                 "Factory method %s for action %s could not be resolved",
                 $factory, $action->getFullName()
             ));

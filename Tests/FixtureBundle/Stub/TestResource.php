@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\Stub;
 
 use Nours\RestAdminBundle\Domain\DomainResource;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
  * Sample Resource for test fixtures
@@ -21,7 +22,7 @@ class TestResource extends DomainResource
 {
     public function __construct()
     {
-        parent::__construct('Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post', array(
+        parent::__construct(Post::class, array(
             'name' => 'test'
         ));
     }

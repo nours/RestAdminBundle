@@ -51,7 +51,7 @@ class DomainResource
     /**
      * @var Action[]
      */
-    private $actions = array();
+    private $actions = [];
 
     /**
      * false means that the parent resource has not been resolved yet.
@@ -65,7 +65,7 @@ class DomainResource
      *
      * @var DomainResource[]
      */
-    private $children = array();
+    private $children = [];
 
     /**
      * @var string
@@ -122,7 +122,7 @@ class DomainResource
      * @param array $configs
      * @return DomainResource
      */
-    public function duplicate(string $newName, array $configs = array()): DomainResource
+    public function duplicate(string $newName, array $configs = []): DomainResource
     {
         $configs = array_merge($this->configs, $configs);
         $configs['name'] = $newName;
@@ -247,7 +247,7 @@ class DomainResource
     /**
      * @param DomainResource|null $parent
      */
-    public function setParent(DomainResource $parent = null)
+    public function setParent(?DomainResource $parent)
     {
         $this->parent = $parent;
 
@@ -324,7 +324,7 @@ class DomainResource
      */
     public function getActionList(array $names): array
     {
-        $results = array();
+        $results = [];
 
         foreach ($names as $name) {
             if ($action = $this->getAction($name)) {
@@ -411,7 +411,7 @@ class DomainResource
      */
     public function getBaseUriPath(string $suffix = null, bool $instance = false): string
     {
-        $parts = array();
+        $parts = [];
 
         if ($parent = $this->getParent()) {
             $parts[] = $parent->getInstanceUriPath();
@@ -522,10 +522,10 @@ class DomainResource
      */
     public function getCollectionRouteParams(array $data): array
     {
-        $params = array();
+        $params = [];
 
         foreach ((array)$this->getIdentifier() as $identifier) {
-            $params[$identifier] = array();
+            $params[$identifier] = [];
         }
 
         foreach ($data as $entity) {
@@ -562,7 +562,7 @@ class DomainResource
     public function getIdentifierNames(): array
     {
         $paramName = $this->getParamName();
-        $names = array();
+        $names = [];
 
         if ($this->isIdentifierComposite()) {
             foreach ($this->getIdentifier() as $identifier) {
@@ -632,7 +632,7 @@ class DomainResource
     private function getIdentifierValues($data): array
     {
         $paramName = $this->getParamName();
-        $values = array();
+        $values = [];
 
         if ($this->isIdentifierComposite()) {
             foreach ((array)$this->getIdentifier() as $identifier) {
@@ -653,7 +653,7 @@ class DomainResource
      */
     private function extractIdentifiers($data): array
     {
-        $values = array();
+        $values = [];
 
         foreach ((array)$this->getIdentifier() as $identifier) {
             $values[$identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);
@@ -683,7 +683,7 @@ class DomainResource
      */
     public function getPrototypeRouteParams(bool $includeSelf = false): array
     {
-        $params = array();
+        $params = [];
 
         if ($includeSelf) {
             if ($this->isIdentifierComposite()) {
@@ -712,7 +712,7 @@ class DomainResource
      */
     public function getPrototypeParamsMapping(bool $includeSelf = false): array
     {
-        $mapping = array();
+        $mapping = [];
 
         if ($includeSelf) {
             $mapping = $this->makePrototypeParamsMapping();
@@ -733,7 +733,7 @@ class DomainResource
 
     private function makePrototypeParamsMapping($suffix = ''): array
     {
-        $mapping = array();
+        $mapping = [];
 
         if ($this->isIdentifierComposite()) {
             foreach ($this->getIdentifierNames() as $identifier => $paramName) {
@@ -769,7 +769,7 @@ class DomainResource
 
     private function makeRouteParamsMapping($suffix = ''): array
     {
-        $mapping = array();
+        $mapping = [];
 
         if ($this->isIdentifierComposite()) {
             foreach ($this->getIdentifierNames() as $identifier => $paramName) {
@@ -828,7 +828,7 @@ class DomainResource
      */
     public function getObjectIdentifiers($data): array
     {
-        $values = array();
+        $values = [];
 
         foreach ((array)$this->getIdentifier() as $identifier) {
             $values[$identifier] = $this->getPropertyAccessor()->getValue($data, $identifier);

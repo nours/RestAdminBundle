@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle;
 
+use InvalidArgumentException;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
@@ -30,7 +31,7 @@ class AdminManager implements CacheWarmerInterface
     /**
      * @var ResourceCollection
      */
-    private $resources = array();
+    private $resources = [];
 
     /**
      * @var mixed
@@ -51,9 +52,9 @@ class AdminManager implements CacheWarmerInterface
      * @param LoaderInterface $loader
      * @param mixed $resource
      * @param string $cacheDir
-     * @param string $debug
+     * @param bool $debug
      */
-    public function __construct(LoaderInterface $loader, $resource, $cacheDir, $debug)
+    public function __construct(LoaderInterface $loader, $resource, string $cacheDir, bool $debug)
     {
         $this->loader   = $loader;
         $this->resource = $resource;
@@ -78,11 +79,6 @@ class AdminManager implements CacheWarmerInterface
                 /** @var ResourceCollection $collection */
                 $collection = $this->loader->load($this->resource);
 
-//                var_dump($collection);die;
-
-//                $export = var_export($collection, true);
-//                $cache->write('<?php return '.$export.';', $collection->getConfigResources());
-
                 $cache->write($this->dumper->dump($collection, $classCacheName), $collection->getConfigResources());
 
                 $this->resources = $collection;
@@ -101,9 +97,10 @@ class AdminManager implements CacheWarmerInterface
 
     /**
      * @param string $name
+     *
      * @return DomainResource
      */
-    public function getResource($name)
+    public function getResource(string $name): DomainResource
     {
         return $this->getResourceCollection()->get($name);
     }
@@ -112,9 +109,10 @@ class AdminManager implements CacheWarmerInterface
      * Returns an action from fully qualified name.
      *
      * @param string $name
+     *
      * @return Action
      */
-    public function getAction($name)
+    public function getAction(string $name): Action
     {
         $exploded = explode(':', $name, 2);
 
@@ -122,7 +120,7 @@ class AdminManager implements CacheWarmerInterface
         $action = $resource->getAction($exploded[1]);
 
         if (empty($action)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Action %s not found for resource %s",
                 $exploded[1], $exploded[0]
             ));
@@ -131,47 +129,47 @@ class AdminManager implements CacheWarmerInterface
         return $action;
     }
 
-    /**
-     * Returns the final resource name, including parent namespaces.
-     *
-     * @param DomainResource $resource
-     * @return string
-     */
-    protected function getResourceName(DomainResource $resource)
-    {
-        foreach ($this->getParentsIterator($resource) as $parent) {
-            $parts[] = $parent->getName();
-        }
+//    /**
+//     * Returns the final resource name, including parent namespaces.
+//     *
+//     * @param DomainResource $resource
+//     * @return string
+//     */
+//    protected function getResourceName(DomainResource $resource): string
+//    {
+//        foreach ($this->getParentsIterator($resource) as $parent) {
+//            $parts[] = $parent->getName();
+//        }
+//
+//        $parts[] = $resource->getName();
+//
+//        return implode('.', $parts);
+//    }
 
-        $parts[] = $resource->getName();
-
-        return implode('.', $parts);
-    }
-
-    /**
-     * Returns an iterator throughout resource parents from ancestor to immediate parent.
-     *
-     * @param DomainResource $resource
-     * @return \ArrayIterator|DomainResource[]
-     */
-    protected function getParentsIterator(DomainResource $resource)
-    {
-        $parents = array();
-        $current = $resource;
-
-        while ($parent = $current->getParent()) {
-            $parents[] = $parent;
-
-            $current = $parent;
-        }
-
-        return new \ArrayIterator(array_reverse($parents));
-    }
+//    /**
+//     * Returns an iterator throughout resource parents from ancestor to immediate parent.
+//     *
+//     * @param DomainResource $resource
+//     * @return \ArrayIterator|DomainResource[]
+//     */
+//    protected function getParentsIterator(DomainResource $resource)
+//    {
+//        $parents = [];
+//        $current = $resource;
+//
+//        while ($parent = $current->getParent()) {
+//            $parents[] = $parent;
+//
+//            $current = $parent;
+//        }
+//
+//        return new \ArrayIterator(array_reverse($parents));
+//    }
 
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir)
     {
         $currentDir = $this->cacheDir;
 

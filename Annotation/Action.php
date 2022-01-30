@@ -31,7 +31,7 @@ class Action
     /**
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     public function __construct(array $values)
     {

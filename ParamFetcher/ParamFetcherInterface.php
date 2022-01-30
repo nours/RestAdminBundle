@@ -19,5 +19,5 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface ParamFetcherInterface
 {
-    public function fetch(Request $request);
+    public function fetch(Request $request): void;
 }

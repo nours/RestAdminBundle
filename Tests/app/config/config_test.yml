@@ -15,7 +15,6 @@ framework:
         strict_requirements: ~
     form: ~
     csrf_protection: false
-    serializer: true
     validation:      { enable_annotations: true }
     default_locale:  "%locale%"
     trusted_hosts:   ~

@@ -10,6 +10,8 @@
 
 namespace Nours\RestAdminBundle\Loader;
 
+use InvalidArgumentException;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -48,7 +50,7 @@ class YamlResourceLoader extends FileLoader
         $path = $this->locator->locate($resource);
 
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('File "%s" not found.', $path));
+            throw new InvalidArgumentException(sprintf('File "%s" not found.', $path));
         }
 
         $configs = $this->getYamlParser()->parse(file_get_contents($path));
@@ -69,8 +71,8 @@ class YamlResourceLoader extends FileLoader
 
         // Process imports
         if (isset($configs['imports'])) {
-            foreach ($configs['imports'] as $name => $config) {
-                $import = $this->import($config['resource'], isset($config['type']) ? $config['type'] : null);
+            foreach ($configs['imports'] as $config) {
+                $import = $this->import($config['resource'], $config['type'] ?? null);
 
                 $resources->merge($import);
             }
@@ -82,12 +84,12 @@ class YamlResourceLoader extends FileLoader
     /**
      * @param string $name
      * @param array $config
-     * @return Resource
+     * @return DomainResource
      */
-    protected function loadResource($name, array $config)
+    protected function loadResource(string $name, array $config): DomainResource
     {
         if (!isset($config['class'])) {
-            throw new \InvalidArgumentException("Resource class missing for $name");
+            throw new InvalidArgumentException("Resource class missing for $name");
         }
 
         $class = $config['class'];
@@ -104,7 +106,7 @@ class YamlResourceLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null): bool
     {
         return is_string($resource) &&
             'yml' === pathinfo($resource, PATHINFO_EXTENSION) &&
@@ -114,7 +116,7 @@ class YamlResourceLoader extends FileLoader
     /**
      * @return Parser
      */
-    private function getYamlParser()
+    private function getYamlParser(): Parser
     {
         if (null === $this->parser) {
             $this->parser = new Parser();
@@ -129,14 +131,14 @@ class YamlResourceLoader extends FileLoader
      * @param array $configs
      * @return array
      */
-    private function normalizeActionsConfig(array $configs)
+    private function normalizeActionsConfig(array $configs): array
     {
-        $actions = isset($configs['actions']) ? $configs['actions'] : array();
+        $actions = $configs['actions'] ?? array();
 
         // Allow using string only to declare the action
         foreach ($actions as $name => $config) {
             if (is_string($config)) {
-                $actions[$config] = array();
+                $actions[$config] = [];
                 unset($actions[$name]);
             }
         }

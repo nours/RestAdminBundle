@@ -35,7 +35,7 @@ class ResourceCollectionEvent extends ResourceEvent
     /**
      * @return ResourceCollection
      */
-    public function getCollection()
+    public function getCollection(): ResourceCollection
     {
         return $this->collection;
     }

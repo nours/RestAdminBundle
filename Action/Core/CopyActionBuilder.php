@@ -64,7 +64,7 @@ class CopyActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'copy';
     }

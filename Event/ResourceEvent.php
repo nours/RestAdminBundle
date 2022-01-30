@@ -33,7 +33,7 @@ class ResourceEvent extends Event
 
     /**
      * @param DomainResource $resource
-     * @param Action $action
+     * @param Action|null $action
      */
     public function __construct(DomainResource $resource, Action $action = null)
     {
@@ -44,7 +44,7 @@ class ResourceEvent extends Event
     /**
      * @return DomainResource
      */
-    public function getResource()
+    public function getResource(): DomainResource
     {
         return $this->resource;
     }
@@ -52,7 +52,7 @@ class ResourceEvent extends Event
     /**
      * @return Action
      */
-    public function getAction()
+    public function getAction(): Action
     {
         return $this->action;
     }

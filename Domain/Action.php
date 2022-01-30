@@ -284,7 +284,7 @@ class Action
     /**
      * Returns an array containing the param mapping for this action, ex :
      *
-     * The mapping is relative to this action's instance is it has one. Otherwise, it is relative to it's parent
+     * The mapping is relative to this action's instance is it has one. Otherwise, it is relative to its parent
      * resource instance.
      *
      * @return array

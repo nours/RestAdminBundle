@@ -37,6 +37,8 @@ class AnnotationFileLoader extends Loader
         FileLocatorInterface $locator,
         AnnotationClassLoader $loader
     ) {
+        parent::__construct();
+
         $this->locator = $locator;
         $this->loader = $loader;
     }
@@ -54,7 +56,7 @@ class AnnotationFileLoader extends Loader
     }
 
 
-    private function findClass($path)
+    private function findClass($path): ?string
     {
         $tokens = token_get_all(file_get_contents($path));
 
@@ -101,7 +103,7 @@ class AnnotationFileLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null): bool
     {
         try {
             $path = $this->locator->locate($resource);

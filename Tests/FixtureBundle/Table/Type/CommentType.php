@@ -37,8 +37,8 @@ class CommentType extends AbstractType
                     'edit',
                     'publish'
                 ),
-                'action_attr' => function(Action $action) {
-                    return array('class' => 'btn');
+                'action_attr' => function() {
+                    return ['class' => 'btn'];
                 },
                 'action_label' => function(Action $action) {
                     return '<i class="fa fa-' . $action->getConfig('icon', 'question') . '"></i>' . $action->getName();
@@ -52,7 +52,7 @@ class CommentType extends AbstractType
      *
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'comment';
     }

@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
  *
- * @Rest\Resource(
+ * @Rest\DomainResource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment",
  *  name = "comment_bis",
  *  parent = "post",

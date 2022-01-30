@@ -35,7 +35,7 @@ class ActionConfigEvent extends ResourceEvent
     /**
      * @var array
      */
-    public $handlers = array();
+    public $handlers = [];
 
     /**
      * @param DomainResource $resource

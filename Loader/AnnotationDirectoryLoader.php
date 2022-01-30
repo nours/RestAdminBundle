@@ -11,6 +11,8 @@
 namespace Nours\RestAdminBundle\Loader;
 
 use Nours\RestAdminBundle\Domain\ResourceCollection;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
@@ -36,6 +38,8 @@ class AnnotationDirectoryLoader extends Loader
         FileLocatorInterface $locator,
         AnnotationFileLoader $loader
     ) {
+        parent::__construct();
+
         $this->locator = $locator;
         $this->loader = $loader;
     }
@@ -50,7 +54,7 @@ class AnnotationDirectoryLoader extends Loader
         $resources = new ResourceCollection();
         $resources->addConfigResource(new DirectoryResource($path));
 
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 //        $iterator = new \DirectoryIterator($path);
         foreach ($iterator as $file) {
             if (!$file->isFile() || $file->getExtension() != 'php' || $file->isDir()) {
@@ -67,7 +71,7 @@ class AnnotationDirectoryLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null): bool
     {
         try {
             $path = $this->locator->locate($resource);

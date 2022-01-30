@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\Form;
 
+use DomainException;
 use Nours\RestAdminBundle\ActionManager;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Event\FormActionEvent;
@@ -68,13 +69,13 @@ class ActionFormFactory
      * @param array $options
      * @return FormInterface
      */
-    public function createForm($data, Action $action, array $options = array())
+    public function createForm($data, Action $action, array $options = []): FormInterface
     {
         // Find form name
         $formName = $action->getForm();
 
         if (empty($formName)) {
-            throw new \DomainException(sprintf(
+            throw new DomainException(sprintf(
                 "Missing form for action %s",
                 $action->getFullName()
             ));

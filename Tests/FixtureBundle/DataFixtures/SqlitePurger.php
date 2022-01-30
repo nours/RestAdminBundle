@@ -35,8 +35,9 @@ class SqlitePurger extends ORMPurger
         parent::purge();
 
         $connection = $this->getObjectManager()->getConnection();
-        if ($connection->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'")->fetchColumn()) {
-            $this->getObjectManager()->getConnection()->executeUpdate('DELETE FROM sqlite_sequence');
+
+        if ($connection->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'")->fetchOne()) {
+            $this->getObjectManager()->getConnection()->executeStatement('DELETE FROM sqlite_sequence');
         }
     }
 }

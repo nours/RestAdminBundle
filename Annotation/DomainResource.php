@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
+use InvalidArgumentException;
 
 /**
  * Class can either be passed as default or as class argument.
@@ -49,7 +50,7 @@ class DomainResource
         } elseif (isset($values['value'])) {
             $this->class = $values['value'];
         } else {
-            throw new \InvalidArgumentException("Missing resource class");
+            throw new InvalidArgumentException("Missing resource class");
         }
 
         unset($values['class']);

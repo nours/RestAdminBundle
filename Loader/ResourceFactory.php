@@ -144,16 +144,16 @@ class ResourceFactory
     {
         // Append index action if not set and resource is not single
         if (!array_key_exists('index', $configs) && !$resource->isSingleResource()) {
-            $configs['index'] = array();
+            $configs['index'] = [];
         }
 
         // Append get action
         if (!array_key_exists('get', $configs)) {
-            $configs['get'] = array();
+            $configs['get'] = [];
         }
 
         // Filter disabled actions
-        $result = array();
+        $result = [];
         foreach ($configs as $name => $config) {
             // Disable the action if config is false
             if (false === $config) {

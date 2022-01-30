@@ -26,9 +26,9 @@ class Route extends \Symfony\Component\Routing\Annotation\Route
      * 
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
-        $array = array(
+        return array(
             'path'      => $this->getPath(),
             'name'      => $this->getName(),
             'requirements' => $this->getRequirements(),
@@ -39,7 +39,5 @@ class Route extends \Symfony\Component\Routing\Annotation\Route
             'schemes'   => $this->getSchemes(),
             'condition' => $this->getCondition()
         );
-        
-        return $array;
     }
 }

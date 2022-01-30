@@ -41,7 +41,7 @@ class RouteEvent extends ResourceEvent
     public $options;
 
     /**
-     * @var string
+     * @var string|string[]
      */
     public $method;
 
@@ -51,9 +51,9 @@ class RouteEvent extends ResourceEvent
     public $host;
 
     /**
-     * @var string|array
+     * @var string|string[]
      */
-    public $schemes = array();
+    public $schemes = [];
 
     /**
      * @param DomainResource $resource
@@ -62,7 +62,7 @@ class RouteEvent extends ResourceEvent
      * @param array $defaults
      * @param array $requirements
      * @param array $options
-     * @param string $method
+     * @param string|string[] $method
      */
     public function __construct(
         DomainResource $resource,

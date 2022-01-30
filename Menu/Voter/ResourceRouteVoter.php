@@ -31,7 +31,7 @@ class ResourceRouteVoter implements VoterInterface
     private $requestStack;
 
     /**
-     * @param Request $request
+     * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {

@@ -40,7 +40,7 @@ class RedirectHandler
      * @param mixed $data
      * @return RedirectResponse
      */
-    public function handleRedirect(DomainResource $resource, $data)
+    public function handleRedirect(DomainResource $resource, $data): RedirectResponse
     {
         if ($resource->isSingleResource()) {
             $url = $this->helper->generateUrl($resource->getParent()->getAction('index'), $data);

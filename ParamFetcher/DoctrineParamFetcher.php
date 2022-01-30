@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\ParamFetcher;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
@@ -35,31 +36,11 @@ class DoctrineParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * A resource is single if request has attributes for it's parameters.
-     *
-     * @param Request $request
-     * @param DomainResource $resource
-     * @return bool
-     */
-    private function isSingleInstance(Request $request, DomainResource $resource)
-    {
-        $isSingle = true;
-
-        foreach ($resource->getIdentifierNames() as $paramName) {
-            if (!$request->attributes->has($paramName)) {
-                $isSingle = false;
-            }
-        }
-
-        return $isSingle;
-    }
-
-    /**
      * @param Request $request
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
-    public function fetch(Request $request)
+    public function fetch(Request $request): void
     {
         /** @var DomainResource $resource */
         $resource = $request->attributes->get('resource');
@@ -126,7 +107,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * @param Request $request
      * @param Action $action
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     protected function fetchData(Request $request, Action $action)
     {
@@ -176,11 +157,11 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * @param string $finderMethod
      * @return mixed
      */
-    private function findSingle(Request $request, DomainResource $resource, $finderMethod = 'find')
+    private function findSingle(Request $request, DomainResource $resource, string $finderMethod = 'find')
     {
         // Composite identifier case
         if ($resource->isIdentifierComposite()) {
-            $criteria = array();
+            $criteria = [];
 
             foreach ($resource->getIdentifierNames() as $identifier => $paramName) {
                 $criteria[$identifier] = $request->attributes->get($paramName);
@@ -206,19 +187,18 @@ class DoctrineParamFetcher implements ParamFetcherInterface
      * @param DomainResource $resource
      * @return array
      */
-    protected function fetchCollection(Request $request, DomainResource $resource)
+    protected function fetchCollection(Request $request, DomainResource $resource): array
     {
-        /** @var QueryBuilder $builder */
         $builder = $this->manager->getRepository($resource->getClass())
                                  ->createQueryBuilder('r')
         ;
 
         $identifier = $resource->getIdentifier();
-        $ids = $request->query->get($identifier);
+        $ids = $request->query->all($identifier);
 
         if (empty($ids)) {
             // Must fetch at least one object
-            throw new NotFoundHttpException(sprintf('Failed to load collection'));
+            throw new NotFoundHttpException(sprintf('Failed to load collection of %s', $resource->getFullName()));
         }
 
         $ids = is_array($ids) ? $ids : [ $ids ];
@@ -236,7 +216,7 @@ class DoctrineParamFetcher implements ParamFetcherInterface
 
         if (count($collection) != count($ids)) {
             // Item count must match
-            throw new NotFoundHttpException(sprintf('Collection count do not match identifiers'));
+            throw new NotFoundHttpException(sprintf('Collection count do not match identifiers of %s', $resource->getFullName()));
         }
 
         $request->attributes->set('data', $collection);
@@ -250,76 +230,16 @@ class DoctrineParamFetcher implements ParamFetcherInterface
         return $collection;
     }
 
-
-    /**
-     * @deprecated
-     *
-     * Fetches data for a resource.
-     *
-     * @param Request $request
-     * @param DomainResource $resource
-     * @param string $finderMethod
-     * @return mixed
-     */
-    protected function fetchInstance(Request $request, DomainResource $resource, $finderMethod = 'find')
-    {
-        if ($resource->getParent()) {
-            $data = $this->findHierarchy($request, $resource);
-        } else {
-            $data = $this->findSingleOld($request, $resource, $finderMethod);
-        }
-
-        if (empty($data)) {
-            // Data must be found, otherwise throw
-            throw new NotFoundHttpException();
-        }
-
-        return $data;
-    }
-
-    /**
-     * @deprecated
-     *
-     * Finds a single resource (without parent) from request, eventually using action finder.
-     *
-     * @param Request $request
-     * @param DomainResource $resource
-     * @param string $finderMethod
-     * @return mixed
-     */
-    private function findSingleOld(Request $request, DomainResource $resource, $finderMethod)
-    {
-        // Composite identifier case
-        if ($resource->isIdentifierComposite()) {
-            $criteria = array();
-
-            foreach ($resource->getIdentifierNames() as $identifier => $paramName) {
-                $criteria[$identifier] = $request->attributes->get($paramName);
-            }
-
-            return $this->manager->getRepository($resource->getClass())->findOneBy($criteria);
-        }
-
-        // Single id
-        $resourceId = $request->attributes->get($resource->getParamName());
-
-        if ($resourceId) {
-            return $this->manager->getRepository($resource->getClass())->$finderMethod($resourceId);
-        }
-
-        return null;
-    }
-
     /**
      * Finds a resource having parent relationship.
      *
-     * Builds a query in order to ensure parent ownership (it's children may have duplicated ids).
+     * Builds a query in order to ensure parent ownership (its children may have duplicated ids).
      *
      * @param Request $request
      * @param DomainResource $resource
      * @return mixed
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     private function findHierarchy(Request $request, DomainResource $resource)
     {
@@ -335,7 +255,6 @@ class DoctrineParamFetcher implements ParamFetcherInterface
 
         $this->buildQueryForParent($builder, $request, $resource);
 
-//        echo $builder->getDQL();die;
         return $builder->getQuery()->getOneOrNullResult();
     }
 

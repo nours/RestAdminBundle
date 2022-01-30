@@ -10,6 +10,8 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection\Compiler;
 
+use DomainException;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,10 +30,10 @@ class ParamFetcherPass implements CompilerPassInterface
         $definition = $container->getDefinition('rest_admin.listener.param_fetcher');
 
         $ids = $container->findTaggedServiceIds('rest_admin.param_fetcher');
-        $fetchers = $references = array();
+        $fetchers = $references = [];
         foreach ($ids as $id => $tags) {
             if (!isset($tags[0]['alias'])) {
-                throw new \DomainException(sprintf(
+                throw new DomainException(sprintf(
                     "Service %s rest_admin.param_fetcher tag must have alias parameter",
                     $id
                 ));
@@ -40,16 +42,16 @@ class ParamFetcherPass implements CompilerPassInterface
             $alias = $tags[0]['alias'];
 
             if (isset($fetchers[$alias])) {
-                throw new \DomainException(sprintf(
+                throw new DomainException(sprintf(
                     "Param fetcher %s is declared twice (registered : %s, found : %s)",
                     $alias, $fetchers[$alias], $id
                 ));
             }
 
             // Check service implements the interface
-            $refl = new \ReflectionClass($container->getDefinition($id)->getClass());
+            $refl = new ReflectionClass($container->getDefinition($id)->getClass());
             if (!$refl->implementsInterface($interface)) {
-                throw new \DomainException(sprintf(
+                throw new DomainException(sprintf(
                     "Param fetcher service %s (%s) must implement %s",
                     $id, $refl->getName(), $interface
                 ));

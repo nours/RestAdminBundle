@@ -44,7 +44,7 @@ class BulkDeleteActionBuilder extends AbstractBuilder
                 ->setAction($generator->generate(
                     $action->getFormActionRouteName(),
                     $action->getRouteParams($data)
-                ));
+                ))
             ;
         }
     }
@@ -65,7 +65,7 @@ class BulkDeleteActionBuilder extends AbstractBuilder
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'bulk_delete';
     }

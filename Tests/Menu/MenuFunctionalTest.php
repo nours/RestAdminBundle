@@ -187,7 +187,7 @@ class MenuFunctionalTest extends AdminTestCase
     }
 
 
-    private function initRequest($uri, array $attributes = array())
+    private function initRequest($uri, array $attributes = [])
     {
         $request = Request::create($uri);
         $request->attributes->add($attributes);

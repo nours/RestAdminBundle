@@ -13,10 +13,17 @@ namespace Nours\RestAdminBundle\Loader;
 use Doctrine\Common\Annotations\Reader;
 use DomainException;
 use InvalidArgumentException;
-use Nours\RestAdminBundle\Annotation\DomainResource;
-use Nours\RestAdminBundle\Annotation\Route;
+use Nours\RestAdminBundle\Annotation\Action as ActionAnnotation;
+use Nours\RestAdminBundle\Annotation\DomainResource as DomainResourceAnnotation;
+use Nours\RestAdminBundle\Annotation\Factory as FactoryAnnotation;
+use Nours\RestAdminBundle\Annotation\Handler as HandlerAnnotation;
+use Nours\RestAdminBundle\Annotation\ParamFetcher as ParamFetcherAnnotation;
+use Nours\RestAdminBundle\Annotation\Route as RouteAnnotation;
+use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Util\Inflector;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -39,36 +46,6 @@ class AnnotationClassLoader implements LoaderInterface
     protected $factory;
 
     /**
-     * @var string
-     */
-    protected $resourceAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Resource';
-
-    /**
-     * @var string
-     */
-    protected $actionAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Action';
-
-    /**
-     * @var string
-     */
-    protected $factoryAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Factory';
-
-    /**
-     * @var string
-     */
-    protected $handlerAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Handler';
-
-    /**
-     * @var string
-     */
-    protected $routeAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\Route';
-
-    /**
-     * @var string
-     */
-    protected $fetcherAnnotationClass = 'Nours\RestAdminBundle\\Annotation\\ParamFetcher';
-
-    /**
      * Constructor.
      *
      * @param Reader $reader
@@ -85,13 +62,13 @@ class AnnotationClassLoader implements LoaderInterface
      * @param null $type
      * @return ResourceCollection
      */
-    public function load($class, $type = null)
+    public function load($class, $type = null): ResourceCollection
     {
         if (!class_exists($class)) {
             throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        $class = new \ReflectionClass($class);
+        $class = new ReflectionClass($class);
         if ($class->isAbstract()) {
             throw new InvalidArgumentException(sprintf('Annotations from class "%s" cannot be read as it is abstract.', $class));
         }
@@ -99,8 +76,7 @@ class AnnotationClassLoader implements LoaderInterface
         $collection = new ResourceCollection();
         $collection->addConfigResource(new FileResource($class->getFileName()));
 
-        if ($annotation = $this->reader->getClassAnnotation($class, $this->resourceAnnotationClass)) {
-            /** @var DomainResource $annotation */
+        if ($annotation = $this->reader->getClassAnnotation($class, DomainResourceAnnotation::class)) {
             $resource = $this->processResource($class, $annotation);
 
             $collection->add($resource);
@@ -113,25 +89,25 @@ class AnnotationClassLoader implements LoaderInterface
 
     /**
      *
-     * @param \ReflectionClass $class
-     * @param DomainResource $annotation
-     * @return \Nours\RestAdminBundle\Domain\DomainResource
+     * @param ReflectionClass $class
+     * @param DomainResourceAnnotation $annotation
+     * @return DomainResource
      */
-    private function processResource(\ReflectionClass $class, DomainResource $annotation): \Nours\RestAdminBundle\Domain\DomainResource
+    private function processResource(ReflectionClass $class, DomainResourceAnnotation $annotation): DomainResource
     {
         $resourceFactory = null;
         $fetcher = null;
         foreach ($class->getMethods() as $method) {
             // Look for @Factory annotation
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->factoryAnnotationClass && (null === $annot->action)) {
+                if (($annot instanceof FactoryAnnotation) && (null === $annot->action)) {
                     $resourceFactory = $this->getControllerName($class, $annotation, $method);
                 }
             }
 
-            // Look for @ParamFetcher annotation for the resource (it's action param is not set)
+            // Look for @ParamFetcher annotation for the resource (its action param is not set)
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->fetcherAnnotationClass && null === $annot->action) {
+                if ($annot instanceof ParamFetcherAnnotation && null === $annot->action) {
                     $fetcher = $this->getControllerName($class, $annotation, $method);
                 }
             }
@@ -158,17 +134,17 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * Creates the actions configuration from annotations.
      *
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      * @param $resourceAnnotation
      * @return array
      */
-    private function processActions(\ReflectionClass $class, $resourceAnnotation): array
+    private function processActions(ReflectionClass $class, $resourceAnnotation): array
     {
-        $configs = array();
+        $configs = [];
 
         // @Action class annotations
         foreach ($this->reader->getClassAnnotations($class) as $annotation) {
-            if ($annotation instanceof $this->actionAnnotationClass) {
+            if ($annotation instanceof ActionAnnotation) {
                 if (empty($annotation->name)) {
                     throw new DomainException(sprintf(
                         "Missing action name from @Action annotation on class %s", $class->getName()
@@ -184,7 +160,7 @@ class AnnotationClassLoader implements LoaderInterface
 
         // @Action method annotations
         foreach ($class->getMethods() as $method) {
-            if ($annotation = $this->reader->getMethodAnnotation($method, $this->actionAnnotationClass)) {
+            if ($annotation = $this->reader->getMethodAnnotation($method, ActionAnnotation::class)) {
                 // Action name can be ommitted from annotation
                 $actionName = $annotation->name ?: $this->guessActionName($method);
 
@@ -202,8 +178,8 @@ class AnnotationClassLoader implements LoaderInterface
                     }
 
                     // @Route method annotation
-                    /** @var Route[] $routes */
-                    $routes = $this->getMethodAnnotations($method, $this->routeAnnotationClass);
+                    /** @var array<RouteAnnotation> $routes */
+                    $routes = $this->getMethodAnnotations($method, RouteAnnotation::class);
                     if ($routes) {
                         foreach ($routes as $route) {
                             $routeConfig = $route->toArray();
@@ -213,7 +189,7 @@ class AnnotationClassLoader implements LoaderInterface
                                 $routeConfig['name'] = $actionName;
                             }
 
-                            // Add the route config to action, assuming it's a default one
+                            // Add the route config to action, assuming its a default one
                             $config['routes'][] = $routeConfig;
                         }
                     }
@@ -226,7 +202,7 @@ class AnnotationClassLoader implements LoaderInterface
         // Load all @ParamFetcher annotation for a specific action
         foreach ($class->getMethods() as $method) {
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->fetcherAnnotationClass && ($actionName = $annot->action)) {
+                if ($annot instanceof ParamFetcherAnnotation && ($actionName = $annot->action)) {
                     // Check the action was previously found
                     if (!isset($configs[$actionName])) {
                         if (!in_array($actionName, array('index', 'get'))) {
@@ -237,7 +213,7 @@ class AnnotationClassLoader implements LoaderInterface
                         }
 
                         // Initialize config for index or get actions (others must be explicitly defined)
-                        $configs[$actionName] = array();
+                        $configs[$actionName] = [];
                     }
 
                     $configs[$actionName]['fetcher'] = 'custom';
@@ -251,7 +227,8 @@ class AnnotationClassLoader implements LoaderInterface
         // Other method annotations
         foreach ($class->getMethods() as $method) {
             // @Handler method annotation
-            foreach ($this->getMethodAnnotations($method, $this->handlerAnnotationClass) as $annotation) {
+            foreach ($this->getMethodAnnotations($method, HandlerAnnotation::class) as $annotation) {
+                /** @var HandlerAnnotation $annotation */
                 $actionName = $annotation->action;
 
                 if (!isset($configs[$actionName])) {
@@ -270,7 +247,8 @@ class AnnotationClassLoader implements LoaderInterface
         // Other method annotations
         foreach ($class->getMethods() as $method) {
             // @Factory method annotation
-            foreach ($this->getMethodAnnotations($method, $this->factoryAnnotationClass) as $annotation) {
+            foreach ($this->getMethodAnnotations($method, FactoryAnnotation::class) as $annotation) {
+                /** @var FactoryAnnotation $annotation */
                 if ($annotation->action) {
                     $actionName = $annotation->action;
 
@@ -294,10 +272,10 @@ class AnnotationClassLoader implements LoaderInterface
      *
      * The CamelCase notation is converted to camel_case.
      *
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
      * @return string
      */
-    private function guessActionName(\ReflectionMethod $method): string
+    private function guessActionName(ReflectionMethod $method): string
     {
         $name = preg_replace('/(\w+)Action/i', '$1', $method->getName());
 
@@ -307,11 +285,13 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * Gets the name for a controller method.
      *
+     * @param ReflectionClass $class
      * @param $resourceAnnotation
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
+     *
      * @return string
      */
-    private function getControllerName(\ReflectionClass $class, $resourceAnnotation, \ReflectionMethod $method): string
+    private function getControllerName(ReflectionClass $class, $resourceAnnotation, ReflectionMethod $method): string
     {
         if ($service = $resourceAnnotation->service) {
             // Use service_id::method notation
@@ -325,13 +305,16 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * Loads annotations of a given type from a method.
      *
-     * @param \ReflectionMethod $method
-     * @param $type
-     * @return array of $type
+     * @param ReflectionMethod $method
+     * @param class-string<T> $type
+     *
+     * @return array<T>
+     *
+     * @template T
      */
-    private function getMethodAnnotations(\ReflectionMethod $method, $type): array
+    private function getMethodAnnotations(ReflectionMethod $method, string $type): array
     {
-        $found = array();
+        $found = [];
         foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
             if ($annotation instanceof $type) {
                 $found[] = $annotation;

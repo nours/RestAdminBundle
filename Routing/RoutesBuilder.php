@@ -40,17 +40,17 @@ class RoutesBuilder
 
     /**
      * @param Action $action
-     * @param $routeSuffix
-     * @param $method
+     * @param string $routeSuffix
+     * @param string|string[] $method
      * @param $path
      * @param array $defaults
      * @param array $requirements
      * @param array $options
      */
     public function addRoute(
-        Action $action, $routeSuffix, $method, $path,
-        array $defaults = array(), array $requirements = array(),
-        array $options = array()
+        Action $action, string $routeSuffix, $method, $path,
+        array $defaults = [], array $requirements = [],
+        array $options = []
     ) {
         $resource = $action->getResource();
 

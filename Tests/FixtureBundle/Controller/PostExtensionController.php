@@ -19,7 +19,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
  *
  * @author David Coudrier <david.coudrier@gmail.com>
  *
- * @Rest\Resource(
+ * @Rest\DomainResource(
  *  "Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension",
  *  parent="post",
  *  name="extension",
