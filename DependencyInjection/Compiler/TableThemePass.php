@@ -23,7 +23,7 @@ class TableThemePass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if ($templates = $container->getParameter('nours_table.themes')) {
-            array_unshift($templates, 'NoursRestAdminBundle::table.html.twig');
+            array_unshift($templates, '@NoursRestAdmin/table.html.twig');
             $container->setParameter('nours_table.themes', $templates);
         }
     }
