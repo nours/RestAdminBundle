@@ -32,8 +32,6 @@ class YamlResourceLoaderTest extends AdminTestCase
 
     /**
      * The post resource is configured in app/config/resources.yml
-     *
-     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
      */
     public function testLoadPostResource()
     {
@@ -67,8 +65,6 @@ class YamlResourceLoaderTest extends AdminTestCase
 
     /**
      * The post resource is configured in app/config/resources.yml
-     *
-     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
      */
     public function testDispatchResourceConfigEvent()
     {

@@ -1,18 +1,14 @@
 services:
-  rest_admin.view_handler:
-    class: Nours\RestAdminBundle\View\DelegatingHandler
+  Nours\RestAdminBundle\View\DelegatingHandler:
 
-  rest_admin.view_handler.templating:
-    class: Nours\RestAdminBundle\View\TwigHandler
+  Nours\RestAdminBundle\View\TwigHandler:
     arguments: [ '@twig', '%rest_admin.listeners.templating.formats%' ]
     tags: [ { name: 'rest_admin.view_handler' } ]
 
-  rest_admin.view_handler.json:
-    class: Nours\RestAdminBundle\View\JsonHandler
+  Nours\RestAdminBundle\View\JsonHandler:
     arguments: [ '@rest_admin.serializer' ]
     tags: [ { name: 'rest_admin.view_handler' } ]
 
-  rest_admin.listener.view_handler:
-    class: Nours\RestAdminBundle\EventListener\ViewListener
-    arguments: [ '@rest_admin.view_handler' ]
+  Nours\RestAdminBundle\EventListener\ViewListener:
+    arguments: [ '@Nours\RestAdminBundle\View\DelegatingHandler' ]
     tags: [ { name: 'kernel.event_subscriber' }]

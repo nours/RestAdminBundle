@@ -28,7 +28,7 @@ class ActionManagerTest extends AdminTestCase
     {
         parent::setUp();
 
-        $this->manager = $this->get('rest_admin.action_manager');
+        $this->manager = $this->get(ActionManager::class);
     }
 
     /**

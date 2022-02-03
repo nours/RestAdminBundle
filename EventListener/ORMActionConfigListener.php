@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\Event\ActionConfigurationEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
+use Nours\RestAdminBundle\Handler\ORMHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -36,19 +37,19 @@ class ORMActionConfigListener implements EventSubscriberInterface
         switch ($ormAction) {
             case 'create' :
                 if ($action->isBulk()) {
-                    $event->addHandler('rest_admin.handler.orm::handleBulkCreate', $priority);
+                    $event->addHandler(ORMHandler::class . '::handleBulkCreate', $priority);
                 } else {
-                    $event->addHandler('rest_admin.handler.orm::handleCreate', $priority);
+                    $event->addHandler(ORMHandler::class . '::handleCreate', $priority);
                 }
                 break;
             case 'update' :
-                $event->addHandler('rest_admin.handler.orm::handleUpdate', $priority);
+                $event->addHandler(ORMHandler::class . '::handleUpdate', $priority);
                 break;
             case 'delete' :
                 if ($action->isBulk()) {
-                    $event->addHandler('rest_admin.handler.orm::handleBulkDelete', $priority);
+                    $event->addHandler(ORMHandler::class . '::handleBulkDelete', $priority);
                 } else {
-                    $event->addHandler('rest_admin.handler.orm::handleDelete', $priority);
+                    $event->addHandler(ORMHandler::class . '::handleDelete', $priority);
                 }
                 break;
         }

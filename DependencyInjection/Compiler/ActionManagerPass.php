@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection\Compiler;
 
+use Nours\RestAdminBundle\ActionManager;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -23,7 +24,7 @@ class ActionManagerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('rest_admin.action_manager');
+        $definition = $container->getDefinition(ActionManager::class);
 
         $ids = $container->findTaggedServiceIds('rest_admin.action_builder');
         foreach ($ids as $id => $tags) {

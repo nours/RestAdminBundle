@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Action\Core;
 
 use Nours\RestAdminBundle\Action\AbstractBuilder;
 use Nours\RestAdminBundle\Domain\Action;
+use Nours\RestAdminBundle\Handler\CopyFactory;
 use Nours\RestAdminBundle\Routing\RoutesBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -57,7 +58,7 @@ class CopyActionBuilder extends AbstractBuilder
             'form' => null,
             'read_only' => false,
             'handler_action' => 'create',
-            'factory' => 'rest_admin.factory.copy::factory'
+            'factory' => CopyFactory::class . '::factory'
         ));
     }
 

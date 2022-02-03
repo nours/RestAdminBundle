@@ -12,6 +12,10 @@ namespace Nours\RestAdminBundle\DependencyInjection;
 
 use DomainException;
 use Nours\RestAdminBundle\Domain\DomainResource;
+use Nours\RestAdminBundle\Domain\ResourceDataFactory;
+use Nours\RestAdminBundle\Form\FormSuccessHandler;
+use Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher;
+use Nours\RestAdminBundle\View\JsonHandler;
 use Nours\TableBundle\Extension\AbstractExtension;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -100,7 +104,7 @@ class NoursRestAdminExtension extends Extension
         }
 
         // Fix Json Handler optional argument
-        $container->getDefinition('rest_admin.view_handler.json')->addArgument(new Reference(
+        $container->getDefinition(JsonHandler::class)->addArgument(new Reference(
             'rest_admin.serialization_context', ContainerInterface::NULL_ON_INVALID_REFERENCE
         ));
 
@@ -110,9 +114,9 @@ class NoursRestAdminExtension extends Extension
         // Support for Symfony ArgumentResolverInterface
         if (interface_exists(ArgumentResolverInterface::class)) {
             foreach ([
-                'rest_admin.param_fetcher.custom',
-                'rest_admin.data_factory',
-                'rest_admin.form_success_handler'
+                CustomParamFetcher::class,
+                ResourceDataFactory::class,
+                FormSuccessHandler::class
             ] as $id) {
                 $container->getDefinition($id)->addArgument(new Reference('argument_resolver'));
             }

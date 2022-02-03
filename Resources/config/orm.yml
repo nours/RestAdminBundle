@@ -1,14 +1,11 @@
 services:
-  rest_admin.param_fetcher.orm:
-    class: Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher
+  Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher:
     arguments: [ '@doctrine.orm.entity_manager' ]
     tags: [ { name: rest_admin.param_fetcher, alias: orm }]
 
-  rest_admin.handler.orm:
-    class: Nours\RestAdminBundle\Handler\ORMHandler
+  Nours\RestAdminBundle\Handler\ORMHandler:
     public: true
     arguments: [ '@doctrine.orm.entity_manager' ]
 
-  rest_admin.listener.orm_action_config:
-    class: Nours\RestAdminBundle\EventListener\ORMActionConfigListener
+  Nours\RestAdminBundle\EventListener\ORMActionConfigListener:
     tags: [ { name: kernel.event_subscriber }]

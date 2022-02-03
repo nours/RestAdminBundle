@@ -1,7 +1,6 @@
 services:
-  rest_admin.twig.extension:
-    class: Nours\RestAdminBundle\Twig\Extension\RestAdminExtension
+  Nours\RestAdminBundle\Twig\Extension\RestAdminExtension:
     arguments:
-      - '@rest_admin.helper'
+      - '@Nours\RestAdminBundle\Helper\AdminHelper'
       - '%rest_admin.template.action%'
     tags: [ { name: 'twig.extension' }]

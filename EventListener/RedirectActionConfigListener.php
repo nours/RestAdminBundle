@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\EventListener;
 
 use Nours\RestAdminBundle\Event\ActionConfigurationEvent;
 use Nours\RestAdminBundle\Event\RestAdminEvents;
+use Nours\RestAdminBundle\Handler\RedirectHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -31,7 +32,7 @@ class RedirectActionConfigListener implements EventSubscriberInterface
         }
 
         // Add default redirect handler
-        $event->addHandler('rest_admin.handler.redirect::handleRedirect', -20);
+        $event->addHandler(RedirectHandler::class . '::handleRedirect', -20);
     }
 
     public static function getSubscribedEvents()

@@ -32,7 +32,7 @@ class AdminTestCase extends WebTestCase
      */
     protected function getAdminManager(): AdminManager
     {
-        return static::getContainer()->get('rest_admin.manager');
+        return static::getContainer()->get(AdminManager::class);
     }
 
     /**

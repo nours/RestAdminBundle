@@ -1,10 +1,8 @@
 services:
-  rest_admin.menu.voter:
-    class: Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter
+  Nours\RestAdminBundle\Menu\Voter\ResourceRouteVoter:
     arguments: [ '@request_stack' ]
     tags:
         - { name: knp_menu.voter }
 
-  rest_admin.menu.helper:
-    class: Nours\RestAdminBundle\Menu\Helper\ResourceMenuHelper
-    arguments: [ '@rest_admin.manager' ]
+  Nours\RestAdminBundle\Menu\Helper\ResourceMenuHelper:
+    arguments: [ '@Nours\RestAdminBundle\AdminManager' ]

@@ -30,7 +30,7 @@ class ResourceFactoryTest extends AdminTestCase
     {
         parent::setUp();
 
-        $this->factory = $this->get('rest_admin.loader.resource_factory');
+        $this->factory = $this->get(ResourceFactory::class);
     }
 
     /**

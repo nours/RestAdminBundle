@@ -3,8 +3,7 @@ services:
 # Command
 ##############################
   Nours\RestAdminBundle\Command\ResourcesDebugCommand:
-    class: Nours\RestAdminBundle\Command\ResourcesDebugCommand
-    arguments: [ '@rest_admin.manager' ]
+    arguments: [ '@Nours\RestAdminBundle\AdminManager' ]
     tags: [ { name: console.command }]
 
 ##############################
@@ -16,174 +15,137 @@ services:
     tags: ['controller.service_arguments']
 
   Nours\RestAdminBundle\Controller\FormController:
-    class: Nours\RestAdminBundle\Controller\FormController
     arguments:
-      - '@rest_admin.data_factory'
-      - '@rest_admin.action_form_factory'
-      - '@rest_admin.form_success_handler'
+      - '@Nours\RestAdminBundle\Domain\ResourceDataFactory'
+      - '@Nours\RestAdminBundle\Form\ActionFormFactory'
+      - '@Nours\RestAdminBundle\Form\FormSuccessHandler'
     tags: ['controller.service_arguments']
 
 ##############################
 # Resources loading
 ##############################
-  rest_admin.loader.yml:
-    class: Nours\RestAdminBundle\Loader\YamlResourceLoader
-    public: false
-    arguments: [ '@file_locator', '@rest_admin.loader.resource_factory' ]
+  Nours\RestAdminBundle\Loader\YamlResourceLoader:
+    arguments: [ '@file_locator', '@Nours\RestAdminBundle\Loader\ResourceFactory' ]
     tags: [ { name: rest_admin.loader }]
 
-  rest_admin.loader.annotation_file:
-    class: Nours\RestAdminBundle\Loader\AnnotationFileLoader
-    public: false
-    arguments: [ '@file_locator', '@rest_admin.loader.annotation_class' ]
+  Nours\RestAdminBundle\Loader\AnnotationFileLoader:
+    arguments: [ '@file_locator', '@Nours\RestAdminBundle\Loader\AnnotationClassLoader' ]
     tags: [ { name: rest_admin.loader }]
 
-  rest_admin.loader.annotation_directory:
-    class: Nours\RestAdminBundle\Loader\AnnotationDirectoryLoader
-    public: false
-    arguments: [ '@file_locator', '@rest_admin.loader.annotation_file' ]
+  Nours\RestAdminBundle\Loader\AnnotationDirectoryLoader:
+    arguments: [ '@file_locator', '@Nours\RestAdminBundle\Loader\AnnotationFileLoader' ]
     tags: [ { name: rest_admin.loader }]
 
-  rest_admin.loader.annotation_class:
-    class: Nours\RestAdminBundle\Loader\AnnotationClassLoader
-    public: false
-    arguments: [ '@annotation_reader', '@rest_admin.loader.resource_factory' ]
+  Nours\RestAdminBundle\Loader\AnnotationClassLoader:
+    arguments: [ '@annotation_reader', '@Nours\RestAdminBundle\Loader\ResourceFactory' ]
 #    tags: [ { name: rest_admin.loader }]
 
   rest_admin.loader_resolver:
     class: Symfony\Component\Config\Loader\LoaderResolver
-    public: false
 
   rest_admin.loader:
     class: Symfony\Component\Config\Loader\DelegatingLoader
-    public: true      # Tests only
+#    public: true      # Tests only
     arguments: [ '@rest_admin.loader_resolver' ]
 
-  rest_admin.loader.resource_factory:
-    class: Nours\RestAdminBundle\Loader\ResourceFactory
-    public: true      # Tests only
-    arguments: [ '@rest_admin.action_manager', '@event_dispatcher', '%rest_admin.resource_class%' ]
+  Nours\RestAdminBundle\Loader\ResourceFactory:
+#    public: true      # Tests only
+    arguments: [ '@Nours\RestAdminBundle\ActionManager', '@event_dispatcher', '%rest_admin.resource_class%' ]
 
 ##############################
 # Routing
 ##############################
-  rest_admin.routing_loader:
-    class: Nours\RestAdminBundle\Routing\RoutingLoader
-    arguments: [ '@rest_admin.manager', '@rest_admin.action_manager', '@event_dispatcher' ]
+  Nours\RestAdminBundle\Routing\RoutingLoader:
+    arguments: [ '@Nours\RestAdminBundle\AdminManager', '@Nours\RestAdminBundle\ActionManager', '@event_dispatcher' ]
     tags: [ { name: 'routing.loader' } ]
 
 ##############################
 # Core
 ##############################
-  rest_admin.manager:
+  Nours\RestAdminBundle\AdminManager:
     class: Nours\RestAdminBundle\AdminManager
     public: true
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%', '%kernel.cache_dir%', '%kernel.debug%' ]
     tags: [ { name: 'kernel.cache_warmer' } ]
 
-  Nours\RestAdminBundle\AdminManager:
-    alias: rest_admin.manager
+  Nours\RestAdminBundle\ActionManager:
     public: true
 
-  rest_admin.action_manager:
-    class: Nours\RestAdminBundle\ActionManager
-    public: true
-
-  rest_admin.view_handler:
-    class: Nours\RestAdminBundle\View\ViewHandler
+  Nours\RestAdminBundle\View\ViewHandler:
     arguments: [ '@rest_admin.loader', '%rest_admin.resource%' ]
 
-  rest_admin.data_factory:
-    class: Nours\RestAdminBundle\Domain\ResourceDataFactory
+  Nours\RestAdminBundle\Domain\ResourceDataFactory:
     public: true
     arguments:
      - '@controller_resolver'
 #     - '@argument_resolver'    # Appended by extension if supported
 
-  rest_admin.handler.redirect:
-    class: Nours\RestAdminBundle\Handler\RedirectHandler
+  Nours\RestAdminBundle\Handler\RedirectHandler:
     public: true
-    arguments: [ '@rest_admin.helper' ]
+    arguments: [ '@Nours\RestAdminBundle\Helper\AdminHelper' ]
 
-  rest_admin.factory.copy:
-    class: Nours\RestAdminBundle\Handler\CopyFactory
+  Nours\RestAdminBundle\Handler\CopyFactory:
     public: true
 
 ##############################
 # Helper
 ##############################
-  rest_admin.helper:
+  Nours\RestAdminBundle\Helper\AdminHelper:
     class: Nours\RestAdminBundle\Helper\AdminHelper
     public: true
-    arguments: [ '@request_stack', '@rest_admin.manager', '@router' ]
-
-  Nours\RestAdminBundle\Helper\AdminHelper:
-    alias: rest_admin.helper
-    public: true
-
+    arguments: [ '@request_stack', '@Nours\RestAdminBundle\AdminManager', '@router' ]
 
 ##############################
 # Core actions
 ##############################
-  rest_admin.action_builder.default:
-    class: Nours\RestAdminBundle\Action\Core\CustomActionBuilder
+  Nours\RestAdminBundle\Action\Core\CustomActionBuilder:
     arguments: [ '%rest_admin.actions.custom%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.index:
-    class: Nours\RestAdminBundle\Action\Core\IndexActionBuilder
+  Nours\RestAdminBundle\Action\Core\IndexActionBuilder:
     arguments: [ '%rest_admin.actions.index%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.get:
-    class: Nours\RestAdminBundle\Action\Core\GetActionBuilder
+  Nours\RestAdminBundle\Action\Core\GetActionBuilder:
     arguments: [ '%rest_admin.actions.get%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.create:
-    class: Nours\RestAdminBundle\Action\Core\CreateActionBuilder
+  Nours\RestAdminBundle\Action\Core\CreateActionBuilder:
     arguments: [ '%rest_admin.actions.create%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.edit:
-    class: Nours\RestAdminBundle\Action\Core\EditActionBuilder
+  Nours\RestAdminBundle\Action\Core\EditActionBuilder:
     arguments: [ '%rest_admin.actions.edit%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.copy:
-    class: Nours\RestAdminBundle\Action\Core\CopyActionBuilder
+  Nours\RestAdminBundle\Action\Core\CopyActionBuilder:
     arguments: [ '%rest_admin.actions.copy%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.delete:
-    class: Nours\RestAdminBundle\Action\Core\DeleteActionBuilder
+  Nours\RestAdminBundle\Action\Core\DeleteActionBuilder:
     arguments: [ '%rest_admin.actions.delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.bulk_delete:
-    class: Nours\RestAdminBundle\Action\Core\BulkDeleteActionBuilder
+  Nours\RestAdminBundle\Action\Core\BulkDeleteActionBuilder:
     arguments: [ '%rest_admin.actions.bulk_delete%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
-  rest_admin.action_builder.form:
-    class: Nours\RestAdminBundle\Action\Core\FormActionBuilder
+  Nours\RestAdminBundle\Action\Core\FormActionBuilder:
     arguments: [ '%rest_admin.actions.form%' ]
     tags: [ { name: 'rest_admin.action_builder' } ]
 
 ##############################
 # Forms
 ##############################
-  rest_admin.action_form_factory:
-    class: Nours\RestAdminBundle\Form\ActionFormFactory
+  Nours\RestAdminBundle\Form\ActionFormFactory:
     public: true
     arguments:
-     - '@rest_admin.action_manager'
+     - '@Nours\RestAdminBundle\ActionManager'
      - '@form.factory'
      - '@router'
      - '@event_dispatcher'
 
-  rest_admin.form_success_handler:
-    class: Nours\RestAdminBundle\Form\FormSuccessHandler
+  Nours\RestAdminBundle\Form\FormSuccessHandler:
     public: true
     arguments:
      - '@controller_resolver'
@@ -192,8 +154,7 @@ services:
 ##############################
 # Param fetcher
 ##############################
-  rest_admin.param_fetcher.custom:
-    class: Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher
+  Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher:
     arguments:
      - '@controller_resolver'
 #     - '@argument_resolver'    # Appended by extension if supported
@@ -202,18 +163,14 @@ services:
 ##############################
 # Event listeners
 ##############################
-  rest_admin.listener.request:
-    class: Nours\RestAdminBundle\EventListener\RequestListener
-    arguments: [ '@rest_admin.manager' ]
+  Nours\RestAdminBundle\EventListener\RequestListener:
+    arguments: [ '@Nours\RestAdminBundle\AdminManager' ]
     tags: [ { name: 'kernel.event_subscriber' }]
 
-  rest_admin.listener.redirect_action_config:
-    class: Nours\RestAdminBundle\EventListener\RedirectActionConfigListener
-#    arguments: [ '@rest_admin.manager' ]
+  Nours\RestAdminBundle\EventListener\RedirectActionConfigListener:
     tags: [ { name: 'kernel.event_subscriber' }]
 
-  rest_admin.listener.param_fetcher:
-    class: Nours\RestAdminBundle\EventListener\ParamFetcherListener
+  Nours\RestAdminBundle\EventListener\ParamFetcherListener:
     arguments:
       - '@service_container'
       - []  # To be replaced in Compiler/ParamFetcherPass
