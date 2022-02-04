@@ -71,7 +71,7 @@ class RequestListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         // Must be executed after router listener (which has priority 32)
         return array(

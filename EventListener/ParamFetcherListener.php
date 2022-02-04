@@ -99,7 +99,7 @@ class ParamFetcherListener implements EventSubscriberInterface
         return $this->container->get($this->fetchers[$name]);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         // Can be executed after all listeners
         return array(

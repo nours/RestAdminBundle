@@ -55,7 +55,7 @@ class ORMActionConfigListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             RestAdminEvents::ACTION_CONFIG => 'onActionConfig',

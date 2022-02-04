@@ -35,7 +35,7 @@ class RedirectActionConfigListener implements EventSubscriberInterface
         $event->addHandler(RedirectHandler::class . '::handleRedirect', -20);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             RestAdminEvents::ACTION_CONFIG => 'onActionConfig'

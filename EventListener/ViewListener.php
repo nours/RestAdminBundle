@@ -49,7 +49,7 @@ class ViewListener implements EventSubscriberInterface
     }
 
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             KernelEvents::VIEW => array(array('onKernelView', 32))
