@@ -15,6 +15,10 @@ use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Nours\RestAdminBundle\Domain\ResourceCollectionDumper;
+use Nours\RestAdminBundle\EventListener\ParamFetcherListener;
+use Nours\RestAdminBundle\EventListener\RequestListener;
+use Nours\RestAdminBundle\EventListener\SecurityListener;
+use Nours\RestAdminBundle\EventListener\ViewListener;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
@@ -179,9 +183,7 @@ class AdminManager implements CacheWarmerInterface
 
         $this->cacheDir = $currentDir;
 
-        return [
-            AdminManager::class
-        ];
+        return [];
     }
 
     /**

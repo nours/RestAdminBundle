@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-
 /**
  * RequestListener who generates resource and action attributes based
  * on infos provided by the routing loader.
@@ -71,7 +70,6 @@ class RequestListener implements EventSubscriberInterface
             }
         }
     }
-
 
     public static function getSubscribedEvents()
     {
