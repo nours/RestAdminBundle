@@ -45,7 +45,7 @@ class YamlResourceLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): ResourceCollection
     {
         $path = $this->locator->locate($resource);
 

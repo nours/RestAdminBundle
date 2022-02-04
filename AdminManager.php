@@ -169,7 +169,7 @@ class AdminManager implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp(string $cacheDir)
+    public function warmUp(string $cacheDir): array
     {
         $currentDir = $this->cacheDir;
 
@@ -178,12 +178,16 @@ class AdminManager implements CacheWarmerInterface
         $this->getResourceCollection();
 
         $this->cacheDir = $currentDir;
+
+        return [
+            AdminManager::class
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return false;
     }

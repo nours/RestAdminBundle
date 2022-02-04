@@ -44,6 +44,7 @@ class AnnotationClassLoader implements LoaderInterface
      * @var ResourceFactory
      */
     protected $factory;
+    protected $resolver;
 
     /**
      * Constructor.
@@ -337,12 +338,14 @@ class AnnotationClassLoader implements LoaderInterface
      */
     public function setResolver(LoaderResolverInterface $resolver)
     {
+        $this->resolver = $resolver;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getResolver()
+    public function getResolver(): LoaderResolverInterface
     {
+        return $this->resolver;
     }
 }

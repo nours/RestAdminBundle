@@ -46,7 +46,7 @@ class AnnotationFileLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): ResourceCollection
     {
         $path = $this->locator->locate($resource);
 
