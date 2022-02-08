@@ -78,7 +78,7 @@ services:
     public: true
     arguments:
      - '@controller_resolver'
-#     - '@argument_resolver'    # Appended by extension if supported
+     - '@argument_resolver'
 
   Nours\RestAdminBundle\Handler\RedirectHandler:
     public: true
@@ -149,7 +149,7 @@ services:
     public: true
     arguments:
      - '@controller_resolver'
-#     - '@argument_resolver'    # Appended by extension if supported
+     - '@argument_resolver'
 
 ##############################
 # Param fetcher
@@ -157,7 +157,7 @@ services:
   Nours\RestAdminBundle\ParamFetcher\CustomParamFetcher:
     arguments:
      - '@controller_resolver'
-#     - '@argument_resolver'    # Appended by extension if supported
+     - '@argument_resolver'
     tags: [ { name: rest_admin.param_fetcher, alias: custom }]
 
 ##############################

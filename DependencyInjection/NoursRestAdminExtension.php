@@ -110,17 +110,6 @@ class NoursRestAdminExtension extends Extension
 
         // Action template parameter
         $container->setParameter('rest_admin.template.action', $config['templates']['action']);
-
-        // Support for Symfony ArgumentResolverInterface
-        if (interface_exists(ArgumentResolverInterface::class)) {
-            foreach ([
-                CustomParamFetcher::class,
-                ResourceDataFactory::class,
-                FormSuccessHandler::class
-            ] as $id) {
-                $container->getDefinition($id)->addArgument(new Reference('argument_resolver'));
-            }
-        }
     }
 
     /**

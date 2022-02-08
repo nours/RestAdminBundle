@@ -30,21 +30,21 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  */
 class FormSuccessHandler
 {
-    private $controllerResolver;
-    private $argumentResolver;
+    private ControllerResolverInterface $controllerResolver;
+    private ArgumentResolverInterface $argumentResolver;
 
     /**
      * FormSuccessHandler constructor.
      *
      * @param ControllerResolverInterface $controllerResolver
-     * @param ArgumentResolverInterface|null $argumentResolver
+     * @param ArgumentResolverInterface $argumentResolver
      */
     public function __construct(
         ControllerResolverInterface $controllerResolver,
-        ArgumentResolverInterface $argumentResolver = null
+        ArgumentResolverInterface $argumentResolver
     ) {
         $this->controllerResolver = $controllerResolver;
-        $this->argumentResolver   = $argumentResolver ?: $controllerResolver;
+        $this->argumentResolver   = $argumentResolver;
     }
 
     /**
