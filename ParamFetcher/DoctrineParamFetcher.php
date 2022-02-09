@@ -25,10 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class DoctrineParamFetcher implements ParamFetcherInterface
 {
-    /**
-     * @var EntityManager
-     */
-    protected $manager;
+    protected EntityManager $manager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -52,55 +49,6 @@ class DoctrineParamFetcher implements ParamFetcherInterface
         } else {
             $this->fetchData($request, $action);
         }
-//
-//        return;
-//
-//
-//
-//
-//        if ($resource->isSingleResource()) {
-//            // Single resource instance are fetched throughout their parents
-//            if (!$resource->getParent()) {
-//                throw new \DomainException(sprintf(
-//                    'Resource %s is single, therefore it must have a parent resource.',
-//                    $resource->getFullName()
-//                ));
-//            }
-//
-//            $parent = $this->fetchInstance($request, $resource->getParent());
-//            $request->attributes->set('parent', $parent);
-//            $request->attributes->set('data', $resource->getSingleChildObject($parent));
-//        } elseif ($this->isSingleInstance($request, $resource)) {
-//            // Request has a resource parameter : it should be fetched
-//            $finder = $action->getConfig('finder', 'find');
-//
-//            $data = $this->fetchInstance($request, $resource, $finder);
-//
-//            $request->attributes->set('data', $data);
-//            $request->attributes->set('parent', $resource->getParentObject($data));
-//        } else {
-//            // Load collection if request has id parameter in query string
-//            $identifiers = $resource->getIdentifier();
-//            $isCollection = true;
-//            foreach ((array)$identifiers as $identifier) {
-//                if (!$request->query->has($identifier)) {
-//                    $isCollection = false;
-//                }
-//            }
-//            if ($isCollection) {
-//                $data = $this->fetchCollection($request, $resource);
-//
-//                $request->attributes->set('data', $data);
-//            }
-//
-//            // Request may concern a collection with a parent
-//            if ($parentResource = $resource->getParent()) {
-//                // If the resource has a parent, fetch it
-//                $parent = $this->fetchInstance($request, $parentResource);
-//
-//                $request->attributes->set('parent', $parent);
-//            }
-//        }
     }
 
     /**
@@ -200,8 +148,6 @@ class DoctrineParamFetcher implements ParamFetcherInterface
             // Must fetch at least one object
             throw new NotFoundHttpException(sprintf('Failed to load collection of %s', $resource->getFullName()));
         }
-
-        $ids = is_array($ids) ? $ids : [ $ids ];
 
         $builder->where($builder->expr()->in(
             'r.'.$identifier,
