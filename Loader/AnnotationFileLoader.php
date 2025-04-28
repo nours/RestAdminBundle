@@ -62,37 +62,59 @@ class AnnotationFileLoader extends Loader
 
         $className = '';
         $count = count($tokens);
+        
+        
         $namespace = $class = false;
+        $tokens = token_get_all(file_get_contents($path));
+        
+        $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true];
+        if (\defined('T_NAME_QUALIFIED')) {
+            $nsTokens[\T_NAME_QUALIFIED] = true;
+        }
+        
         for ($i = 0 ; $i < $count ; ++$i) {
             $token = $tokens[$i];
-
-            if (!is_array($token)) {
+            if (!isset($token[1])) {
                 continue;
             }
-
-            if ($namespace && T_STRING == $token[0]) {
-                // After namespace, read NS_SEPARATOR and STRING
-                do {
-                    $className .= $token[1];
-                    $token = $tokens[++$i];     // Inc token
-                } while (
-                    $i < $count && is_array($token) &&
-                    in_array($token[0], array(T_NS_SEPARATOR, T_STRING))
-                );
-                $namespace = false;
+            
+            if (true === $class && \T_STRING === $token[0]) {
+                return $namespace.'\\'.$token[1];
             }
-
-            if ($class && T_STRING == $token[0]) {
-                // Found class name
-                $className .= '\\' . $token[1];
-                return $className;
+            
+            if (true === $namespace && isset($nsTokens[$token[0]])) {
+                $namespace = $token[1];
+                while (isset($tokens[++$i][1], $nsTokens[$tokens[$i][0]])) {
+                    $namespace .= $tokens[$i][1];
+                }
+                $token = $tokens[$i];
             }
-
-            if (T_CLASS == $token[0]) {
-                $class = true;
+            
+            if (\T_CLASS === $token[0]) {
+                // Skip usage of ::class constant and anonymous classes
+                $skipClassToken = false;
+                for ($j = $i - 1; $j > 0; --$j) {
+                    if (!isset($tokens[$j][1])) {
+                        if ('(' === $tokens[$j] || ',' === $tokens[$j]) {
+                            $skipClassToken = true;
+                        }
+                        break;
+                    }
+                    
+                    if (\T_DOUBLE_COLON === $tokens[$j][0] || \T_NEW === $tokens[$j][0]) {
+                        $skipClassToken = true;
+                        break;
+                    } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT])) {
+                        break;
+                    }
+                }
+                
+                if (!$skipClassToken) {
+                    $class = true;
+                }
             }
-
-            if (T_NAMESPACE == $token[0]) {
+            
+            if (\T_NAMESPACE === $token[0]) {
                 $namespace = true;
             }
         }
