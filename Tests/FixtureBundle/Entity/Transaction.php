@@ -16,33 +16,29 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Transaction
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
- * @ORM\Table(name="`transaction`")
  */
+#[ORM\Entity]
+#[ORM\Table(name: '`transaction`')]
 class Transaction
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var Invoice
-     *
-     * @ORM\OneToOne(targetEntity="Invoice")
      */
+    #[ORM\OneToOne(targetEntity: Invoice::class)]
     private $invoice;
 
     /**
      * @var Order
-     *
-     * @ORM\OneToOne(targetEntity="Order")
      */
+    #[ORM\OneToOne(targetEntity: Order::class)]
     private $order;
 
     /**

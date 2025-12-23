@@ -16,31 +16,25 @@ use Doctrine\ORM\Mapping as ORM;
  * CommentResponse class.
  *
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
  */
+#[ORM\Entity]
 class CommentResponse
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var Comment
-     *
-     * @ORM\ManyToOne(targetEntity="Comment", inversedBy="responses")
      */
+    #[ORM\ManyToOne(targetEntity: Comment::class, inversedBy: 'responses')]
     private $comment;
 
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $response;
 
     /**

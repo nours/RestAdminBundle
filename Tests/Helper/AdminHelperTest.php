@@ -12,6 +12,10 @@ namespace Nours\RestAdminBundle\Tests\Helper;
 
 use Nours\RestAdminBundle\Helper\AdminHelper;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -73,8 +77,8 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlWithData()
     {
         $this->loadFixtures();
-        $posts = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findAll();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $posts = $this->getEntityManager()->getRepository(Post::class)->findAll();
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $this->assertNotNull($post);
 
@@ -89,7 +93,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlForParent()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $url = $this->helper->generateUrl('post.comment:create', $post);
         $formUrl = $this->helper->generateFormAction('post.comment:create', $post);
@@ -104,7 +108,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlForInstance()
     {
         $this->loadFixtures();
-        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+        $comment = $this->getEntityManager()->find(Comment::class,1);
 
         $url = $this->helper->generateUrl('post.comment:edit', $comment);
         $formUrl = $this->helper->generateFormAction('post.comment:edit', $comment);
@@ -119,7 +123,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlForCompositeEntity()
     {
         $this->loadFixtures();
-        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $composite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'first'
         ));
@@ -137,7 +141,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGenerateUrlForCompositeEntityChild()
     {
         $this->loadFixtures();
-        $child = $this->getEntityManager()->getRepository('FixtureBundle:CompositeChild')->findOneBy(array(
+        $child = $this->getEntityManager()->getRepository(CompositeChild::class)->findOneBy(array(
             'id' => 1
         ));
 
@@ -171,7 +175,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGetCurrentStuffWithData()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $action = $this->getAdminManager()->getAction('post:get');
 
@@ -193,7 +197,7 @@ class AdminHelperTest extends AdminTestCase
     public function testGetCurrentStuffWithSubresource()
     {
         $this->loadFixtures();
-        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+        $comment = $this->getEntityManager()->find(Comment::class,1);
 
         $action = $this->getAdminManager()->getAction('post.comment:publish');
 
@@ -216,8 +220,8 @@ class AdminHelperTest extends AdminTestCase
     public function testGetCurrentStuffWithCollection()
     {
         $this->loadFixtures();
-        $post1 = $this->getEntityManager()->find('FixtureBundle:Post', 1);
-        $post2 = $this->getEntityManager()->find('FixtureBundle:Post', 2);
+        $post1 = $this->getEntityManager()->find(Post::class,1);
+        $post2 = $this->getEntityManager()->find(Post::class,2);
 
         $action = $this->getAdminManager()->getAction('post:bulk_delete');
 

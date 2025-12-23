@@ -11,6 +11,10 @@
 namespace Nours\RestAdminBundle\Tests\Domain;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Contract;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Invoice;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Order;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Transaction;
 
 /**
  * Class ResourceRoutingTest
@@ -31,10 +35,10 @@ class ResourceRoutingTest extends AdminTestCase
         $resourceContractInvoiceTransaction = $this->getAdminManager()->getResource('contract.invoice.transaction');
         $resourceContractOrderInvoiceTransaction = $this->getAdminManager()->getResource('contract.order.invoice.transaction');
 
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
-        $invoice  = $this->getEntityManager()->find('FixtureBundle:Invoice', 1);
-        $transaction = $this->getEntityManager()->find('FixtureBundle:Transaction', 1);
+        $contract = $this->getEntityManager()->find(Contract::class,1);
+        $order    = $this->getEntityManager()->find(Order::class,1);
+        $invoice  = $this->getEntityManager()->find(Invoice::class,1);
+        $transaction = $this->getEntityManager()->find(Transaction::class,1);
 
         /*
          * First level (Contract) : route params

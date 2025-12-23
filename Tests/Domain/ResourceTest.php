@@ -12,6 +12,10 @@ namespace Nours\RestAdminBundle\Tests\Domain;
 
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CommentResponse;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
@@ -87,8 +91,8 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetRouteParamsForCollection()
     {
-        $post1 = $this->getEntityManager()->find('FixtureBundle:Post', 1);
-        $post2 = $this->getEntityManager()->find('FixtureBundle:Post', 2);
+        $post1 = $this->getEntityManager()->find(Post::class,1);
+        $post2 = $this->getEntityManager()->find(Post::class,2);
 
         $params = $this->postResource->getCollectionRouteParams(array($post1, $post2));
 
@@ -102,7 +106,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetBaseRouteParamsForTopLevelResource()
     {
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $params = $this->postResource->getBaseRouteParams($post);
 
@@ -114,7 +118,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetInstanceRouteParamsFromTopLevelResource()
     {
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $params = $this->postResource->getInstanceRouteParams($post);
 
@@ -128,7 +132,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetBaseRouteParamsOfChildResource()
     {
-        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+        $comment = $this->getEntityManager()->find(Comment::class,1);
 
         $params = $this->commentResource->getBaseRouteParams($comment);
 
@@ -142,7 +146,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetBaseRouteParamsOfParentResource()
     {
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $params = $this->commentResource->getBaseRouteParams($post);
 
@@ -156,7 +160,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetInstanceRouteParamsOfChildResource()
     {
-        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+        $comment = $this->getEntityManager()->find(Comment::class,1);
 
         $params = $this->commentResource->getInstanceRouteParams($comment);
 
@@ -229,7 +233,7 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetInstanceRouteParamsOfCompositePKResource()
     {
-        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $composite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'first',
         ));
@@ -246,11 +250,11 @@ class ResourceTest extends AdminTestCase
      */
     public function testGetRouteParamsForCollectionOfCompositePKResource()
     {
-        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $composite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'first',
         ));
-        $composite2 = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $composite2 = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'second',
         ));
@@ -340,7 +344,7 @@ class ResourceTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment.comment_response');
 
-        $data = $this->getEntityManager()->getRepository('FixtureBundle:CommentResponse')->find(1);
+        $data = $this->getEntityManager()->getRepository(CommentResponse::class)->find(1);
 
         $parent = $resource->getParentObject($data);
 
@@ -356,7 +360,7 @@ class ResourceTest extends AdminTestCase
         $resource = $this->getAdminManager()->getResource('post.extension');
 
         /** @var Post $parent */
-        $parent = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $parent = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         $data = $resource->getSingleChildObject($parent);
 
@@ -370,7 +374,7 @@ class ResourceTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('post.comment.comment_response');
 
-        $data = $this->getEntityManager()->getRepository('FixtureBundle:CommentResponse')->find(1);
+        $data = $this->getEntityManager()->getRepository(CommentResponse::class)->find(1);
 
         $identifiers = $resource->getObjectIdentifiers($data);
 
@@ -385,7 +389,7 @@ class ResourceTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('composite');
 
-        $data = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $data = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'second'
         ));
@@ -404,7 +408,7 @@ class ResourceTest extends AdminTestCase
     {
         $resource = $this->getAdminManager()->getResource('composite.composite_child');
 
-        $data = $this->getEntityManager()->getRepository('FixtureBundle:CompositeChild')->findOneBy(array(
+        $data = $this->getEntityManager()->getRepository(CompositeChild::class)->findOneBy(array(
             'id' => 1
         ));
 

@@ -92,7 +92,7 @@ class CompositeControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/composites');
 
         $this->getEntityManager()->clear();
-        $newComposite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $newComposite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 2,
             'name' => 'third'
         ));
@@ -137,7 +137,7 @@ class CompositeControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/composites');
 
         $this->getEntityManager()->clear();
-        $updatedComposite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $updatedComposite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'fourth'
         ));
@@ -176,7 +176,7 @@ class CompositeControllerTest extends AdminTestCase
 
         // Object has been deleted
         $this->getEntityManager()->clear();
-        $composite = $this->getEntityManager()->getRepository('FixtureBundle:Composite')->findOneBy(array(
+        $composite = $this->getEntityManager()->getRepository(Composite::class)->findOneBy(array(
             'id' => 1,
             'name' => 'fourth'
         ));

@@ -35,7 +35,7 @@ class ResourceEvent extends Event
      * @param DomainResource $resource
      * @param Action|null $action
      */
-    public function __construct(DomainResource $resource, Action $action = null)
+    public function __construct(DomainResource $resource, ?Action $action = null)
     {
         $this->resource = $resource;
         $this->action   = $action;

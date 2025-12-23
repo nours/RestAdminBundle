@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 
 /**
@@ -136,7 +137,7 @@ class PostPrefixedControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/prefixed/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(4);
+        $newPost = $this->getEntityManager()->getRepository(Post::class)->find(4);
 
         // Object has been created
         $this->assertNotNull($newPost);
@@ -172,7 +173,7 @@ class PostPrefixedControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/prefixed/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $newPost = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         // Object has been created
         $this->assertEquals('edited', $newPost->getContent());
@@ -204,7 +205,7 @@ class PostPrefixedControllerTest extends AdminTestCase
 
         // Object has been deleted
         $this->getEntityManager()->clear();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(2);
 
         $this->assertTrue(null === $post);
     }

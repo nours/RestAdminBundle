@@ -16,30 +16,25 @@ use Doctrine\ORM\Mapping as ORM;
  * Class PostExtension
  *
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
  */
+#[ORM\Entity]
 class PostExtension
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var Post
-     *
-     * @ORM\OneToOne(targetEntity="Post", inversedBy="extension")
      */
+    #[ORM\OneToOne(targetEntity: Post::class, inversedBy: 'extension')]
     private $post;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $name;
 
     /**

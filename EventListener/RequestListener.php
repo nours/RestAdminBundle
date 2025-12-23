@@ -60,7 +60,7 @@ class RequestListener implements EventSubscriberInterface
         }
 
         // Guess request format on accept headers in order to initialize its format
-        $format = $request->get('_format');
+        $format = $request->attributes->get('_format');
         if (empty($format)) {
             $accept = AcceptHeader::fromString($request->headers->get('Accept'));
             if ($accept->has('application/json')) {

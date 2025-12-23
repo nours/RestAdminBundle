@@ -27,16 +27,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ResourceFactory
 {
-    /**
-     * @var ActionManager
-     */
-    private $actionManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    private $resourceClass;
+    private ActionManager $actionManager;
+    private EventDispatcherInterface $dispatcher;
+    private string $resourceClass;
 
     /**
      * @param ActionManager $actionManager
@@ -68,7 +61,7 @@ class ResourceFactory
      * @param DomainResource $resource
      * @param array $configs
      */
-    public function configureActions(DomainResource $resource, array $configs)
+    public function configureActions(DomainResource $resource, array $configs): void
     {
         $actions = $this->normalizeActionsConfig($resource, $configs);
 
@@ -123,7 +116,7 @@ class ResourceFactory
      * @param DomainResource $resource
      * @param ResourceCollection $collection
      */
-    public function finishResource(DomainResource $resource, ResourceCollection $collection)
+    public function finishResource(DomainResource $resource, ResourceCollection $collection): void
     {
         // Dispatch resource config event
         $event = new ResourceCollectionEvent($resource, $collection);

@@ -25,15 +25,8 @@ use Symfony\Component\Yaml\Parser;
  */
 class YamlResourceLoader extends FileLoader
 {
-    /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
-     * @var ResourceFactory
-     */
-    private $resourceFactory;
+    private ?Parser $parser = null;
+    private ResourceFactory $resourceFactory;
 
     public function __construct(FileLocatorInterface $locator, ResourceFactory $resourceFactory)
     {
@@ -106,7 +99,7 @@ class YamlResourceLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         return is_string($resource) &&
             'yml' === pathinfo($resource, PATHINFO_EXTENSION) &&

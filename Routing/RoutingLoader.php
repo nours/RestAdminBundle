@@ -29,20 +29,9 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RoutingLoader extends Loader
 {
-    /**
-     * @var AdminManager
-     */
-    private $manager;
-
-    /**
-     * @var ActionManager
-     */
-    private $builders;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private AdminManager $manager;
+    private ActionManager $builders;
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * @param AdminManager $manager
@@ -61,7 +50,7 @@ class RoutingLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): RouteCollection
     {
         $resources = $this->manager->getResourceCollection();
 
@@ -101,7 +90,7 @@ class RoutingLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         return $type == 'admin';
     }

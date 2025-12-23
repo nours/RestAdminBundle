@@ -1,0 +1,87 @@
+imports:
+  - { resource: services.yml }
+  - { resource: security.yml }
+
+parameters:
+  locale: 'fr'
+  secret: 'SecretPhrase'
+  router.request_context.host: tests.org
+  router.request_context.scheme: http
+
+framework:
+  secret: "%secret%"
+  router:
+    resource: "%kernel.project_dir%/Tests/config/routing.yml"
+    strict_requirements: ~
+  form: ~
+  csrf_protection: false
+  validation: { enable_annotations: true }
+  default_locale: "%locale%"
+  trusted_hosts: ~
+  session:
+    # handler_id set to null will use default session handler from php.ini
+    handler_id: ~
+    storage_factory_id: session.storage.factory.mock_file
+    save_path: "%kernel.project_dir%/Tests/app/cache/sessions"
+
+  annotations: true
+  test: ~
+  profiler:
+    collect: false
+
+twig:
+  default_path: '%kernel.project_dir%/Tests/templates'
+
+monolog:
+  handlers:
+    main:
+      type: fingers_crossed
+      action_level: error
+      handler: file
+    file:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      level: info
+
+nours_rest_admin:
+  resource: "%kernel.project_dir%/Tests/config/resources.yml"
+  templating_formats: [ 'html', 'ajax' ]
+  table_extension_disable_child_filter: false
+  listeners:
+    orm: true
+    security: true
+  services:
+    serializer: jms_serializer
+    serialization_context: tests.serialization_context
+  templates:
+    index: index.html.twig
+    get: get.html.twig
+    create: create.html.twig
+    edit: edit.html.twig
+    copy: copy.html.twig
+    delete: delete.html.twig
+    bulk_delete: bulk_delete.html.twig
+  extras:
+    defaults:
+      default_option: foobar
+    index:
+      icon: list
+      default_option: baz
+    create:
+      icon: plus
+    edit:
+      icon: pencil
+    delete:
+      icon: trash
+
+doctrine:
+  dbal:
+    driver: pdo_sqlite
+    path: '%kernel.cache_dir%/sqlite.db.cache'
+    charset: UTF8
+    use_savepoints: true
+  orm:
+    auto_generate_proxy_classes: "%kernel.debug%"
+    auto_mapping: true
+    enable_lazy_ghost_objects: true
+    report_fields_where_declared: true

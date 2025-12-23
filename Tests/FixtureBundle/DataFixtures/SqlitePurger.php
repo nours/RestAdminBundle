@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class SqlitePurger extends ORMPurger
 {
-    public function __construct(EntityManagerInterface $em = null, $excluded = [])
+    public function __construct(?EntityManagerInterface $em = null, $excluded = [])
     {
         parent::__construct($em, $excluded);
     }

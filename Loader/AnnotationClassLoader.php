@@ -336,7 +336,7 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function setResolver(LoaderResolverInterface $resolver)
+    public function setResolver(LoaderResolverInterface $resolver): void
     {
         $this->resolver = $resolver;
     }

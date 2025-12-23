@@ -17,36 +17,30 @@ use Doctrine\ORM\Mapping as ORM;
  * A composite child to a composite entity
  *
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
  */
+#[ORM\Entity]
 class CompositeChild
 {
     /**
      * @var Composite
-     *
-     * @ORM\ManyToOne(targetEntity="Composite")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id"),
-     *   @ORM\JoinColumn(name="parent_name", referencedColumnName="name")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Composite::class)]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'parent_name', referencedColumnName: 'name')]
     private $parent;
 
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="string")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string')]
     private $name;
 
     /**

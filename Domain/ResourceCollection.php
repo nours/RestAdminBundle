@@ -164,4 +164,14 @@ class ResourceCollection implements Countable, IteratorAggregate, Serializable
         $this->resources = unserialize($serialized);
         $this->configResources = [];
     }
+    
+    public function __serialize(): array
+    {
+        return $this->resources;
+    }
+    
+    public function __unserialize(array $data): void
+    {
+        $this->resources = $data;
+    }
 }

@@ -11,6 +11,7 @@
 namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 
 /**
@@ -43,7 +44,7 @@ class PostControllerTest extends AdminTestCase
 //        $this->assertEquals('created', $object->content);
 //
 //        $this->getEntityManager()->clear();
-//        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(3);
+//        $newPost = $this->getEntityManager()->getRepository(Post::class)->find(3);
 //
 //        // Object has been created
 //        $this->assertNotNull($newPost);
@@ -181,7 +182,7 @@ class PostControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(4);
+        $newPost = $this->getEntityManager()->getRepository(Post::class)->find(4);
 
         // Object has been created
         $this->assertNotNull($newPost);
@@ -217,7 +218,7 @@ class PostControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $newPost = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         // Object has been created
         $this->assertEquals('edited', $newPost->getContent());
@@ -251,7 +252,7 @@ class PostControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $newPost = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findOneBy(array(
+        $newPost = $this->getEntityManager()->getRepository(Post::class)->findOneBy(array(
             'content' => 'copied'
         ));
 
@@ -291,7 +292,7 @@ class PostControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         // Object has been edited
         $this->assertEquals('edited', $post->getContent());
@@ -338,7 +339,7 @@ class PostControllerTest extends AdminTestCase
 
         // Object has been deleted
         $this->getEntityManager()->clear();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(2);
 
         $this->assertNull($post);
     }
@@ -382,7 +383,7 @@ class PostControllerTest extends AdminTestCase
 
         // All posts has been deleted
         $this->getEntityManager()->clear();
-        $all = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findAll();
+        $all = $this->getEntityManager()->getRepository(Post::class)->findAll();
 
         $this->assertCount(0, $all);
     }

@@ -18,32 +18,28 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Contract
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
  */
+#[ORM\Entity]
 class Contract
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var Order
-     *
-     * @ORM\OneToOne(targetEntity="order", mappedBy="contract")
      */
+    #[ORM\OneToOne(mappedBy: 'contract', targetEntity: Order::class)]
     private $order;
 
     /**
      * @var Collection|Invoice[]
-     *
-     * @ORM\OneToMany(targetEntity="Invoice", mappedBy="contract")
      */
+    #[ORM\OneToMany(mappedBy: 'contract', targetEntity: Invoice::class)]
     private $invoices;
 
     /**

@@ -45,7 +45,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
      */
     public function testFindModel()
     {
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->findOneBy(array());
+        $post = $this->getEntityManager()->getRepository(Post::class)->findOneBy(array());
 
         $resource = $this->getAdminManager()->getResource('post');
 
@@ -69,7 +69,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     public function testFindModelHierarchy()
     {
         /** @var Comment $comment */
-        $comment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->findOneBy(array());
+        $comment = $this->getEntityManager()->getRepository(Comment::class)->findOneBy(array());
         $post = $comment->getPost();
 
         $resource = $this->getAdminManager()->getResource('post.comment');
@@ -94,7 +94,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     public function testFindSingleModel()
     {
         /** @var Post $post */
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
         $extension = $post->getExtension();
 
         $resource = $this->getAdminManager()->getResource('post.extension');
@@ -121,7 +121,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     public function testFindParentModel()
     {
         /** @var Comment $comment */
-        $comment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->findOneBy(array());
+        $comment = $this->getEntityManager()->getRepository(Comment::class)->findOneBy(array());
         $post = $comment->getPost();
 
         $resource = $this->getAdminManager()->getResource('post.comment');
@@ -166,7 +166,7 @@ class DoctrineParamFetcherTest extends AdminTestCase
     public function testFindParentOfSingle()
     {
         /** @var Post $post */
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(2);
 
         $resource = $this->getAdminManager()->getResource('post.extension');
 

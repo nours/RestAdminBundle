@@ -18,35 +18,28 @@ use JMS\Serializer\Annotation as Serializer;
  * A sample Post class.
  *
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
  */
+#[ORM\Entity]
 class Post
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $content;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
-     */
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private $comments;
 
     /**
      * @var PostExtension
-     *
-     * @ORM\OneToOne(targetEntity="PostExtension", mappedBy="post")
      */
+    #[ORM\OneToOne(mappedBy: 'post', targetEntity: PostExtension::class)]
     private $extension;
 
     /**

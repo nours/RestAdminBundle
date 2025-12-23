@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
 
 /**
  * Class PostExtensionControllerTest
@@ -67,7 +68,7 @@ class PostExtensionControllerTest extends AdminTestCase
 
         $this->getEntityManager()->clear();
         /** @var Post $post */
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(2);
         $extension = $post->getExtension();
 
         // Object has been created
@@ -104,7 +105,7 @@ class PostExtensionControllerTest extends AdminTestCase
         $this->assertRedirect($response, '/posts');
 
         $this->getEntityManager()->clear();
-        $data = $this->getEntityManager()->getRepository('FixtureBundle:PostExtension')->find(1);
+        $data = $this->getEntityManager()->getRepository(PostExtension::class)->find(1);
 
         // Object has been created
         $this->assertEquals('edited', $data->getName());
@@ -136,8 +137,8 @@ class PostExtensionControllerTest extends AdminTestCase
 
         // Object has been deleted
         $this->getEntityManager()->clear();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
-        $pxtension = $this->getEntityManager()->getRepository('FixtureBundle:PostExtension')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
+        $pxtension = $this->getEntityManager()->getRepository(PostExtension::class)->find(1);
 
         $this->assertNull($pxtension);
         $this->assertNull($post->getExtension());

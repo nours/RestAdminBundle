@@ -6,9 +6,9 @@
         </testsuite>
     </testsuites>
     <php>
-        <server name="KERNEL_DIR" value="./Tests/app/" />
-        <server name="KERNEL_CLASS" value="AppKernel" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+        <server name="KERNEL_DIR" value="./Tests/" />
+        <server name="KERNEL_CLASS" value="Nours\RestAdminBundle\Tests\AppKernel" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
     </php>
     <filter>
         <whitelist>

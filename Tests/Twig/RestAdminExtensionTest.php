@@ -13,6 +13,8 @@ namespace Nours\RestAdminBundle\Tests\Twig;
 use Nours\RestAdminBundle\Domain\Action;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Nours\RestAdminBundle\Twig\Extension\RestAdminExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -139,7 +141,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->loadFixtures();
 
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
         $html = $this->extension->renderActionLink($this->twig, 'post:edit', $post);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/edit">'));
@@ -152,7 +154,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->loadFixtures();
 
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
         $html = $this->extension->renderActionLink($this->twig, 'post:edit', $post, array(
             'routeParams' => array(
                 'bar' => 'baz'
@@ -169,7 +171,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->loadFixtures();
 
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
         $html = $this->extension->renderActionLink($this->twig, 'post.comment:index', $post);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments">'));
@@ -182,7 +184,7 @@ class RestAdminExtensionTest extends AdminTestCase
     {
         $this->loadFixtures();
 
-        $comment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->find(1);
+        $comment = $this->getEntityManager()->getRepository(Comment::class)->find(1);
         $html = $this->extension->renderActionLink($this->twig, 'post.comment:get', $comment);
 
         $this->assertNotFalse(strpos($html, '<a href="/posts/1/comments/1">'));
@@ -237,7 +239,7 @@ class RestAdminExtensionTest extends AdminTestCase
     public function testGetActionPath()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         $url = $this->extension->getActionPath('post:edit', $post);
 
@@ -250,7 +252,7 @@ class RestAdminExtensionTest extends AdminTestCase
     public function testGetActionUrl()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(1);
+        $post = $this->getEntityManager()->getRepository(Post::class)->find(1);
 
         $url = $this->extension->getActionUrl('post:edit', $post);
 

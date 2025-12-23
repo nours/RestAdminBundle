@@ -409,7 +409,7 @@ class DomainResource
      *
      * @return string
      */
-    public function getBaseUriPath(string $suffix = null, bool $instance = false): string
+    public function getBaseUriPath(?string $suffix = null, bool $instance = false): string
     {
         $parts = [];
 

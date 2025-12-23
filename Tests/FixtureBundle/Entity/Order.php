@@ -18,40 +18,35 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Order
  * 
  * @author David Coudrier <david.coudrier@gmail.com>
- *
- * @ORM\Entity()
- * @ORM\Table(name="`order`")
  */
+#[ORM\Entity]
+#[ORM\Table(name: '`order`')]
 class Order
 {
     /**
      * @var integer
-     *
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var Contract
-     *
-     * @ORM\OneToOne(targetEntity="Contract", inversedBy="order")
      */
+    #[ORM\OneToOne(inversedBy: 'order', targetEntity: Contract::class)]
     private $contract;
 
     /**
      * @var Invoice
-     *
-     * @ORM\OneToOne(targetEntity="Invoice", inversedBy="order")
      */
+    #[ORM\OneToOne(inversedBy: 'order', targetEntity: Invoice::class)]
     private $invoice;
 
     /**
      * @var Collection|Transaction[]
-     *
-     * @ORM\OneToMany(targetEntity="Transaction", mappedBy="order")
      */
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Transaction::class)]
     private $transactions;
 
     /**

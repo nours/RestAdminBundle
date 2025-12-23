@@ -31,12 +31,12 @@ class YamlResourceLoaderTest extends AdminTestCase
     }
 
     /**
-     * The post resource is configured in app/config/resources.yml
+     * The post resource is configured in config/resources.yml
      */
     public function testLoadPostResource()
     {
         /** @var ResourceCollection $resources */
-        $resources = $this->loader->load(__DIR__ . '/../app/config/resources.yml');
+        $resources = $this->loader->load(__DIR__ . '/../config/resources.yml');
 
         $this->assertTrue($resources->has('post'));
 
@@ -64,7 +64,7 @@ class YamlResourceLoaderTest extends AdminTestCase
 
 
     /**
-     * The post resource is configured in app/config/resources.yml
+     * The post resource is configured in config/resources.yml
      */
     public function testDispatchResourceConfigEvent()
     {
@@ -79,7 +79,7 @@ class YamlResourceLoaderTest extends AdminTestCase
         });
 
         /** @var ResourceCollection $resources */
-        $resources = $this->loader->load(__DIR__ . '/../app/config/resources.yml');
+        $resources = $this->loader->load(__DIR__ . '/../config/resources.yml');
 
         $post = $resources->get('post.comment');
         $this->assertEquals('bar', $post->getConfig('foo'));

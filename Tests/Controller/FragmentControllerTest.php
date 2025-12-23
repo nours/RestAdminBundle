@@ -12,6 +12,8 @@ namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Controller\FragmentController;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernel;
 
@@ -64,7 +66,7 @@ class FragmentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => FragmentController::class . '::createPostComment',
-            'parent' => $this->getEntityManager()->find('FixtureBundle:Post', 1)
+            'parent' => $this->getEntityManager()->find(Post::class,1)
         ));
 
         $response = $this->httpKernel->handle($request);
@@ -104,7 +106,7 @@ class FragmentControllerTest extends AdminTestCase
         $request = new Request(array(), array(), array(
             '_controller' => FragmentController::class . '::create',
             'resource'    => $this->getAdminManager()->getResource('post.comment'),
-            'parent'      => $this->getEntityManager()->find('FixtureBundle:Post', 1)
+            'parent'      => $this->getEntityManager()->find(Post::class,1)
         ));
 
         $response = $this->httpKernel->handle($request);
@@ -125,7 +127,7 @@ class FragmentControllerTest extends AdminTestCase
         $this->loadFixtures();
         $request = new Request(array(), array(), array(
             '_controller' => FragmentController::class . '::editPostComment',
-            'data'        => $this->getEntityManager()->find('FixtureBundle:Comment', 1)
+            'data'        => $this->getEntityManager()->find(Comment::class,1)
         ));
 
         $response = $this->httpKernel->handle($request);
@@ -147,7 +149,7 @@ class FragmentControllerTest extends AdminTestCase
         $request = new Request(array(), array(), array(
             '_controller' => FragmentController::class . '::edit',
             'resource'    => $this->getAdminManager()->getResource('post'),
-            'data'        => $this->getEntityManager()->find('FixtureBundle:Post', 2)
+            'data'        => $this->getEntityManager()->find(Post::class,2)
         ));
 
         $response = $this->httpKernel->handle($request);
@@ -169,7 +171,7 @@ class FragmentControllerTest extends AdminTestCase
         $request = new Request(array(), array(), array(
             '_controller' => FragmentController::class . '::edit',
             'resource'    => $this->getAdminManager()->getResource('post.comment'),
-            'data'        => $this->getEntityManager()->find('FixtureBundle:Comment', 1)
+            'data'        => $this->getEntityManager()->find(Comment::class,1)
         ));
 
         $response = $this->httpKernel->handle($request);

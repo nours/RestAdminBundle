@@ -191,7 +191,7 @@ class Action
      *
      * @return string
      */
-    public function getRouteName(string $name = null): string
+    public function getRouteName(?string $name = null): string
     {
         if ($name) {
             trigger_error('Overriding action route name is deprecated, use getFormActionRouteName instead', E_USER_DEPRECATED);

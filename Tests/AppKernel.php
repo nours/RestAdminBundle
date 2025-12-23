@@ -8,17 +8,24 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\HttpKernel\Kernel;
+namespace Nours\RestAdminBundle\Tests;
+
+use Doctrine;
+use JMS;
+use Knp;
+use Nours;
+use Symfony;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Class AppKernel
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -29,14 +36,13 @@ class AppKernel extends Kernel
             new Nours\RestAdminBundle\NoursRestAdminBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-//            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
             new Nours\RestAdminBundle\Tests\FixtureBundle\FixtureBundle(),
             new Nours\TableBundle\NoursTableBundle()
         );
     }
-
+    
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_test.yml');
+        $loader->load(__DIR__ . '/config/config_test.yml');
     }
 }

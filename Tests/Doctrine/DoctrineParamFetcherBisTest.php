@@ -12,6 +12,10 @@ namespace Nours\RestAdminBundle\Tests\Doctrine;
 
 use Nours\RestAdminBundle\ParamFetcher\DoctrineParamFetcher;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Contract;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Invoice;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Order;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -40,7 +44,7 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContract()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract');
 
@@ -60,8 +64,8 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractOrder()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+        $order    = $this->getEntityManager()->find(Order::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.order');
 
@@ -82,10 +86,10 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractInvoice()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-//        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
-        $invoice  = $this->getEntityManager()->find('FixtureBundle:Invoice', 1);
-//        $transaction = $this->getEntityManager()->find('FixtureBundle:Transaction', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+//        $order    = $this->getEntityManager()->find(Order::class, 1);
+        $invoice  = $this->getEntityManager()->find(Invoice::class, 1);
+//        $transaction = $this->getEntityManager()->find(Transaction::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.invoice');
 
@@ -107,9 +111,9 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractOrderInvoice()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
-        $invoice  = $this->getEntityManager()->find('FixtureBundle:Invoice', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+        $order    = $this->getEntityManager()->find(Order::class, 1);
+        $invoice  = $this->getEntityManager()->find(Invoice::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.order.invoice');
 
@@ -130,9 +134,9 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractOrderTransaction()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
-        $transaction = $this->getEntityManager()->find('FixtureBundle:Transaction', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+        $order    = $this->getEntityManager()->find(Order::class, 1);
+        $transaction = $this->getEntityManager()->find(Transaction::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.order.transaction');
 
@@ -154,9 +158,9 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractInvoiceTransaction()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $invoice  = $this->getEntityManager()->find('FixtureBundle:Invoice', 1);
-        $transaction = $this->getEntityManager()->find('FixtureBundle:Transaction', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+        $invoice  = $this->getEntityManager()->find(Invoice::class, 1);
+        $transaction = $this->getEntityManager()->find(Transaction::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.invoice.transaction');
 
@@ -179,10 +183,10 @@ class DoctrineParamFetcherBisTest extends AdminTestCase
      */
     public function testFetchContractOrderInvoiceTransaction()
     {
-        $contract = $this->getEntityManager()->find('FixtureBundle:Contract', 1);
-        $order    = $this->getEntityManager()->find('FixtureBundle:Order', 1);
-        $invoice  = $this->getEntityManager()->find('FixtureBundle:Invoice', 1);
-        $transaction = $this->getEntityManager()->find('FixtureBundle:Transaction', 1);
+        $contract = $this->getEntityManager()->find(Contract::class, 1);
+        $order    = $this->getEntityManager()->find(Order::class, 1);
+        $invoice  = $this->getEntityManager()->find(Invoice::class, 1);
+        $transaction = $this->getEntityManager()->find(Transaction::class, 1);
 
         $resource = $this->getAdminManager()->getResource('contract.order.invoice.transaction');
 

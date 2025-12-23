@@ -71,7 +71,7 @@ class AnnotationDirectoryLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         try {
             $path = $this->locator->locate($resource);

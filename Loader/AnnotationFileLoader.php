@@ -10,11 +10,9 @@
 
 namespace Nours\RestAdminBundle\Loader;
 
-use Doctrine\Common\Annotations\Reader;
 use Nours\RestAdminBundle\Domain\ResourceCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * Load resources from controller file
@@ -23,15 +21,8 @@ use Symfony\Component\Config\Resource\FileResource;
  */
 class AnnotationFileLoader extends Loader
 {
-    /**
-     * @var AnnotationClassLoader
-     */
-    private $loader;
-    /**
-     * @var FileLocatorInterface
-     */
-    private $locator;
-
+    private AnnotationClassLoader $loader;
+    private FileLocatorInterface $locator;
 
     public function __construct(
         FileLocatorInterface $locator,
@@ -60,9 +51,7 @@ class AnnotationFileLoader extends Loader
     {
         $tokens = token_get_all(file_get_contents($path));
 
-        $className = '';
         $count = count($tokens);
-        
         
         $namespace = $class = false;
         $tokens = token_get_all(file_get_contents($path));
@@ -125,7 +114,7 @@ class AnnotationFileLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         try {
             $path = $this->locator->locate($resource);

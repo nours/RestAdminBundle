@@ -11,6 +11,8 @@
 namespace Nours\RestAdminBundle\Tests\Controller;
 
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 
 /**
@@ -90,8 +92,8 @@ class CommentBisControllerTest extends AdminTestCase
         $this->assertEquals('created!', $response->getContent());
 
         $this->getEntityManager()->clear();
-        $newComment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->findOneBy(array(
-            'post' => $this->getEntityManager()->getRepository('FixtureBundle:Post')->find(2)
+        $newComment = $this->getEntityManager()->getRepository(Comment::class)->findOneBy(array(
+            'post' => $this->getEntityManager()->getRepository(Post::class)->find(2)
         ));
 
         // Object has been created
@@ -129,7 +131,7 @@ class CommentBisControllerTest extends AdminTestCase
         $this->assertEquals('success!', $response->getContent());
 
         $this->getEntityManager()->clear();
-        $newComment = $this->getEntityManager()->getRepository('FixtureBundle:Comment')->find(1);
+        $newComment = $this->getEntityManager()->getRepository(Comment::class)->find(1);
 
         // Object has been created
         $this->assertEquals('updated!', $newComment->getComment());

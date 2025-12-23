@@ -12,6 +12,9 @@ namespace Nours\RestAdminBundle\Tests\Domain;
 
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Tests\AdminTestCase;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
 
 /**
  * Class ActionTest
@@ -122,7 +125,7 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post.comment_bis:create');
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $params = $action->getRouteParams($post);
 
@@ -136,7 +139,7 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post.comment_bis:edit');
-        $comment = $this->getEntityManager()->find('FixtureBundle:Comment', 1);
+        $comment = $this->getEntityManager()->find(Comment::class,1);
 
         $params = $action->getRouteParams($comment);
 
@@ -152,8 +155,8 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post:bulk_delete');
-        $post1 = $this->getEntityManager()->find('FixtureBundle:Post', 1);
-        $post2 = $this->getEntityManager()->find('FixtureBundle:Post', 2);
+        $post1 = $this->getEntityManager()->find(Post::class,1);
+        $post2 = $this->getEntityManager()->find(Post::class,2);
 
         // Using some instances
         $params = $action->getRouteParams(array($post1, $post2));
@@ -171,7 +174,7 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post.comment:bulk_delete');
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         // Without instances
         $params = $action->getRouteParams($post);
@@ -185,7 +188,7 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post.extension:create');
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         $params = $action->getRouteParams($post);
 
@@ -199,7 +202,7 @@ class ActionTest extends AdminTestCase
         $this->loadFixtures();
 
         $action = $this->getAdminManager()->getAction('post.extension:edit');
-        $extension = $this->getEntityManager()->find('FixtureBundle:PostExtension', 1);
+        $extension = $this->getEntityManager()->find(PostExtension::class,1);
 
         $params = $action->getRouteParams($extension);
 

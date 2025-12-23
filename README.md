@@ -17,7 +17,7 @@ Add bundle to AppKernel :
 
 new Nours\RestAdminBundle\NoursRestAdminBundle()
 
-Create main resources config file, for example in app/config/resources.yml, then configure it in bundle main configuration :
+Create main resources config file, for example in config/resources.yml, then configure it in bundle main configuration :
 
 nours_rest_admin:
     resource: '%kernel.project_dir%/config/resources.yml'

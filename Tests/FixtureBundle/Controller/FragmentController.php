@@ -15,6 +15,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 /**
  * Class FragmentController.
@@ -25,6 +26,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FragmentController extends AbstractController
 {
+//    public function __construct(Environment $twig)
+//    {
+//    }
+    
     /**
      * The template renders a post create action
      *

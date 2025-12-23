@@ -14,6 +14,7 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Comment;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Composite;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\CompositeChild;
+use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CommentType;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\CompositeChildType;
 use Nours\RestAdminBundle\Tests\FixtureBundle\Table\Type\PostType;
@@ -40,7 +41,7 @@ class AdminExtensionTest extends AdminTestCase
     public function testAdminParentResourceTable()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         /** @var TableInterface $table */
         $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
@@ -55,7 +56,7 @@ class AdminExtensionTest extends AdminTestCase
     public function testTableUrlUsingCustomParams()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 1);
+        $post = $this->getEntityManager()->find(Post::class,1);
 
         /** @var TableInterface $table */
         $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
@@ -77,7 +78,7 @@ class AdminExtensionTest extends AdminTestCase
     public function testTableResourceParentFiltering()
     {
         $this->loadFixtures();
-        $post = $this->getEntityManager()->find('FixtureBundle:Post', 3);
+        $post = $this->getEntityManager()->find(Post::class,3);
 
         /** @var TableInterface $table */
         $table = $this->get('nours_table.factory')->createTable(CommentType::class, array(
