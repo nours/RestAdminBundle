@@ -10,7 +10,6 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
-use Nours\RestAdminBundle\Controller\DefaultController;
 use Nours\RestAdminBundle\Controller\FormController;
 use Nours\RestAdminBundle\Controller\GetController;
 use Nours\RestAdminBundle\Controller\IndexController;
@@ -33,11 +32,15 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('nours_rest_admin');
         $rootNode = $treeBuilder->getRootNode();
-        
+
         $rootNode
             ->children()
                 ->scalarNode('resource')->isRequired()->end()
                 ->scalarNode('default_param_fetcher')->defaultValue('orm')->end()
+                ->booleanNode('enable_annotations')
+                    ->defaultNull()
+                    ->info('Enable Doctrine Annotations support. Set to true if you use annotations instead of PHP 8 attributes. If null, auto-detected based on annotation_reader service availability.')
+                ->end()
                 ->scalarNode('resource_class')
                     ->defaultValue('Nours\RestAdminBundle\Domain\DomainResource')
                     ->info('Main resource definition class, redefine to use your own implementation')

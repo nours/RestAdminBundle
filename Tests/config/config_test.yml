@@ -10,12 +10,13 @@ parameters:
 
 framework:
   secret: "%secret%"
+  http_method_override: true
   router:
     resource: "%kernel.project_dir%/Tests/config/routing.yml"
     strict_requirements: ~
   form: ~
   csrf_protection: false
-  validation: { enable_annotations: true }
+  validation: ~
   default_locale: "%locale%"
   trusted_hosts: ~
   session:
@@ -24,7 +25,6 @@ framework:
     storage_factory_id: session.storage.factory.mock_file
     save_path: "%kernel.project_dir%/Tests/app/cache/sessions"
 
-  annotations: true
   test: ~
   profiler:
     collect: false
@@ -79,9 +79,5 @@ doctrine:
     driver: pdo_sqlite
     path: '%kernel.cache_dir%/sqlite.db.cache'
     charset: UTF8
-    use_savepoints: true
   orm:
-    auto_generate_proxy_classes: "%kernel.debug%"
     auto_mapping: true
-    enable_lazy_ghost_objects: true
-    report_fields_where_declared: true

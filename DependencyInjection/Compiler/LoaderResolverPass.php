@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class LoaderResolverPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $definition = $container->getDefinition('rest_admin.loader_resolver');
 

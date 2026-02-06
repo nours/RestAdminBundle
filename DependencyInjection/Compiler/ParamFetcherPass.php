@@ -12,6 +12,7 @@ namespace Nours\RestAdminBundle\DependencyInjection\Compiler;
 
 use DomainException;
 use Nours\RestAdminBundle\EventListener\ParamFetcherListener;
+use Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
@@ -25,9 +26,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ParamFetcherPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        $interface  = 'Nours\RestAdminBundle\ParamFetcher\ParamFetcherInterface';
+        $interface  = ParamFetcherInterface::class;
         $definition = $container->getDefinition(ParamFetcherListener::class);
 
         $ids = $container->findTaggedServiceIds('rest_admin.param_fetcher');

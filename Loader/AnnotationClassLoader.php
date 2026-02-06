@@ -35,27 +35,20 @@ use Symfony\Component\Config\Resource\FileResource;
  */
 class AnnotationClassLoader implements LoaderInterface
 {
-    /**
-     * @var Reader
-     */
-    protected $reader;
-
-    /**
-     * @var ResourceFactory
-     */
-    protected $factory;
+    protected ?Reader $reader;
+    protected ResourceFactory $factory;
     protected $resolver;
 
     /**
      * Constructor.
      *
-     * @param Reader $reader
      * @param ResourceFactory $factory
+     * @param ?Reader $reader
      */
-    public function __construct(Reader $reader, ResourceFactory $factory)
+    public function __construct(ResourceFactory $factory, ?Reader $reader)
     {
-        $this->reader = $reader;
         $this->factory = $factory;
+        $this->reader = $reader;
     }
 
     /**

@@ -10,6 +10,7 @@
 
 namespace Nours\RestAdminBundle\DependencyInjection;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use DomainException;
 use Nours\RestAdminBundle\Domain\DomainResource;
 use Nours\RestAdminBundle\Domain\ResourceDataFactory;
@@ -36,15 +37,17 @@ class NoursRestAdminExtension extends Extension
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
         $loader->load('twig.yml');
+
+        // Configure annotation reader
+        $this->configureAnnotationReader($config, $container);
 
         if (class_exists(AbstractExtension::class)) {
             $loader->load('table.yml');
@@ -168,5 +171,41 @@ class NoursRestAdminExtension extends Extension
         }
 
         $container->setParameter('rest_admin.resource_class', $resourceClass);
+    }
+
+    private function configureAnnotationReader(array $config, ContainerBuilder $container): void
+    {
+        $enableAnnotations = $config['enable_annotations'];
+
+        // Si le service annotation_reader de Symfony existe, l'utiliser
+        if ($container->has('annotation_reader')) {
+            $container->getDefinition('Nours\RestAdminBundle\Loader\AnnotationClassLoader')
+                ->setArgument(1, new Reference('annotation_reader'));
+            return;
+        }
+
+        // Auto-détection si enable_annotations est null
+        if ($enableAnnotations === null) {
+            $enableAnnotations = class_exists(AnnotationReader::class);
+        }
+
+        if ($enableAnnotations) {
+            // Créer le service AnnotationReader si doctrine/annotations est installé
+            if (!class_exists(AnnotationReader::class)) {
+                throw new DomainException(
+                    'You have enabled annotations support but doctrine/annotations is not installed. ' .
+                    'Run "composer require doctrine/annotations" or set "enable_annotations: false".'
+                );
+            }
+
+            $container->register('nours_rest_admin.annotation_reader', AnnotationReader::class);
+
+            $container->getDefinition('Nours\RestAdminBundle\Loader\AnnotationClassLoader')
+                ->setArgument(1, new Reference('nours_rest_admin.annotation_reader'));
+        } else {
+            // Pas de support annotations, passer null
+            $container->getDefinition('Nours\RestAdminBundle\Loader\AnnotationClassLoader')
+                ->setArgument(1, null);
+        }
     }
 }

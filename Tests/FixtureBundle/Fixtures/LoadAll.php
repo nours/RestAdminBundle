@@ -21,12 +21,12 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
 
 /**
  * Class LoadAll
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class LoadAll extends AbstractFixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // First post (id = 1), with one comment (id = 1), with one response (id = 1)
         // And with an author

@@ -172,8 +172,10 @@ class AdminManager implements CacheWarmerInterface
 
     /**
      * {@inheritdoc}
+     * @param string $cacheDir
+     * @param string|null $buildDir
      */
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $currentDir = $this->cacheDir;
 

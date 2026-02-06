@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class TableThemePass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($templates = $container->getParameter('nours_table.themes')) {
             array_unshift($templates, '@NoursRestAdmin/table.html.twig');

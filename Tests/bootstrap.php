@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/../vendor/symfony/phpunit-bridge/bootstrap.php';
+
 // Autoload
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/AppKernel.php';

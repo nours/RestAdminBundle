@@ -41,7 +41,7 @@ class ResourcesDebugCommand extends Command
         $this->adminManager = $adminManager;
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('debug:rest_admin')
@@ -59,7 +59,7 @@ EOF
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $resources = $this->adminManager->getResourceCollection();
 
@@ -75,6 +75,8 @@ EOF
 
             $output->writeln("");
         }
+
+        return Command::SUCCESS;
     }
 
     private function dumpResourceLight(OutputInterface $output, DomainResource $resource)

@@ -17,7 +17,7 @@ use Nours\RestAdminBundle\Tests\AdminTestCase;
 
 /**
  * Class AnnotationClassLoaderTest
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class AnnotationClassLoaderTest extends AdminTestCase
@@ -27,7 +27,7 @@ class AnnotationClassLoaderTest extends AdminTestCase
     {
         $class = 'Nours\RestAdminBundle\Tests\FixtureBundle\Controller\Comment\CommentController';
 
-        $loader = new AnnotationClassLoader(new AnnotationReader(), $this->get(ResourceFactory::class));
+        $loader = new AnnotationClassLoader($this->get(ResourceFactory::class), new AnnotationReader());
 
         $resources = $loader->load($class);
 

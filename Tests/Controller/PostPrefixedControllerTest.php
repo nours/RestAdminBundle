@@ -16,7 +16,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Post;
 
 /**
  * Class PostControllerTest
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class PostPrefixedControllerTest extends AdminTestCase
@@ -185,6 +185,7 @@ class PostPrefixedControllerTest extends AdminTestCase
     public function testDeleteFormAction()
     {
         $client = static::createClient();
+        $client->catchExceptions(false);
         $this->loadFixtures();
 
         $crawler = $client->request('GET', '/prefixed/posts/2/delete');

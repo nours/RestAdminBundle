@@ -27,7 +27,7 @@ class CommentType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('comment', TextType::class, array(
             'constraints' => new NotBlank()

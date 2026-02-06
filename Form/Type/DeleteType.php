@@ -17,7 +17,7 @@ use Symfony\Component\Form\Tests\Extension\Core\Type\SubmitTypeTest;
 
 /**
  * Class DeleteType
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class DeleteType extends AbstractType
@@ -25,12 +25,12 @@ class DeleteType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('submit', SubmitType::class);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'delete';
     }

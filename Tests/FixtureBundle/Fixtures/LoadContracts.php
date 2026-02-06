@@ -19,12 +19,12 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\Transaction;
 
 /**
  * Class LoadContracts
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class LoadContracts extends AbstractFixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $contract = new Contract(); // 1
         $manager->persist($contract);

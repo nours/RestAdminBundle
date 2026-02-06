@@ -18,7 +18,7 @@ use Nours\RestAdminBundle\Tests\FixtureBundle\Entity\PostExtension;
 
 /**
  * Class ActionTest
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
 class ActionTest extends AdminTestCase
@@ -88,7 +88,7 @@ class ActionTest extends AdminTestCase
      *
      * @return array
      */
-    public function getNotReadOnlyActionNames()
+    public static function getNotReadOnlyActionNames()
     {
         return array(
             array('create'),

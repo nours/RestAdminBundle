@@ -11,18 +11,25 @@
 namespace Nours\RestAdminBundle\Tests\FixtureBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\DataFixtures\Purger\ORMPurgerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class SqlitePurger
- * 
+ *
  * @author David Coudrier <david.coudrier@gmail.com>
  */
-class SqlitePurger extends ORMPurger
+class SqlitePurger implements ORMPurgerInterface
 {
-    public function __construct(?EntityManagerInterface $em = null, $excluded = [])
-    {
-        parent::__construct($em, $excluded);
+    private ORMPurger $purger;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        ?EntityManagerInterface $entityManager = null,
+        $excluded = []
+    ) {
+        $this->entityManager = $entityManager;
+        $this->purger = new ORMPurger($entityManager, $excluded);
     }
 
     /**
@@ -30,14 +37,20 @@ class SqlitePurger extends ORMPurger
      *
      * @return void
      */
-    function purge()
+    function purge(): void
     {
-        parent::purge();
+        $this->purger->purge();
 
-        $connection = $this->getObjectManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
 
         if ($connection->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'")->fetchOne()) {
-            $this->getObjectManager()->getConnection()->executeStatement('DELETE FROM sqlite_sequence');
+            $connection->executeStatement('DELETE FROM sqlite_sequence');
         }
+    }
+
+    public function setEntityManager(EntityManagerInterface $em): void
+    {
+        $this->purger->setEntityManager($em);
+        $this->entityManager = $em;
     }
 }
